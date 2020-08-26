@@ -1,0 +1,77 @@
+.subscriptioncontent{
+    font-size: 1.55rem;
+    position: relative;
+    top:18px;
+    letter-spacing: .01rem;
+    padding: 0 10px 0 10px;
+    
+}
+
+.subscriptionList{
+display:flex;
+margin-top:4%;
+flex-direction:row;
+justify-content: center;
+}
+
+.subscriptionBox{
+    &::after{
+        position: absolute;
+        content:"";
+        width: 100%;
+        height: 95%;
+        left:-10%;
+        bottom:15%;
+        box-sizing: inherit;
+        box-shadow: 0px 0px 2px 2px rgba(117, 117, 117, 0.52);
+    border: inherit;
+        background-color: white;
+        z-index: -1;
+        transition: .5s;
+    }
+
+    &:hover{
+         background-color:rgb(255,187,0);
+         position: relative;
+         top:10px;
+         height: 50vh;
+         width:18vw;
+         transition: .5s;
+         .subscriptionPrice{
+            top:-2%;
+            font-size: 1.8rem;
+            transition: .5s;
+        }
+    }
+    position: relative;
+    left:2%;
+    height: 45vh;
+    width:17vw;
+    min-width: 200px;
+    margin: 3.5% 6% 0 6%;
+    min-height: 200px;
+    z-index: 10;
+    background-color: rgb(172,172,172);
+    transition: .5s;
+    div{
+        position: relative;
+        text-align: left;
+        left:-10%;
+        padding: 0 10px 0 30px;;
+        transition: .5s;
+       
+    }
+}
+
+.subscriptionPrice{
+font-size: 1.55rem;
+position: relative;
+text-overflow: clip;
+transition: .5s;
+}
+
+
+
+.subscriptionType{
+color: blue;
+}

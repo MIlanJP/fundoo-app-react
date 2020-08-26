@@ -6,6 +6,10 @@
   padding: 0 10px 0 10px;
 }
 
+a {
+  text-decoration: none;
+}
+
 .subscriptionList {
   display: flex;
   margin-top: 4%;
@@ -19,25 +23,25 @@
   height: 45vh;
   width: 17vw;
   min-width: 200px;
-  margin: 3.5% 6% 0 6%;
+  margin: 3.5% 5.5% 0 5.5%;
   min-height: 200px;
   z-index: 10;
   background-color: #acacac;
-  transition: 0.5s;
+  transition: 0.25s;
 }
 .subscriptionBox::after {
   position: absolute;
   content: "";
   width: 100%;
-  height: 95%;
+  height: 90%;
   left: -10%;
-  bottom: 15%;
+  bottom: 18%;
   box-sizing: inherit;
   box-shadow: 0px 0px 2px 2px rgba(117, 117, 117, 0.52);
   border: inherit;
   background-color: white;
   z-index: -1;
-  transition: 0.5s;
+  transition: 0.25s;
 }
 .subscriptionBox:hover {
   background-color: #ffbb00;
@@ -45,28 +49,126 @@
   top: 10px;
   height: 50vh;
   width: 18vw;
-  transition: 0.5s;
+  transition: 0.25s;
 }
 .subscriptionBox:hover .subscriptionPrice {
-  top: -2%;
   font-size: 1.8rem;
-  transition: 0.5s;
+  transition: 0.25s;
+}
+.subscriptionBox:hover div,
+.subscriptionBox:hover li {
+  font-size: 1.1rem;
+  transition: 0.25s;
 }
 .subscriptionBox div {
   position: relative;
   text-align: left;
+  left: -12%;
+  padding: 0 10px 0px 30px;
+  transition: 0.25s;
+}
+.subscriptionBox li {
+  position: relative;
+  text-align: left;
   left: -10%;
-  padding: 0 10px 0 30px;
-  transition: 0.5s;
+  padding-right: 30px;
+  transition: 0.25s;
 }
 
 .subscriptionPrice {
   font-size: 1.55rem;
   position: relative;
   text-overflow: clip;
-  transition: 0.5s;
+  transition: 0.25s;
+}
+
+.addToCart {
+  position: absolute !important;
+  top: 87% !important;
+  left: -10px !important;
 }
 
 .subscriptionType {
   color: blue;
+}
+
+.subscriptionSignIn {
+  color: blue;
+  position: relative;
+  top: 40px;
+  cursor: pointer;
+}
+
+.subscriptionPopUpBackground {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  background-color: rgba(148, 143, 143, 0.534);
+}
+
+.subscriptionPopUp {
+  background-color: white;
+  outline: none;
+  position: relative;
+  width: 44vw;
+  min-height: 120px;
+  height: 28.5vh;
+  border: none;
+  top: calc(50% - 90px);
+  left: calc(50% - 22vw);
+  border-radius: 10px;
+  z-index: 20;
+  box-shadow: 0px 0px 15px 15px rgba(151, 151, 151, 0.876);
+}
+
+.popUpTopLayer {
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  background-color: #ffbb00;
+  height: 33px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: left;
+  padding-top: 15px;
+  padding-left: 12%;
+  color: white;
+}
+.popUpTopLayer span {
+  float: right;
+  padding-right: 15%;
+  font-size: 0.7rem;
+}
+
+.popUpSelect {
+  display: flex;
+  flex-direction: row;
+}
+
+.popUpSelectOptions {
+  margin-top: 10px;
+  padding-top: 15px;
+  align-items: center;
+  width: 25%;
+  font-size: 0.8rem;
+  font-weight: 600;
+  height: 40%;
+  color: gray;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.popUpSelectOptionsSelected {
+  margin-top: 10px;
+  padding-top: 15px;
+  align-items: center;
+  width: 25%;
+  color: black;
+  font-size: 0.8rem;
+  font-weight: 600;
+  height: 40%;
+  border: 1px solid black;
+  cursor: pointer;
 }

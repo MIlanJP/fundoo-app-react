@@ -3,8 +3,6 @@ import Header from "./header";
 import { Link } from "react-router-dom";
 import secureLogo from "../Assets/img/account.svg";
 import styles from "../scss/signup.module.scss";
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {
   Card,
   CardContent,
@@ -30,17 +28,7 @@ export default function Signup() {
         confirm:""
     })
 
-
-    // const [helperText]=useState({
-    //   firstname:"First Name Must have least 5 Character",
-    //   secondname:"Second Name Must have least 5 Character",
-    //   emailId:false,
-    //   password:false,
-    //   confirm:false
-    // })
-
-    const[paswordVisibilty,setPasswordVisibility]=useState(true)
-
+    const [validation,setValidation]=useState(false)
    const[validationStatus,setValidationStatus]=useState({
     firstname:false,
     secondname:false,
@@ -50,12 +38,15 @@ export default function Signup() {
    })
 
    function onInputClick(e){
-   if(!( !validationStatus.firstname&&!validationStatus.secondname&&
-    !validationStatus.emailId&&!validationStatus.password&&!validationStatus.confirm
+   if( validationStatus.firstname&&validationStatus.secondname&&
+    validationStatus.emailId&&validationStatus.password&&validationStatus.confirm
     && values.firstname!==""&&values.secondname!==""&&
     values.emailId!==""&&values.password!==""&&values.confirm!==""
-    )){
+    ){
+     console.log("Validated")
+    }else{
       e.preventDefault();
+      console.log("Not Validated")
     }
    }
 
@@ -64,17 +55,17 @@ export default function Signup() {
       const name1=e.currentTarget.name;
       const val1=e.currentTarget.value
       if(name1==='firstname'){
-          setValidationStatus({...validationStatus,[name1]:(val1.length<4)})
+          setValidationStatus({...validationStatus,[name1]:(values.firstname.length<4)})
       }else  if(name1==='secondname'){
-        setValidationStatus({...validationStatus,[name1]:(val1.length<4)})
+        setValidationStatus({...validationStatus,[name1]:(values.secondname.length<4)})
 
       }else  if(name1==='emailId'){
-        setValidationStatus({...validationStatus,[name1]:!(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(val1))})
+        setValidationStatus({...validationStatus,[name1]:(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(values.emailId))})
       }else  if(name1==='password'){
-        setValidationStatus({...validationStatus,[name1]:!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/.test(val1))})
+        setValidationStatus({...validationStatus,[name1]:(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/.test(values.emailId))})
 
       }else  if(name1==='confirm'){
-        setValidationStatus({...validationStatus,[name1]:!(values.password===val1)})
+        setValidationStatus({...validationStatus,[name1]:(values.password===values.confirm)})
 
       }
       
@@ -128,6 +119,7 @@ export default function Signup() {
                 id="outlined-basic"
                 label="Second name"
                 error={validationStatus.secondname}
+                helperText="Please Enter Second Name"
                 variant="outlined"
               />
             </Grid>
@@ -149,30 +141,24 @@ export default function Signup() {
               onChange={handleOnChange}
               value={values.password}
                 fullWidth="true"
-                type={paswordVisibilty ? "password":"text"}
+                type="text"
                 error={validationStatus.password}
                 id="outlined-basic"
                 label="Password"
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={5} className={styles.gridItem}>
+            <Grid item xs={6} className={styles.gridItem}>
               <TextField
               name='confirm'
               value={values.confirm}
               onChange={handleOnChange}
-              type={paswordVisibilty ? "password":"text"}
               error={validationStatus.confirm}
                 fullWidth="true"
                 id="outlined-basic"
                 label="Confirm"
                 variant="outlined"
               />
-            </Grid>
-            <Grid xs={1}
-            onClick={()=>{setPasswordVisibility(!paswordVisibilty)}}
-            >
-            {paswordVisibilty ?<VisibilityOff/>:<Visibility/>}
             </Grid>
           </Grid>
             <Link onClick={(e)=>{onInputClick(e)}}  className={styles.SignUpButton} to="/profile">

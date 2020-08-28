@@ -15,7 +15,7 @@ export default function ResetPassword() {
  
   const [values,setValues]=useState({
     emailId:"",
-    password:"",
+    oldpassword:"",
     newpassword:""
 })
 
@@ -46,6 +46,7 @@ function handleOnChange(e){
             justify="center"
             alignItems="center"
             spacing={3}
+            lg={12}
           >
             <TextField
               className={styles.EmailInput}
@@ -59,8 +60,8 @@ function handleOnChange(e){
             />
             <TextField
               className={styles.PasswordInput}
-              value={values.password}
-              name="password"
+              value={values.oldpassword}
+              name="oldpassword"
               onChange={handleOnChange}
               fullWidth="true"
               id="standard-basic"
@@ -69,8 +70,8 @@ function handleOnChange(e){
             />
             <TextField
             className={styles.PasswordInput}
-            value={values.password}
-            name="password"
+            value={values.newpassword}
+            name="newpassword"
             onChange={handleOnChange}
             fullWidth="true"
             id="standard-basic"

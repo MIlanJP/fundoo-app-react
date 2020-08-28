@@ -14,12 +14,22 @@ $font: 'Montserrat', sans-serif;
     position: relative;;
     top:6%;
     width:55vw;
+    min-width:400px;
     height:85%;
-    min-height:400px;
+    min-height:500px;
     left:calc(50% - 27.5vw);
     align-self: center;
- 
+    a{
+        text-decoration:none;
+    }
 }
+
+@media screen and (max-width:740px){
+.signUpCard{
+    left:calc(50% - 200px);
+}
+}
+
 .signUpLabel{
     position: relative;
     top:10px;

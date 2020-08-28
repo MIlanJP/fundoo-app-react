@@ -141,6 +141,7 @@ a {
     padding-top:15px;
     padding-left:12%;;
     color: white;;
+    text-decoration: capitalize;
     span{
         float: right;
         padding-right:15%;
@@ -175,5 +176,31 @@ a {
     font-weight: 600;
     height:40% ;
     border:1px solid black;
-    cursor: pointer
+    cursor: pointer;
+  
+}
+.swipeLeft{
+   animation: slideFromLeft 1s;
+}
+
+.activePopUpButton{
+    border-bottom-color: rgb(103,58,183);
+}
+
+
+.popUpContent{
+text-align: left;
+padding:10px 10px 0 20px;
+}
+
+
+@keyframes slideFromLeft{
+    from {
+        width: 50%;
+      }
+    to {
+        width: 100%; 
+      }
+    
+  
 }

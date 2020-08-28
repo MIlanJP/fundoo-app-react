@@ -1,0 +1,22 @@
+.Logo{
+    font-size: 1rem;
+    text-shadow: 0 1px 1px rgb(0, 0, 0);
+    font-weight: 400;
+}
+
+.f-red,.d-red{
+    color:red;
+}
+
+.u-blue,.o-blue{
+    color:blue;
+}
+
+.n-yellow{
+    color:yellow;
+}
+
+.o-green{
+    color:green;
+}
+

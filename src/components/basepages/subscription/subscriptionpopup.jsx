@@ -24,17 +24,22 @@ export default function Subscriptionpopup(props) {
     );
   });
 
-  const handleClick = () => {
-    props.sendToggleControl(!props.togglePopUp);
+  const handleClick = (e) => {
+    e.preventDefault();
+    
+    if (e.target === e.currentTarget) {
+     return  props.sendToggleControl(!props.togglePopUp);
+    }
+
   };
   return props.togglePopUp ? (
     <div
-      onClick={() => {
-        handleClick();
+      onClick={(e) => {
+        handleClick(e);
       }}
       className={styles.subscriptionPopUpBackground}
     >
-      <div   className={styles.subscriptionPopUp}>
+      <div className={styles.subscriptionPopUp}>
         <div className={styles.popUpTopLayer}>
           {props.subscriptionDetails[0]} Pack Details{" "}
           <span>{props.subscriptionDetails[1]}</span>{" "}

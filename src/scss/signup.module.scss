@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;1,100&display=swap');
+$font: 'Montserrat', sans-serif;
+
+.signupLogo{
+    width:30%;
+    height:40%;
+}
+
+.Logo{
+    text-align: left;
+    padding-left:40px;
+}
+.signUpCard{
+    position: relative;;
+    top:6%;
+    width:55vw;
+    height:85%;
+    min-height:400px;
+    left:calc(50% - 27.5vw);
+    align-self: center;
+ 
+}
+.signUpLabel{
+    position: relative;
+    top:10px;
+    font-size: 1.8rem;;
+    text-align: left;
+    padding-left:30px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.gridContainer{
+    position:relative;
+    top:50px;
+    padding-left:40px;
+    padding-right:40px;
+    height: 100%;
+
+}
+.gridItem{
+    position:relative;
+    margin-bottom:5%; 
+}
+.SignUpButton{
+    position: relative;
+    top:110px;;
+    right:-50%;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color:white;
+   
+ background-color:rgb(26,115,232);
+   font-size:.825rem;;
+   padding:10px  25px 10px 25px;
+   border-radius: 4px;
+  
+}
+.LoginLink{
+    position: relative;
+    top:110px;;
+    left:-40%;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+}

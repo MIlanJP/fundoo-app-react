@@ -6,10 +6,14 @@ import {
   TextField,
   Grid,
   Button,
+  IconButton,
+  InputAdornment,
 } from "@material-ui/core";
 import styles from "../scss/login.module.scss";
 import "../css/logo.css";
 import { Link } from "react-router-dom";
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 export default function Login() {
  
@@ -17,6 +21,8 @@ export default function Login() {
     emailId:"",
     password:"",
 })
+
+const [showPassword,setShowPassword]=useState(false)
 
 function handleOnChange(e){
   setValues({...values,[e.currentTarget.name]:e.currentTarget.value})
@@ -41,7 +47,6 @@ function handleOnChange(e){
         <form action="">
           <Grid
             container
-        
             direction="column"
             justify="center"
             alignItems="center"
@@ -64,9 +69,13 @@ function handleOnChange(e){
               onChange={handleOnChange}
               fullWidth="true"
               id="standard-basic"
+              type={showPassword?'text':'password'}
               color="secondary"
               label="Password *"
-            ></TextField>
+            >
+            </TextField>
+            {showPassword ? <Visibility  className={styles.showPaswordButton}  onClick={()=>{setShowPassword(!showPassword)}} /> : 
+            <VisibilityOff className={styles.showPaswordButton}   onClick={()=>{setShowPassword(!showPassword)}}/>}
           </Grid>
           <Button className={styles.LoginButton}>Log In</Button>
         </form>

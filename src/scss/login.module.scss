@@ -54,18 +54,20 @@ a{
 }
 .ForgotPasswordLink{
   position: relative;
-  top:65px;
-  left:0.5%;  
+  top:63px;
+  right:1.5%;  
 }
 .CreateAccountLink{
   position: relative; 
   top:95px;
-  right:64%; 
+  right:66%; 
 }
 .ResetPasswordLink{
   position: relative;
-  top:100px;
-  left:30%;
+  top:30px;
+  left:-35%;
+  margin-top:auto;
+  margin-right:auto;
 }
 }
 
@@ -116,4 +118,17 @@ right:25px;
    padding:10px  25px 10px 25px;
    border-radius: 4px;
 background-color:rgb(26,115,232);
+}
+
+.showPaswordButton{
+  position:relative;
+  top:30px;
+  margin-left:auto;
+  padding-right:20px;
+  transition: 0.25s;
+
+  &:hover{
+    color:rgb(185, 185, 185);
+    transition: 0.25s;
+  }
 }

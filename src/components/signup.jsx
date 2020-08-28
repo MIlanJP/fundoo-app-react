@@ -64,9 +64,9 @@ export default function Signup() {
       const name1=e.currentTarget.name;
       const val1=e.currentTarget.value
       if(name1==='firstname'){
-          setValidationStatus({...validationStatus,[name1]:(val1.length<4)})
+          setValidationStatus({...validationStatus,[name1]:(val1.length<5)})
       }else  if(name1==='secondname'){
-        setValidationStatus({...validationStatus,[name1]:(val1.length<4)})
+        setValidationStatus({...validationStatus,[name1]:(val1.length<5)})
 
       }else  if(name1==='emailId'){
         setValidationStatus({...validationStatus,[name1]:!(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(val1))})

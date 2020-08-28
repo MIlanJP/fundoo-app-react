@@ -1,7 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&display=swap");
 
 .mainLogo {
-
   position:absolute;
   width:30vw;
   min-width: 400px;;
@@ -14,7 +13,9 @@
     width:100%;
     height:100%;
   }
-
+a{
+  text-decoration:none;
+}
   .EmailInput,.PasswordInput{
     position: relative;
     top:80px;;
@@ -54,14 +55,24 @@
 .ForgotPasswordLink{
   position: relative;
   top:65px;
-  left:-16%;  
+  left:0.5%;  
 }
 .CreateAccountLink{
-  position: relative;
+  position: relative; 
   top:95px;
-  left:-50%; 
+  right:64%; 
+}
+.ResetPasswordLink{
+  position: relative;
+  top:100px;
+  left:30%;
 }
 }
+
+.ResetPasswordCard{
+  min-height: 500px;;
+}
+
 
 
 @media screen and (max-width:1250px){
@@ -69,6 +80,9 @@
     left: calc(50% - 200px);
   }
 }
+
+
+// Forgot Email Section
 
 .goBackButton{
 position: absolute;
@@ -80,4 +94,26 @@ left:25px;
   position: absolute;
 bottom:15px;
 right:25px;
+}
+
+// Back Button of ResetPassword
+.GoBack{
+  font-size: .85rem;
+  position: relative;
+  top:100px;
+  left:-62%
+}
+
+.ResetPasswordButton{
+  position: relative;
+  top:100px;;
+  left:30%;
+  color:white;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  color:white;
+  font-size:.825rem;;
+   padding:10px  25px 10px 25px;
+   border-radius: 4px;
+background-color:rgb(26,115,232);
 }

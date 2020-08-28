@@ -11,11 +11,12 @@ import styles from "../scss/login.module.scss";
 import "../css/logo.css";
 import { Link } from "react-router-dom";
 
-export default function Login() {
+export default function ResetPassword() {
  
   const [values,setValues]=useState({
     emailId:"",
     password:"",
+    newpassword:""
 })
 
 function handleOnChange(e){
@@ -23,7 +24,7 @@ function handleOnChange(e){
 }
 
   return (
-    <Card className={styles.mainLogo} justify="center" boxShadow={3}>
+    <Card className={`${styles.ResetPasswordCard} ${styles.mainLogo}`} justify="center" boxShadow={3}>
       <CardContent>
         <Typography className="Logo" variant="h5">
           <span className="f-red">F</span>
@@ -34,14 +35,13 @@ function handleOnChange(e){
           <span className="o-blue">o</span>
         </Typography>
         <Typography className={styles.signInLabel} m={3} variant="h5">
-          Sign in
+         ResetPassword
         </Typography>
-        <Typography className={styles.loginInfo}>Continue to Fundoo</Typography>
+        <Typography className={styles.loginInfo}>Reset your password</Typography>
 
         <form action="">
           <Grid
             container
-        
             direction="column"
             justify="center"
             alignItems="center"
@@ -66,19 +66,24 @@ function handleOnChange(e){
               id="standard-basic"
               color="secondary"
               label="Password *"
-            ></TextField>
+            />
+            <TextField
+            className={styles.PasswordInput}
+            value={values.password}
+            name="password"
+            onChange={handleOnChange}
+            fullWidth="true"
+            id="standard-basic"
+            color="secondary"
+            label="Password *"
+          />
           </Grid>
-          <Button className={styles.LoginButton}>Log In</Button>
+          <Link className={styles.ResetPasswordButton} to="/login">
+          ResetPassword
+        </Link>
+        <Link to='/login' className={styles.GoBack}  >go back</Link>
         </form>
-        <Link className={styles.ForgotPasswordLink} to="/forgotpassword">
-          Forgot Password?
-        </Link>
-        <Link className={styles.ResetPasswordLink} to="/resetpassword">
-        Reset Password?
-      </Link>
-        <Link className={styles.CreateAccountLink} to="/signup">
-          Create Account
-        </Link>
+
       </CardContent>
     </Card>
   );

@@ -11,12 +11,16 @@ import {
 } from "@material-ui/core";
 import styles from "../scss/login.module.scss";
 import "../css/logo.css";
-import { Link } from "react-router-dom";
+import { Link ,useHistory} from "react-router-dom";
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
-export default function Login() {
- 
+import services from '../services/services'
+
+export default function Login(props) {
+  const history = useHistory();
+  const[message,setMessage]=useState('')
+
   const [values,setValues]=useState({
     emailId:"",
     password:"",
@@ -26,6 +30,20 @@ const [showPassword,setShowPassword]=useState(false)
 
 function handleOnChange(e){
   setValues({...values,[e.currentTarget.name]:e.currentTarget.value})
+}
+
+function TriggerLogin(){
+  const serv=new services();
+  serv.signin(values.emailId,values.password).then(data=>{
+console.log("Success");
+history.push('/profile')
+  }).catch(err=>{
+    setMessage("Incorrect Password Or emailId ")
+    console.log(err)
+    setTimeout(()=>{
+    setMessage(null)
+    },2000)
+  })
 }
 
   return (
@@ -43,7 +61,7 @@ function handleOnChange(e){
           Sign in
         </Typography>
         <Typography className={styles.loginInfo}>Continue to Fundoo</Typography>
-
+        <p className={styles.message} >{message}</p>
         <form action="">
           <Grid
             container
@@ -77,7 +95,7 @@ function handleOnChange(e){
             {showPassword ? <Visibility  className={styles.showPaswordButton}  onClick={()=>{setShowPassword(!showPassword)}} /> : 
             <VisibilityOff className={styles.showPaswordButton}   onClick={()=>{setShowPassword(!showPassword)}}/>}
           </Grid>
-          <Button className={styles.LoginButton}>Log In</Button>
+          <Button onClick={TriggerLogin}  className={styles.LoginButton}>Log In</Button>
         </form>
         <Link className={styles.ForgotPasswordLink} to="/forgotpassword">
           Forgot Password?

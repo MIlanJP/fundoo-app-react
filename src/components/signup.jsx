@@ -235,7 +235,7 @@ export default function Signup() {
         >
           Next
         </Link>
-        <Link className={styles.LoginLink} to="/signin">
+        <Link className={styles.LoginLink} to="/login">
           Sign In Instead
         </Link>
       </CardContent>

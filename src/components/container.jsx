@@ -3,10 +3,12 @@ import React, { Component,useState } from 'react'
 import {Route} from 'react-router-dom'
 import styles from '../css/container.module.scss'
 import Login from './login';
-import signup from './signup'
+import Signup from './signup'
 import Forgotpassword from './forgotpassword'
 import Resetpassword from './resetPassword'
 import Profile from './profile'
+import  ProtectedRoute  from '../services/protected.route';
+import NonProtectedRoute from '../services/unprotected.route'
 
 export default class Container extends Component {
     
@@ -25,11 +27,11 @@ export default class Container extends Component {
     render() {
         return (
             <div className={styles.container}>
-            <Route path='/login' component={()=><Login  setId={this.setId}/>} />
-            <Route path="/signup" component={signup} />
-            <Route path="/forgotpassword" component={Forgotpassword}/>
-            <Route path="/resetpassword" component={Resetpassword}/>
-            <Route path="/profile" component={()=><Profile setId={this.setId}/>}/>
+            <NonProtectedRoute path='/login' component={()=><Login/>} />
+            <NonProtectedRoute path="/signup" component={()=><Signup/>} />
+            <NonProtectedRoute path="/forgotpassword" component={()=><Forgotpassword/>}/>
+        <NonProtectedRoute path="/resetpassword" component={()=><Resetpassword/>}/>
+            <ProtectedRoute path="/profile" component={()=><Profile/>}/>
             </div>
         )
     }

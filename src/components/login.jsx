@@ -14,7 +14,7 @@ import "../css/logo.css";
 import { Link ,useHistory} from "react-router-dom";
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-
+import Auth from "../services/Auth"
 import services from '../services/services'
 
 export default function Login(props) {
@@ -35,8 +35,8 @@ function handleOnChange(e){
 function TriggerLogin(){
   const serv=new services();
   serv.signin(values.emailId,values.password).then(data=>{
-console.log("Success");
-history.push('/profile')
+console.log(data);
+Auth.login(()=>{history.push('/profile')})
   }).catch(err=>{
     setMessage("Incorrect Password Or emailId ")
     console.log(err)

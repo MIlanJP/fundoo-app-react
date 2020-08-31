@@ -15,17 +15,17 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import service from '../services/services'
 import MessageContext from './messagecontext'
 
-export default function ResetPassword() {
+export default function EnterNewPassword() {
   const messages=useContext(MessageContext)
   const history = useHistory();
   const [values, setValues] = useState({
     emailId: "",
-    oldpassword: "",
-    newpassword: "",
+    password: "",
+    confirm: "",
   });
 
-  const [showOldPassword, setShowOldPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
  async function validate(e) {
   ResetPasswordButton();
@@ -34,9 +34,9 @@ export default function ResetPassword() {
         /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(
           values.emailId
         ) &&
-        values.oldpassword !== values.newpassword &&
-        values.oldpassword !== "" &&
-        values.newpassword !== ""
+        values.password === values.confirm &&
+        values.password !== "" &&
+        values.confirm !== ""
       )
     ) {
       e.preventDefault();
@@ -47,18 +47,16 @@ export default function ResetPassword() {
   }
 
  async  function ResetPasswordButton(){
+     console.log(window.location.pathname)
     const serv=new service();
-    serv.signin(values.emailId,values.oldpassword).then(data=>{
-        serv.resetpassword(data.data.id,values.newpassword).then(
+        serv.setNewPassWord(window.location.pathname,values.password).then(
         data=>{console.log(data)
           history.push('/login')
           messages.setMessage("Password is been Sucessfully Reset");
     setTimeout(()=>{messages.setMessage(null)},2000)
-
         }
       )
-      console.log("Printing values")
-    }).catch(err=>{console.log(err)
+    .catch(err=>{console.log(err)
       messages.setMessage("You Have Entered Wrong password");
       setTimeout(()=>{messages.setMessage(null)},2000)
     })
@@ -87,7 +85,7 @@ export default function ResetPassword() {
           ResetPassword
         </Typography>
         <Typography className={styles.loginInfo}>
-          Reset your password
+        Enter New Password
         </Typography>
 
         <form action="">
@@ -100,65 +98,55 @@ export default function ResetPassword() {
             lg={12}
           >
             <TextField
-              className={styles.EmailInput}
-              value={values.emailId}
-              name="emailId"
-              onChange={handleOnChange}
-              fullWidth="true"
-              id="standard-basic"
-              color="secondary"
-              label="Email Id *"
-            />
-            <TextField
               className={styles.PasswordInput}
-              value={values.oldpassword}
-              name="oldpassword"
+              value={values.password}
+              name="password"
               onChange={handleOnChange}
-              type={showOldPassword ? "text" : "password"}
+              type={showPassword ? "text" : "password"}
               fullWidth="true"
               id="standard-basic"
               color="secondary"
-              label="Old Password *"
+              label="Password *"
             />
-            {showOldPassword ? (
+            {showPassword ? (
               <Visibility
                 className={styles.showPaswordButton}
                 onClick={() => {
-                  setShowOldPassword(!showOldPassword);
+                  setShowPassword(!showPassword);
                 }}
               />
             ) : (
               <VisibilityOff
                 className={styles.showPaswordButton}
                 onClick={() => {
-                  setShowOldPassword(!showOldPassword);
+                  setShowPassword(!showPassword);
                 }}
               />
             )}
 
             <TextField
               className={styles.PasswordInput}
-              value={values.newpassword}
-              name="newpassword"
+              value={values.confirm}
+              name="confirm"
               onChange={handleOnChange}
               fullWidth="true"
               id="standard-basic"
               color="secondary"
-              type={showNewPassword ? "text" : "password"}
-              label="New Password *"
+              type={showConfirmPassword ? "text" : "password"}
+              label="Confirm Password *"
             />
-            {showNewPassword ? (
+            {showConfirmPassword ? (
               <Visibility
                 className={styles.showPaswordButton}
                 onClick={() => {
-                  setShowNewPassword(!showNewPassword);
+                  setShowConfirmPassword(!showConfirmPassword);
                 }}
               />
             ) : (
               <VisibilityOff
                 className={styles.showPaswordButton}
                 onClick={() => {
-                  setShowNewPassword(!showNewPassword);
+                  setShowConfirmPassword(!showConfirmPassword);
                 }}
               />
             )}

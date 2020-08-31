@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Header from "./header";
-import { Link,useHistory  } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import secureLogo from "../Assets/img/account.svg";
 import styles from "../scss/signup.module.scss";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import axios from "axios";
-import signUpRequest from '../services/services'
+import signUpRequest from "../services/services";
+import MessageContext from "./messagecontext";
+
 import {
   Card,
   CardContent,
@@ -23,6 +25,8 @@ const inputProps = {
 };
 
 export default function Signup() {
+  const messages = useContext(MessageContext);
+
   const history = useHistory();
   const [values, setValues] = useState({
     firstname: "",
@@ -41,8 +45,8 @@ export default function Signup() {
   // })
 
   const [paswordVisibilty, setPasswordVisibility] = useState(true);
-  const[link, setLink]=useState('/signup');
-  const[helperText, setHelperText]= useState('')
+  const [link, setLink] = useState("/signup");
+  const [helperText, setHelperText] = useState("");
 
   const [validationStatus, setValidationStatus] = useState({
     firstname: false,
@@ -52,8 +56,7 @@ export default function Signup() {
     confirm: false,
   });
 
-   function onInputClick(e,callback) {
-     
+  function onInputClick(e, callback) {
     if (
       !(
         !validationStatus.firstname &&
@@ -71,35 +74,43 @@ export default function Signup() {
       e.preventDefault();
       // return;
     }
-   return  callback(e);
+    return callback(e);
 
     // axios.get("http://fundoonotes.incubation.bridgelabz.com/api/user/userSignUp")
     // .then(data=>{console.log(data)})
- 
   }
 
-  function fetchdata(e){
-      const signUPREQ= new signUpRequest();
-      signUPREQ.signup(values.firstname,values.secondname,values.emailId,values.password).then(
-       data=>
-       {
-         history.push("/login");
-      //  setLink('/login')
-        
+  function fetchdata(e) {
+    const signUPREQ = new signUpRequest();
+    signUPREQ
+      .signup(
+        values.firstname,
+        values.secondname,
+        values.emailId,
+        values.password
+      )
+      .then((data) => {
+        history.push("/login");
+        messages.setMessage("Congrats!! you Have successfully Registered");
+        setTimeout(() => {
+          messages.setMessage(null);
+        }, 2000);
+        //  setLink('/login')
+      })
+      .catch((err) => {
+        //  setLink('/signup')
+        e.preventDefault();
+        setHelperText("Email Id is Already Taken");
+        if (validationStatus.emailId === false) {
+          validationStatus.emailId = true;
         }
-     ).catch(err=>{
-      //  setLink('/signup')
-       e.preventDefault();
-     setHelperText("Email Id is Already Taken")
-     if(validationStatus.emailId===false){
-       validationStatus.emailId=true;
-     }
-    //  history.push("/signup");
-     setTimeout(()=>{setHelperText("");
-     validationStatus.emailId=false;
-   },2000)
-   return false;
-     })
+        //  history.push("/signup");
+        setTimeout(() => {
+          setHelperText("");
+          validationStatus.emailId = false;
+        }, 2000);
+        return false;
+      });
   }
 
   function handleOnChange(e) {
@@ -162,7 +173,7 @@ export default function Signup() {
               id="outlined-basic"
               label="First name"
               error={validationStatus.firstname}
-              helperText=''
+              helperText=""
               variant="outlined"
             />
           </Grid>
@@ -228,7 +239,7 @@ export default function Signup() {
         </Grid>
         <Link
           onClick={(e) => {
-            onInputClick(e,fetchdata);
+            onInputClick(e, fetchdata);
           }}
           className={styles.SignUpButton}
           to={link}

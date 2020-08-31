@@ -25,6 +25,38 @@ export default class Service {
       },
     });
   }
+
+  resetpassword(accessToken,newPassword){
+    return axios({
+      method:"POST",
+      url:`http://fundoonotes.incubation.bridgelabz.com/api/user/reset-password?access_token=${accessToken}`,
+      data:{
+        newPassword
+      }
+    })
+  }
+
+  recoverEmailID(email){
+    return axios({
+      method:"POST",
+      url:`http://fundoonotes.incubation.bridgelabz.com/api/user/reset`,
+      data:{
+        email
+      }
+    })
+  }
+
+  setNewPassWord(url,password){
+    return axios({
+      method:"POST",
+      url:`http://localhost:4200${url}`,
+      data:{
+        password
+      }
+    })
+  }
+
+
 }
 
 // const data=Signup();

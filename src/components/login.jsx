@@ -1,4 +1,4 @@
-import React,{ useState } from "react";
+import React,{ useState,useContext } from "react";
 import {
   Card,
   CardContent,
@@ -16,8 +16,10 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Auth from "../services/Auth"
 import services from '../services/services'
+import MessageContext from './messagecontext'
 
 export default function Login(props) {
+  const message1=useContext(MessageContext)
   const history = useHistory();
   const[message,setMessage]=useState('')
 
@@ -29,13 +31,20 @@ export default function Login(props) {
 const [showPassword,setShowPassword]=useState(false)
 
 function handleOnChange(e){
+  const val=e.currentTarget.value
   setValues({...values,[e.currentTarget.name]:e.currentTarget.value})
+
 }
 
 function TriggerLogin(){
   const serv=new services();
   serv.signin(values.emailId,values.password).then(data=>{
 console.log(data);
+message1.setMessage("You Have Logged In Sucessfully")
+setTimeout(()=>{
+message1.setMessage(null)
+
+},2000)
 Auth.login(()=>{history.push('/profile')})
   }).catch(err=>{
     setMessage("Incorrect Password Or emailId ")

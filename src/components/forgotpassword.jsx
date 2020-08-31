@@ -1,5 +1,8 @@
-import React,{useState} from 'react'
+import React,{useState,useContext} from 'react'
 import styles from "../scss/login.module.scss";
+import MessageContext from './messagecontext'
+import {useHistory} from 'react-router-dom'
+
 import {
     Card,
     CardContent,
@@ -10,8 +13,10 @@ import {
   } from "@material-ui/core";
   import "../css/logo.css";
   import { Link } from "react-router-dom";
-
+import service from '../services/services'
 export default function Forgotpassword() {
+  const messages=useContext(MessageContext)
+const history = useHistory();
     const [values,setValues]=useState({
         emailId:"",
         password:"",
@@ -21,6 +26,25 @@ export default function Forgotpassword() {
       setValues({...values,[e.currentTarget.name]:e.currentTarget.value})
     }
     
+    function handleOnClick(){
+      const serv=new service();
+      serv.recoverEmailID(values.emailId).then(
+        data=>{
+          console.log("Email ID present")
+          console.log(data.data.message)
+          history.push("/login");
+          messages.setMessage(data.data.message);
+          setTimeout(()=>{messages.setMessage(null)},2000)
+        }
+      ).catch(err => 
+        {
+          
+          messages.setMessage("Your Email ID is not found");
+          setTimeout(()=>{messages.setMessage(null)},2000)
+        }
+        )
+    }
+
     return (
         <Card className={styles.mainLogo} justify="center" boxShadow={3}>
         <CardContent>
@@ -61,7 +85,7 @@ export default function Forgotpassword() {
           <Link className={styles.goBackButton} to="/login">
            Back
           </Link>
-          <Link className={styles.findEmail} to="/login">
+          <Link onClick={handleOnClick}  className={styles.findEmail}>
           Next
         </Link>
         </CardContent>

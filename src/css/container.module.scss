@@ -4,3 +4,45 @@
     align-items: center;
     justify-content: center;
 }
+.messages{
+    position:absolute;
+    top:30px;
+  background-color:red;
+    height:60px;
+    left:calc(50vw - 100px);
+    width:200px;
+    color:white;
+    z-index: 10;
+  }
+  .greenmessage{
+    position:absolute;
+    top:30px;
+  background-color:green;
+    height:60px;
+    left:calc(50vw - 100px);
+    width:200px;
+    color:white;
+    z-index: 10;
+  
+}
+
+  .registeredMessage{
+    position:absolute;
+    top:30px;
+  background-color:rgb(0, 47, 255);
+    height:60px;
+    left:calc(50vw - 100px);
+    width:200px;
+    color:white;
+    z-index: 10;
+  }
+  .resetpasswordMessage{
+    position:absolute;
+    top:30px;
+  background-color:rgb(255, 251, 0);
+    height:60px;
+    left:calc(50vw - 100px);
+    width:200px;
+    color:black;
+    z-index: 10;
+  }

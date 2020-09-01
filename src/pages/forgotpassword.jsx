@@ -30,13 +30,15 @@ export default function Forgotpassword() {
     service
       .recoverEmailID(values.emailId)
       .then((data) => {
-        console.log(data)
-        history.push("/login");
-        messages.setMessage(data.data.message);
-        messages.setSnackBar(true);
+        if(data.status===200){
+          history.push("/login");
+          messages.setMessage(data.data.message);
+          messages.setSnackBar(true);
+        }else{
+        messages.setMessage("Some Error Occured while processing request");
+        messages.setSnackBar(true);}
       })
-      .catch((err) => {
-        console.log({err})
+      .catch(() => {
         messages.setMessage("Your Email ID is not found");
         messages.setSnackBar(true);
       });

@@ -42,7 +42,6 @@ export default function Login(props) {
     services.signIn(data)
       .then((data) => {
         if(data.status===200){
-      
         localStorage.setItem("token",data.data.id)
         message1.setMessage("You Have Logged In Sucessfully");
         message1.setSnackBar(true);

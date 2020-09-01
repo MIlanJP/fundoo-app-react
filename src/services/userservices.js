@@ -9,7 +9,6 @@ const apicall = (data, url, method) => {
         resolve(response);
       })
       .catch((err) => {
-        console.log({err});
         reject(err);
       });
   });

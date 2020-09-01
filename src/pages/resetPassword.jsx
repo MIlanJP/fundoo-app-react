@@ -46,11 +46,17 @@ export default function ResetPassword() {
   async function ResetPasswordButton() {
     service
       .setNewPassWord(window.location.pathname, values.oldpassword)
-      .then(() => {
+      .then((data) => {
+        console.log(data)
+        if(data.status===204){
         history.push("/login");
         messages.setMessage("Password is been Sucessfully Reset");
         messages.setSnackBar(true);
-      })
+       }else{
+        messages.setMessage("Some Error Occured while processing request");
+        messages.setSnackBar(true);
+       }
+       })
       .catch(() => {
         messages.setMessage("Error Occured while resetting password");
         messages.setSnackBar(true);

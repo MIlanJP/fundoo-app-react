@@ -5,6 +5,7 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import signUpRequest from "../services/userservices";
 import MessageContext from "../components/messagecontext";
+import Validation from '../services/validation'
 
 import {
   Card,
@@ -97,25 +98,28 @@ export default function Signup() {
     const name1 = e.currentTarget.name;
     const val1 = e.currentTarget.value;
     if (name1 === "firstname") {
-      setValidationStatus({ ...validationStatus, [name1]: val1.length < 5 });
+      setValidationStatus({ ...validationStatus, [name1]: !Validation.vallidateName(val1) });
     } else if (name1 === "secondname") {
-      setValidationStatus({ ...validationStatus, [name1]: val1.length < 5 });
+      setValidationStatus({ ...validationStatus, [name1]:!Validation.vallidateName(val1)  });
     } else if (name1 === "emailId") {
       setValidationStatus({
         ...validationStatus,
-        [name1]: !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(val1),
+        [name1]: !Validation.validateEmail(val1),
       });
     } else if (name1 === "password") {
       setValidationStatus({
         ...validationStatus,
-        [name1]: !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/.test(val1),
+        [name1]: !Validation.validatePassword(val1),
       }
       );
     } else if (name1 === "confirm") {
       setValidationStatus({
         ...validationStatus,
         [name1]: !(values.password === val1),
+        
       });
+      
+
     }
   }
 

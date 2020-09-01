@@ -22,12 +22,13 @@ export default class App extends Component {
         "You Have Logged In Sucessfully":"success",
         "Incorrect Password or emailId":"error",
         "you Have successfully logged out":"error",
-        "Password is been Sucessfully Reset":"warning",
+        "Password is been Sucessfully Reset":"sucess",
         "Congrats!! you Have successfully Registered":"success",
         "You Have Entered Wrong password":"error",
-        "Set password link sent to you registered email, please check.":"success",
+        "Set password link sent to you registered email, please check.":"warning",
         "Your Email ID is not found":"error",
-        "Email ID is already taken" :"error"
+        "Email ID is already taken" :"error",
+        "Some Error Occured while processing request":"error"
       }
       
     };
@@ -58,39 +59,7 @@ export default class App extends Component {
         }}
       >
         <Snackbars type={this.state.messagesList[this.state.message]} 
-        message={this.state.message}/>
-{/* 
-        {this.state.message === "You Have Logged In Sucessfully" && (
-          <div className={styles.greenmessage}>{this.state.message}</div>
-        )}
-          {this.state.message === "Incorrect Password or emailId" && (
-          <div className={styles.messages}>{this.state.message}</div>
-        )}
-        {this.state.message === "you Have successfully logged out" && (
-          <div className={styles.messages}>{this.state.message}</div>
-        )}
-        {this.state.message === "Password is been Sucessfully Reset" && (
-          <div className={styles.resetpasswordMessage}>
-            {this.state.message}
-          </div>
-        )}
-        {this.state.message ===
-          "Congrats!! you Have successfully Registered" && (
-          <div className={styles.registeredMessage}>{this.state.message}</div>
-        )}
-        {this.state.message === "You Have Entered Wrong password" && (
-          <div className={styles.messages}>{this.state.message}</div>
-        )}
-        {this.state.message ===
-          "Set password link sent to you registered email, please check." && (
-          <div className={styles.greenmessage}>{this.state.message}</div>
-        )}
-        {this.state.message === "Your Email ID is not found" && (
-          <div className={styles.messages}>{this.state.message}</div>
-        )}
-        {this.state.message === "Email ID is already taken" && (
-          <div className={styles.messages}>{this.state.message}</div>
-        )} */}
+        message={this.state.message} show={this.state.showSnackBar}  />
         <div className={styles.container}>
           <Route path="/login" component={() => <Login />} />
           <Route path="/signup" component={() => <Signup />} />

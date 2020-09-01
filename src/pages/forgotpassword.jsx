@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import "../css/logo.css";
 import { Link } from "react-router-dom";
-import service from "../services/services";
+import service from "../services/userservices";
 import Logo from "../components/Logo";
 export default function Forgotpassword() {
   const messages = useContext(MessageContext);
@@ -27,21 +27,18 @@ export default function Forgotpassword() {
   }
 
   function handleOnClick() {
-    const serv = new service();
-    serv
+    service
       .recoverEmailID(values.emailId)
       .then((data) => {
+        console.log(data)
         history.push("/login");
         messages.setMessage(data.data.message);
-        setTimeout(() => {
-          messages.setMessage(null);
-        }, 2000);
+        messages.setSnackBar(true);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log({err})
         messages.setMessage("Your Email ID is not found");
-        setTimeout(() => {
-          messages.setMessage(null);
-        }, 2000);
+        messages.setSnackBar(true);
       });
   }
 

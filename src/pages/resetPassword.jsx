@@ -1,22 +1,22 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import {
   Card,
   CardContent,
   Typography,
   TextField,
   Grid,
-  Button,
 } from "@material-ui/core";
 import styles from "../scss/login.module.scss";
 import "../css/logo.css";
-import { Link,useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import service from '../services/services'
-import MessageContext from './messagecontext'
+import service from "../services/services";
+import MessageContext from "../components/messagecontext";
+import Logo from "../components/Logo";
 
 export default function ResetPassword() {
-  const messages=useContext(MessageContext)
+  const messages = useContext(MessageContext);
   const history = useHistory();
   const [values, setValues] = useState({
     emailId: "",
@@ -27,41 +27,39 @@ export default function ResetPassword() {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
- async function validate(e) {
-  ResetPasswordButton();
+  async function validate(e) {
+    ResetPasswordButton();
     if (
       !(
         /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(
           values.emailId
         ) &&
-        values.oldpassword !== values.newpassword &&
+        values.oldpassword === values.newpassword &&
         values.oldpassword !== "" &&
         values.newpassword !== ""
       )
     ) {
       e.preventDefault();
     }
-
-    
-
   }
 
- async  function ResetPasswordButton(){
-    const serv=new service();
-    serv.signin(values.emailId,values.oldpassword).then(data=>{
-        serv.resetpassword(data.data.id,values.newpassword).then(
-        data=>{console.log(data)
-          history.push('/login')
-          messages.setMessage("Password is been Sucessfully Reset");
-    setTimeout(()=>{messages.setMessage(null)},2000)
-
-        }
-      )
-      console.log("Printing values")
-    }).catch(err=>{console.log(err)
-      messages.setMessage("You Have Entered Wrong password");
-      setTimeout(()=>{messages.setMessage(null)},2000)
-    })
+  async function ResetPasswordButton() {
+    const serv = new service();
+    serv
+      .setNewPassWord(window.location.pathname, values.oldpassword)
+      .then(() => {
+        history.push("/login");
+        messages.setMessage("Password is been Sucessfully Reset");
+        setTimeout(() => {
+          messages.setMessage(null);
+        }, 2000);
+      })
+      .catch(() => {
+        messages.setMessage("Error Occured while resetting password");
+        setTimeout(() => {
+          messages.setMessage(null);
+        }, 2000);
+      });
   }
 
   function handleOnChange(e) {
@@ -74,41 +72,20 @@ export default function ResetPassword() {
       justify="center"
       boxShadow={3}
     >
-      <CardContent>
-        <Typography className="Logo" variant="h5">
-          <span className="f-red">F</span>
-          <span className="u-blue">u</span>
-          <span className="n-yellow">n</span>
-          <span className="d-red">d</span>
-          <span className="o-green">o</span>
-          <span className="o-blue">o</span>
-        </Typography>
-        <Typography className={styles.signInLabel} m={3} variant="h5">
-          ResetPassword
-        </Typography>
-        <Typography className={styles.loginInfo}>
-          Reset your password
+      <CardContent className={styles.resetCard}>
+        <Logo />
+        <Typography className={styles.resetLabel} m={3} variant="h5">
+          Reset Password
         </Typography>
 
         <form action="">
           <Grid
             container
-            direction="column"
+            direction="row"
             justify="center"
             alignItems="center"
-            spacing={3}
-            lg={12}
+            spacing={1}
           >
-            <TextField
-              className={styles.EmailInput}
-              value={values.emailId}
-              name="emailId"
-              onChange={handleOnChange}
-              fullWidth="true"
-              id="standard-basic"
-              color="secondary"
-              label="Email Id *"
-            />
             <TextField
               className={styles.PasswordInput}
               value={values.oldpassword}
@@ -117,8 +94,11 @@ export default function ResetPassword() {
               type={showOldPassword ? "text" : "password"}
               fullWidth="true"
               id="standard-basic"
-              color="secondary"
-              label="Old Password *"
+              autoComplete="off"
+              helperText="Enter your New Password"
+              color="primary"
+              label="Password *"
+              variant="outlined"
             />
             {showOldPassword ? (
               <Visibility
@@ -142,10 +122,12 @@ export default function ResetPassword() {
               name="newpassword"
               onChange={handleOnChange}
               fullWidth="true"
+              helperText="Confirm your the password again"
               id="standard-basic"
-              color="secondary"
+              color="primary"
               type={showNewPassword ? "text" : "password"}
-              label="New Password *"
+              label="Confirm Password *"
+              variant="outlined"
             />
             {showNewPassword ? (
               <Visibility
@@ -163,15 +145,11 @@ export default function ResetPassword() {
               />
             )}
           </Grid>
-          <Link
-            onClick={validate}
-            className={styles.ResetPasswordButton}
-           
-          >
+          <Link onClick={validate} className={styles.ResetPasswordButton}>
             Reset Password
           </Link>
           <Link to="/login" className={styles.GoBack}>
-            go back
+            go back to Sign page
           </Link>
         </form>
       </CardContent>

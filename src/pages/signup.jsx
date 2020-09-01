@@ -1,28 +1,20 @@
 import React, { useState, useContext } from "react";
-import Header from "./header";
 import { Link, useHistory } from "react-router-dom";
-import secureLogo from "../Assets/img/account.svg";
 import styles from "../scss/signup.module.scss";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import axios from "axios";
 import signUpRequest from "../services/services";
-import MessageContext from "./messagecontext";
+import MessageContext from "../components/messagecontext";
 
 import {
   Card,
   CardContent,
   Grid,
   Typography,
-  Box,
   TextField,
-  Button,
 } from "@material-ui/core";
 import "../css/logo.css";
-
-const inputProps = {
-  step: 300,
-};
+import Logo from "./../components/Logo";
 
 export default function Signup() {
   const messages = useContext(MessageContext);
@@ -36,16 +28,7 @@ export default function Signup() {
     confirm: "",
   });
 
-  // const [helperText]=useState({
-  //   firstname:"First Name Must have least 5 Character",
-  //   secondname:"Second Name Must have least 5 Character",
-  //   emailId:false,
-  //   password:false,
-  //   confirm:false
-  // })
-
   const [paswordVisibilty, setPasswordVisibility] = useState(true);
-  const [link, setLink] = useState("/signup");
   const [helperText, setHelperText] = useState("");
 
   const [validationStatus, setValidationStatus] = useState({
@@ -72,39 +55,39 @@ export default function Signup() {
       )
     ) {
       e.preventDefault();
-      // return;
+    } else {
+      return callback(e);
     }
-    return callback(e);
-
-    // axios.get("http://fundoonotes.incubation.bridgelabz.com/api/user/userSignUp")
-    // .then(data=>{console.log(data)})
   }
 
   function fetchdata(e) {
     const signUPREQ = new signUpRequest();
+    const data = {
+      firstName: values.firstname,
+      lastName: values.secondname,
+      email: values.emailId,
+      password: values.password,
+      service: "advance",
+    };
     signUPREQ
-      .signup(
-        values.firstname,
-        values.secondname,
-        values.emailId,
-        values.password
-      )
-      .then((data) => {
+      .signup(data)
+      .then(() => {
         history.push("/login");
         messages.setMessage("Congrats!! you Have successfully Registered");
         setTimeout(() => {
           messages.setMessage(null);
         }, 2000);
-        //  setLink('/login')
       })
-      .catch((err) => {
-        //  setLink('/signup')
+      .catch(() => {
         e.preventDefault();
+        messages.setMessage("Email ID is already taken");
+        setTimeout(() => {
+          messages.setMessage(null);
+        }, 2000);
         setHelperText("Email Id is Already Taken");
         if (validationStatus.emailId === false) {
           validationStatus.emailId = true;
         }
-        //  history.push("/signup");
         setTimeout(() => {
           setHelperText("");
           validationStatus.emailId = false;
@@ -130,7 +113,8 @@ export default function Signup() {
       setValidationStatus({
         ...validationStatus,
         [name1]: !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/.test(val1),
-      });
+      }
+      );
     } else if (name1 === "confirm") {
       setValidationStatus({
         ...validationStatus,
@@ -142,14 +126,9 @@ export default function Signup() {
   return (
     <Card className={styles.signUpCard}>
       <CardContent>
-        <Typography className={`Logo ${styles.Logo}`} variant="h5">
-          <span className="f-red">F</span>
-          <span className="u-blue">u</span>
-          <span className="n-yellow">n</span>
-          <span className="d-red">d</span>
-          <span className="o-green">o</span>
-          <span className="o-blue">o</span>
-        </Typography>
+        <div className={styles.signupLogoLabel}>
+        <Logo  />
+        </div>
         <Typography variant="h5" className={styles.signUpLabel}>
           Create your Fundoo Account
         </Typography>
@@ -169,11 +148,12 @@ export default function Signup() {
               onChange={handleOnChange}
               value={values.firstname}
               fullWidth="true"
-              inputProps={inputProps}
+             
+              autoComplete="off"
               id="outlined-basic"
               label="First name"
               error={validationStatus.firstname}
-              helperText=""
+              helperText="Enter First Name"
               variant="outlined"
             />
           </Grid>
@@ -184,7 +164,9 @@ export default function Signup() {
               value={values.secondname}
               fullWidth="true"
               id="outlined-basic"
+              autoComplete="off"
               label="Second name"
+              helperText="Enter Last Name"
               error={validationStatus.secondname}
               variant="outlined"
             />
@@ -199,10 +181,20 @@ export default function Signup() {
               helperText={helperText}
               id="outlined-basic"
               label="Email Id"
+              helperText="Enter valid Email ID"
+              autoComplete="off"
               variant="outlined"
             />
           </Grid>
-          <Grid item xs={6} className={styles.gridItem}>
+          <div className={styles.passwordBlock}>
+          <Grid
+            container
+            spacing={1}
+            direction="row"
+            justify="flex-start"
+            alignItems="flex-start"
+          >
+                      <Grid item sm={6} s={12} xs={12} className={styles.gridItem}>
             <TextField
               name="password"
               onChange={handleOnChange}
@@ -212,10 +204,12 @@ export default function Signup() {
               error={validationStatus.password}
               id="outlined-basic"
               label="Password"
+              autoComplete="off"
+              helperText="Password must atleast contain alteast 8 character 1 Uppercase 1 special character 1 digit"
               variant="outlined"
             />
           </Grid>
-          <Grid item xs={5} className={styles.gridItem}>
+          <Grid item xs={11} s={11}  sm={5} className={styles.gridItem ,styles.gridConfirm}>
             <TextField
               name="confirm"
               value={values.confirm}
@@ -224,11 +218,14 @@ export default function Signup() {
               error={validationStatus.confirm}
               fullWidth="true"
               id="outlined-basic"
+              helperText="Confirm   the   password    must   match    the   entered    password                                          "
               label="Confirm"
+              autoComplete="off"
               variant="outlined"
             />
           </Grid>
           <Grid
+          className={styles.signUpVisibility}
             xs={1}
             onClick={() => {
               setPasswordVisibility(!paswordVisibilty);
@@ -236,13 +233,14 @@ export default function Signup() {
           >
             {paswordVisibilty ? <VisibilityOff /> : <Visibility />}
           </Grid>
+          </Grid>
+        </div>
         </Grid>
         <Link
           onClick={(e) => {
             onInputClick(e, fetchdata);
           }}
           className={styles.SignUpButton}
-          to={link}
         >
           Next
         </Link>
@@ -253,4 +251,3 @@ export default function Signup() {
     </Card>
   );
 }
-// <img className={styles.signupLogo} src={secureLogo} />

@@ -6,6 +6,16 @@ $font: 'Montserrat', sans-serif;
     height:40%;
 }
 
+.signupLogoLabel{
+    position:relative ;
+    left:5% ;
+}
+.gridConfirm{
+    position: relative;
+    height:auto;
+    width:auto;
+}
+
 .Logo{
     text-align: left;
     padding-left:40px;
@@ -29,6 +39,8 @@ $font: 'Montserrat', sans-serif;
     left:calc(50% - 200px);
 }
 }
+
+
 
 .signUpLabel{
     position: relative;
@@ -54,7 +66,7 @@ $font: 'Montserrat', sans-serif;
 .SignUpButton{
     position: relative;
     top:110px;;
-    right:-50%;
+    right:calc(-90% + 50px);
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
     color:white;
@@ -68,7 +80,17 @@ $font: 'Montserrat', sans-serif;
 .LoginLink{
     position: relative;
     top:110px;;
-    left:-40%;
+    // left:%;
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
+}
+
+.signUpVisibility{
+position: relative;
+padding-top:20px;
+left:1%;
+}
+.passwordBlock{
+position: relative;
+left:2%;
 }

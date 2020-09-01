@@ -32,10 +32,33 @@ a{
     margin-bottom:20px;
    width:95%;
   }
+  
+
+  .recoverEmailLabel{
+    position: relative;
+    top:50px;
+left:30%;
+    font-size:1rem;
+  }
 
   .signInLabel{
     position: relative;
     top: 30px;
+    left: 40%;;
+    font-size: 1.7rem;
+    font-weight: 700;
+  }
+
+  .findEmailLabel{
+    position: relative;
+    top: 20px;
+    left: 28%;;
+  }
+
+  .resetLabel{
+    position: relative;
+    top: 30px;
+    left: 20%;;
     font-size: 1.7rem;
     font-weight: 700;
   }
@@ -43,6 +66,8 @@ a{
   .loginInfo{
     position: relative;
     top:60px;
+    left: 24%;;
+
     font-size:1.5rem;
   }
 
@@ -55,22 +80,23 @@ a{
   background-color:blue;
   color:white;
   text-transform: capitalize;
-  left:35%;
+  left:70%;
   font-size: .8rem;
   font-weight: 400;
+  border-radius: 4px;
   &:hover{
     background-color:rgba(15, 15, 240, 0.698);
   }
 }
 .ForgotPasswordLink{
   position: relative;
-  top:63px;
-  right:1.5%;  
+  top:40px;
+  left:1.5%;  
 }
 .CreateAccountLink{
   position: relative; 
-  top:95px;
-  right:66%; 
+  top:70px;
+  left:-32%; 
 }
 .ResetPasswordLink{
   position: relative;
@@ -85,14 +111,25 @@ a{
   min-height: 500px;;
 }
 
+.resetCard{
 
+  position: relative;
+  left:5%;
+ width:80%;
+}
 
 @media screen and (max-width:1250px){
   .mainLogo {
     left: calc(50% - 200px);
   }
+
 }
 
+
+.LoginLogo{
+  position: relative;
+  left:40%;
+}
 
 // Forgot Email Section
 
@@ -113,13 +150,13 @@ right:25px;
   font-size: .85rem;
   position: relative;
   top:100px;
-  left:-62%
+  left:-55%
 }
 
 .ResetPasswordButton{
   position: relative;
   top:100px;;
-  left:30%;
+  left:60%;
   color:white;
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
@@ -130,9 +167,28 @@ right:25px;
 background-color:rgb(26,115,232);
 }
 
+.LoginLogo{
+  // position: relative;
+  align-items: center;
+  justify-content: center;
+}
+
 .showPaswordButton{
   position:relative;
-  top:30px;
+  top:0px;
+  margin-left:auto;
+  padding-right:20px;
+  transition: 0.25s;
+
+  &:hover{
+    color:rgb(185, 185, 185);
+    transition: 0.25s;
+  }
+}
+
+.showPaswordButtonForSignin{
+  position:relative;
+  top:20px;
   margin-left:auto;
   padding-right:20px;
   transition: 0.25s;

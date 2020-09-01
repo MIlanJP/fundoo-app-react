@@ -5,7 +5,7 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import signUpRequest from "../services/userservices";
 import MessageContext from "../components/messagecontext";
-import Validation from '../services/validation'
+import Validation from "../services/validation";
 
 import {
   Card,
@@ -56,7 +56,7 @@ export default function Signup() {
       )
     ) {
       e.preventDefault();
-      return
+      return;
     } else {
       return callback(e);
     }
@@ -98,9 +98,15 @@ export default function Signup() {
     const name1 = e.currentTarget.name;
     const val1 = e.currentTarget.value;
     if (name1 === "firstname") {
-      setValidationStatus({ ...validationStatus, [name1]: !Validation.vallidateName(val1) });
+      setValidationStatus({
+        ...validationStatus,
+        [name1]: !Validation.vallidateName(val1),
+      });
     } else if (name1 === "secondname") {
-      setValidationStatus({ ...validationStatus, [name1]:!Validation.vallidateName(val1)  });
+      setValidationStatus({
+        ...validationStatus,
+        [name1]: !Validation.vallidateName(val1),
+      });
     } else if (name1 === "emailId") {
       setValidationStatus({
         ...validationStatus,
@@ -110,16 +116,12 @@ export default function Signup() {
       setValidationStatus({
         ...validationStatus,
         [name1]: !Validation.validatePassword(val1),
-      }
-      );
+      });
     } else if (name1 === "confirm") {
       setValidationStatus({
         ...validationStatus,
         [name1]: !(values.password === val1),
-        
       });
-      
-
     }
   }
 
@@ -127,7 +129,7 @@ export default function Signup() {
     <Card className={styles.signUpCard}>
       <CardContent>
         <div className={styles.signupLogoLabel}>
-        <Logo  />
+          <Logo />
         </div>
         <Typography variant="h5" className={styles.signUpLabel}>
           Create your Fundoo Account
@@ -148,7 +150,6 @@ export default function Signup() {
               onChange={handleOnChange}
               value={values.firstname}
               fullWidth={true}
-             
               autoComplete="off"
               id="outlined-basic"
               label="First name"
@@ -187,54 +188,60 @@ export default function Signup() {
             />
           </Grid>
           <div className={styles.passwordBlock}>
-          <Grid
-            container
-            spacing={1}
-            direction="row"
-            justify="flex-start"
-            alignItems="flex-start"
-          >
-                      <Grid item sm={6} s={12} xs={12} className={styles.gridItem}>
-            <TextField
-              name="password"
-              onChange={handleOnChange}
-              value={values.password}
-              fullWidth={true}
-              type={paswordVisibilty ? "password" : "text"}
-              error={validationStatus.password}
-              id="outlined-basic"
-              label="Password"
-              autoComplete="off"
-              helperText="Password must atleast contain alteast 8 character 1 Uppercase 1 special character 1 digit"
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item xs={11} s={11}  sm={5} className={styles.gridItem , styles.gridConfirm}>
-            <TextField
-              name="confirm"
-              value={values.confirm}
-              onChange={handleOnChange}
-              type={paswordVisibilty ? "password" : "text"}
-              error={validationStatus.confirm}
-              fullWidth={true}
-              id="outlined-basic"
-              helperText="Confirm   the   password    must   match    the   entered    password   "
-              label="Confirm"
-              autoComplete="off"
-              variant="outlined"
-            />
-          </Grid>
-          <Grid
-          className={styles.signUpVisibility}
-            xs={1}
-            onClick={() => {
-              setPasswordVisibility(!paswordVisibilty);
-            }}
-          >
-            {paswordVisibilty ? <VisibilityOff /> : <Visibility />}
-          </Grid>
-          </Grid>
-        </div>
+            <Grid
+              container
+              spacing={1}
+              direction="row"
+              justify="flex-start"
+              alignItems="flex-start"
+            >
+              <Grid item sm={6} s={12} xs={12} className={styles.gridItem}>
+                <TextField
+                  name="password"
+                  onChange={handleOnChange}
+                  value={values.password}
+                  fullWidth={true}
+                  type={paswordVisibilty ? "password" : "text"}
+                  error={validationStatus.password}
+                  id="outlined-basic"
+                  label="Password"
+                  autoComplete="off"
+                  helperText="Password must atleast contain alteast 8 character 1 Uppercase 1 special character 1 digit"
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid
+                item
+                xs={11}
+                s={11}
+                sm={5}
+                className={(styles.gridItem, styles.gridConfirm)}
+              >
+                <TextField
+                  name="confirm"
+                  value={values.confirm}
+                  onChange={handleOnChange}
+                  type={paswordVisibilty ? "password" : "text"}
+                  error={validationStatus.confirm}
+                  fullWidth={true}
+                  id="outlined-basic"
+                  helperText="Confirm   the   password    must   match    the   entered    password   "
+                  label="Confirm"
+                  autoComplete="off"
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid
+                className={styles.signUpVisibility}
+                xs={1}
+                onClick={() => {
+                  setPasswordVisibility(!paswordVisibilty);
+                }}
+              >
+                {paswordVisibilty ? <VisibilityOff /> : <Visibility />}
+              </Grid>
+            </Grid>
+          </div>
         </Grid>
         <Link
           onClick={(e) => {

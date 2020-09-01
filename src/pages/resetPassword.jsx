@@ -11,7 +11,7 @@ import "../css/logo.css";
 import { Link, useHistory } from "react-router-dom";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import service from "../services/services";
+import service from "../services/userservices";
 import MessageContext from "../components/messagecontext";
 import Logo from "../components/Logo";
 
@@ -44,21 +44,22 @@ export default function ResetPassword() {
   }
 
   async function ResetPasswordButton() {
-    const serv = new service();
-    serv
+    service
       .setNewPassWord(window.location.pathname, values.oldpassword)
-      .then(() => {
+      .then((data) => {
+        console.log(data)
+        if(data.status===204){
         history.push("/login");
         messages.setMessage("Password is been Sucessfully Reset");
-        setTimeout(() => {
-          messages.setMessage(null);
-        }, 2000);
-      })
+        messages.setSnackBar(true);
+       }else{
+        messages.setMessage("Some Error Occured while processing request");
+        messages.setSnackBar(true);
+       }
+       })
       .catch(() => {
         messages.setMessage("Error Occured while resetting password");
-        setTimeout(() => {
-          messages.setMessage(null);
-        }, 2000);
+        messages.setSnackBar(true);
       });
   }
 

@@ -14,10 +14,9 @@ export default function Profile() {
         onClick={() => {
           Auth.logout(() => {
             history.push("/login");
+            localStorage.removeItem('token')
             messages.setMessage("you Have successfully logged out");
-            setTimeout(() => {
-              messages.setMessage(null);
-            }, 2000);
+            messages.setSnackBar(true);
           });
         }}
       >

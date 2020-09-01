@@ -13,7 +13,7 @@ import { Link, useHistory } from "react-router-dom";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Auth from "../services/Auth";
-import services from "../services/services";
+import services from "../services/userservices";
 import MessageContext from "../components/messagecontext";
 import Logo from "../components/Logo";
 
@@ -34,33 +34,30 @@ export default function Login(props) {
   }
 
   function TriggerLogin() {
-    const serv = new services();
-
+// console.log(process.env.BASEURL)
     const data={
       email:values.emailId,
       password:values.password
     }
-    serv
-      .signin(data)
-      .then(() => {
+    services.signIn(data)
+      .then((data) => {
+        if(data.status===200){
+        localStorage.setItem("token",data.data.id)
         message1.setMessage("You Have Logged In Sucessfully");
-        setTimeout(() => {
-          message1.setMessage(null);
-        }, 2000);
+        message1.setSnackBar(true);
         Auth.login(() => {
           history.push("/profile");
-        });
+        });}
       })
-      .catch(() => {
-        setMessage("Incorrect Password Or emailId");
-        setTimeout(() => {
-          setMessage(null);
-        }, 2000);
+      .catch((err) => {
+        message1.setMessage("Incorrect Password or emailId");
+        message1.setSnackBar(true);
       });
+     
   }
 
   return (
-    <Card className={styles.mainLogo} justify="center" boxShadow={3}>
+    <Card className={styles.mainLogo} justify="center" >
       <CardContent>
         <div className={styles.LoginLogo}>
         <Logo />
@@ -83,7 +80,7 @@ export default function Login(props) {
               value={values.emailId}
               name="emailId"
               onChange={handleOnChange}
-              fullWidth="true"
+              // fullWidth="true"
               id="outlined-basic"
               autoComplete='off'
               color="primary"

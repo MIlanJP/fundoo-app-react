@@ -3,8 +3,9 @@ import { Link, useHistory } from "react-router-dom";
 import styles from "../scss/signup.module.scss";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import signUpRequest from "../services/services";
+import signUpRequest from "../services/userservices";
 import MessageContext from "../components/messagecontext";
+import Validation from '../services/validation'
 
 import {
   Card,
@@ -55,13 +56,13 @@ export default function Signup() {
       )
     ) {
       e.preventDefault();
+      return
     } else {
       return callback(e);
     }
   }
 
   function fetchdata(e) {
-    const signUPREQ = new signUpRequest();
     const data = {
       firstName: values.firstname,
       lastName: values.secondname,
@@ -69,21 +70,17 @@ export default function Signup() {
       password: values.password,
       service: "advance",
     };
-    signUPREQ
-      .signup(data)
+    signUpRequest
+      .signUp(data)
       .then(() => {
         history.push("/login");
         messages.setMessage("Congrats!! you Have successfully Registered");
-        setTimeout(() => {
-          messages.setMessage(null);
-        }, 2000);
+        messages.setSnackBar(true);
       })
       .catch(() => {
         e.preventDefault();
         messages.setMessage("Email ID is already taken");
-        setTimeout(() => {
-          messages.setMessage(null);
-        }, 2000);
+        messages.setSnackBar(true);
         setHelperText("Email Id is Already Taken");
         if (validationStatus.emailId === false) {
           validationStatus.emailId = true;
@@ -101,25 +98,28 @@ export default function Signup() {
     const name1 = e.currentTarget.name;
     const val1 = e.currentTarget.value;
     if (name1 === "firstname") {
-      setValidationStatus({ ...validationStatus, [name1]: val1.length < 5 });
+      setValidationStatus({ ...validationStatus, [name1]: !Validation.vallidateName(val1) });
     } else if (name1 === "secondname") {
-      setValidationStatus({ ...validationStatus, [name1]: val1.length < 5 });
+      setValidationStatus({ ...validationStatus, [name1]:!Validation.vallidateName(val1)  });
     } else if (name1 === "emailId") {
       setValidationStatus({
         ...validationStatus,
-        [name1]: !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(val1),
+        [name1]: !Validation.validateEmail(val1),
       });
     } else if (name1 === "password") {
       setValidationStatus({
         ...validationStatus,
-        [name1]: !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/.test(val1),
+        [name1]: !Validation.validatePassword(val1),
       }
       );
     } else if (name1 === "confirm") {
       setValidationStatus({
         ...validationStatus,
         [name1]: !(values.password === val1),
+        
       });
+      
+
     }
   }
 
@@ -147,7 +147,7 @@ export default function Signup() {
               onClick={() => {}}
               onChange={handleOnChange}
               value={values.firstname}
-              fullWidth="true"
+              fullWidth={true}
              
               autoComplete="off"
               id="outlined-basic"
@@ -162,7 +162,7 @@ export default function Signup() {
               name="secondname"
               onChange={handleOnChange}
               value={values.secondname}
-              fullWidth="true"
+              fullWidth={true}
               id="outlined-basic"
               autoComplete="off"
               label="Second name"
@@ -176,7 +176,7 @@ export default function Signup() {
               name="emailId"
               onChange={handleOnChange}
               value={values.emailId}
-              fullWidth="true"
+              fullWidth={true}
               error={validationStatus.emailId}
               helperText={helperText}
               id="outlined-basic"
@@ -199,7 +199,7 @@ export default function Signup() {
               name="password"
               onChange={handleOnChange}
               value={values.password}
-              fullWidth="true"
+              fullWidth={true}
               type={paswordVisibilty ? "password" : "text"}
               error={validationStatus.password}
               id="outlined-basic"
@@ -209,16 +209,16 @@ export default function Signup() {
               variant="outlined"
             />
           </Grid>
-          <Grid item xs={11} s={11}  sm={5} className={styles.gridItem ,styles.gridConfirm}>
+          <Grid item xs={11} s={11}  sm={5} className={styles.gridItem , styles.gridConfirm}>
             <TextField
               name="confirm"
               value={values.confirm}
               onChange={handleOnChange}
               type={paswordVisibilty ? "password" : "text"}
               error={validationStatus.confirm}
-              fullWidth="true"
+              fullWidth={true}
               id="outlined-basic"
-              helperText="Confirm   the   password    must   match    the   entered    password                                          "
+              helperText="Confirm   the   password    must   match    the   entered    password   "
               label="Confirm"
               autoComplete="off"
               variant="outlined"

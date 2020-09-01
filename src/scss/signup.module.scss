@@ -65,8 +65,8 @@ $font: 'Montserrat', sans-serif;
 }
 .SignUpButton{
     position: relative;
-    top:110px;;
-    right:calc(-90% + 50px);
+    top:80px;
+    left:calc(90% - 50px);
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
     color:white;
@@ -79,7 +79,7 @@ $font: 'Montserrat', sans-serif;
 }
 .LoginLink{
     position: relative;
-    top:110px;;
+    top:80px;;
     // left:%;
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;

@@ -73,7 +73,9 @@ export default function ResetPassword() {
       boxShadow={3}
     >
       <CardContent className={styles.resetCard}>
-        <Logo />
+        <div className={styles.resetPageLogo} >
+          <Logo />
+        </div>
         <Typography className={styles.resetLabel} m={3} variant="h5">
           Reset Password
         </Typography>

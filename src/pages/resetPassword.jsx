@@ -14,12 +14,12 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import service from "../services/userservices";
 import MessageContext from "../components/messagecontext";
 import Logo from "../components/Logo";
+import Validation from "../services/validation"
 
 export default function ResetPassword() {
   const messages = useContext(MessageContext);
   const history = useHistory();
   const [values, setValues] = useState({
-    emailId: "",
     oldpassword: "",
     newpassword: "",
   });
@@ -28,18 +28,16 @@ export default function ResetPassword() {
   const [showNewPassword, setShowNewPassword] = useState(false);
 
   async function validate(e) {
-    ResetPasswordButton();
+   
     if (
-      !(
-        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(
-          values.emailId
+        (
+          Validation.validatePassword(values.oldpassword)
         ) &&
         values.oldpassword === values.newpassword &&
         values.oldpassword !== "" &&
         values.newpassword !== ""
-      )
     ) {
-      e.preventDefault();
+      ResetPasswordButton();
     }
   }
 
@@ -98,7 +96,8 @@ export default function ResetPassword() {
               fullWidth="true"
               id="standard-basic"
               autoComplete="off"
-              helperText="Enter your New Password"
+              error={!Validation.validatePassword( values.oldpassword)}
+              helperText="Password must atleast contain alteast 8 character 1 Uppercase 1 special character 1 digit"
               color="primary"
               label="Password *"
               variant="outlined"
@@ -125,9 +124,10 @@ export default function ResetPassword() {
               name="newpassword"
               onChange={handleOnChange}
               fullWidth="true"
-              helperText="Confirm your the password again"
+              helperText="Confirm   the   password    must   match    the   entered    password   "
               id="standard-basic"
               color="primary"
+              error={!(values.newpassword===values.oldpassword)}
               type={showNewPassword ? "text" : "password"}
               label="Confirm Password *"
               variant="outlined"

@@ -22,13 +22,14 @@ export default class App extends Component {
         "You Have Logged In Sucessfully":"success",
         "Incorrect Password or emailId":"error",
         "you Have successfully logged out":"error",
-        "Password is been Sucessfully Reset":"sucess",
+        "Password is been Sucessfully Reset":"success",
         "Congrats!! you Have successfully Registered":"success",
         "You Have Entered Wrong password":"error",
         "Set password link sent to you registered email, please check.":"warning",
         "Your Email ID is not found":"error",
         "Email ID is already taken" :"error",
-        "Some Error Occured while processing request":"error"
+        "Some Error Occured while processing request":"error",
+        "Error Occured while resetting password":'error'
       }
       
     };

@@ -41,6 +41,30 @@ export default function Header() {
       minWidth: "250px",
       height: "100%",
     },
+
+    keepTitle:{
+        textDecoration: "none",
+        margin:'9px 0 0 0',
+        position:'relative',
+        top:'10px',
+        left:"-20px",
+        marginRight:'auto',
+        fontSize:"1.4rem",
+        fontFamily:"Roboto, RobotoDraft, Arial, sans-serif",
+        color:"black"
+    },
+
+    GoogleKeepImage:{
+        height:'70%',
+        margin:'9px 0 0 0',
+        position:'relative',
+        left:'-15px'
+    },
+
+    googleKeepBulbImage:{
+        height:'40px',
+    },
+
     middlePortion: {
       paddingTop: "8px",
       width: "57vw",
@@ -64,11 +88,10 @@ export default function Header() {
     rightPortion: {
       flex: "grow",
       position: "relative",
-      top:'-8px',
+      top:'-9px',
       display: "flex",
       flexDirection: "row",
       justifyContent: "flex-end",
-      marginTop: "10px",
       alignSelf: "flex-end",
       width: "30%",
     },
@@ -77,7 +100,7 @@ export default function Header() {
       display: "flex",
       flexDirection: "row",
       position: "relative",
-      left: "-6.5%",
+      left: "-6.75%",
     },
     appIconList: {
       display: "flex",
@@ -85,9 +108,9 @@ export default function Header() {
       paddingRight: "10px",
     },
     menuIconButton: {
-      margin: "10px 0 0 15px",
+      margin: "9px 10px 0 15px",
       padding: "9px",
-      height: "80%",
+      height: "70%",
     },
     menuIcon: {
       fontSize: "1.5rem",
@@ -108,8 +131,11 @@ export default function Header() {
         <IconButton className={classes.menuIconButton} aria-label="menu">
           <MenuIcon className={classes.menuIcon} />
         </IconButton>
-        <img src={bulb} alt="" />
-        <Link>Keep</Link>
+        <IconButton disabled={true}  disableFocusRipple={true} disableRipple={true}  className={classes.GoogleKeepImage}>
+        <img className={classes.googleKeepBulbImage}  src={bulb} alt="Google Keep" />
+        </IconButton>
+       
+        <Link className={classes.keepTitle}  >Keep</Link>
       </div>
 
       <div className={classes.middlePortion}>

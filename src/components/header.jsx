@@ -18,7 +18,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Auth from "../services/Auth";
 import { useHistory } from "react-router-dom";
 import MessageContext from "../components/messagecontext";
-export default function Header() {
+export default function Header(props) {
     const history = useHistory();
   const messages = useContext(MessageContext);
 
@@ -134,6 +134,18 @@ export default function Header() {
       transition: "opacity .25s",
       pointerEvents: searchStyles[2],
     },
+    otherTitle:{
+       
+        textDecoration: "none",
+        margin:'9px 0 0 30px',
+        position:'relative',
+        top:'10px',
+        left:"-20px",
+        marginRight:'auto',
+        fontSize:"1.4rem",
+        fontFamily:"Roboto, RobotoDraft, Arial, sans-serif",
+        color:"black"
+    },
     logOutPopUp:{
         position: "absolute",
         right:"10px",
@@ -153,15 +165,34 @@ export default function Header() {
 
   return (
     <header className={classes.root}>
-      <div className={classes.leftPortion}>
-        <IconButton className={classes.menuIconButton} aria-label="menu">
-          <MenuIcon className={classes.menuIcon} />
-        </IconButton>
-        <IconButton disabled={true}  disableFocusRipple={true} disableRipple={true}  className={classes.GoogleKeepImage}>
-        <img className={classes.googleKeepBulbImage}  src={bulb} alt="Google Keep" />
-        </IconButton>
+      <div className={classes.leftPortion}>{
+          props.heading==="Keep" ?
+          <>
+          <IconButton className={classes.menuIconButton} aria-label="menu"
+          onClick={()=>{props.setShowDrawer(!props.showDrawer)
+          }}
+          >
+            <MenuIcon className={classes.menuIcon} />
+          </IconButton>
+          <IconButton disabled={true}  disableFocusRipple={true} disableRipple={true}  className={classes.GoogleKeepImage}>
+          <img className={classes.googleKeepBulbImage}  src={bulb} alt="Google Keep" />
+          </IconButton>
+          <Link className={classes.keepTitle}  >Keep</Link>
+           </>:
+            <>
+            <IconButton className={classes.menuIconButton} aria-label="menu"
+            onClick={()=>{props.setShowDrawer(!props.showDrawer)
+            }}
+            >
+              <MenuIcon className={classes.menuIcon} />
+            </IconButton>
+            <Link className={classes.otherTitle} >{props.heading}</Link>
+          </>
+
+      }
        
-        <Link className={classes.keepTitle}  >Keep</Link>
+       
+       
       </div>
 
       <div className={classes.middlePortion}>
@@ -225,6 +256,9 @@ export default function Header() {
                 setLogoutPopUpStyle(['0','-10','none'])
               }
           }}
+          onBlur={()=>{
+            setLogoutPopUpStyle(['0','-10','none'])
+         }}
           aria-label="menu"
           >
             <PersonSharpIcon className={classes.appsIconGrid} />
@@ -238,6 +272,9 @@ export default function Header() {
                       messages.setSnackBar(true);
                     });
                   }}
+                  onFocus={()=>{
+                    setLogoutPopUpStyle(['1','10','auto'])
+                 }}
           >
           Logout 
           <IconButton className={`${classes.iconAppButton}`} aria-label="menu">

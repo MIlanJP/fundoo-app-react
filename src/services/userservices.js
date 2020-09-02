@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ApiCall } from "./apicall";
+
 const baseURL = "http://fundoonotes.incubation.bridgelabz.com/api/";
 
 const apicall = (data, url, method) => {

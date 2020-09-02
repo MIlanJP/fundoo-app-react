@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import Auth from "../services/Auth";
 import { useHistory } from "react-router-dom";
 import MessageContext from "../components/messagecontext";
+import Header from '../components/header'
 
 export default function Profile() {
   const messages = useContext(MessageContext);
@@ -9,7 +10,8 @@ export default function Profile() {
   const history = useHistory();
   return (
     <>
-      <div>WelCome Page</div>
+  
+     <Header/>
       <button
         onClick={() => {
           Auth.logout(() => {

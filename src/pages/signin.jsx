@@ -20,7 +20,7 @@ import Logo from "../components/Logo";
 export default function Login(props) {
   const message1 = useContext(MessageContext);
   const history = useHistory();
-  const [message, setMessage] = useState("");
+  const [message] = useState("");
 
   const [values, setValues] = useState({
     emailId: "",

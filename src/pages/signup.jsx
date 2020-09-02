@@ -30,7 +30,6 @@ export default function Signup() {
   });
 
   const [paswordVisibilty, setPasswordVisibility] = useState(true);
-  const [helperText, setHelperText] = useState("");
 
   const [validationStatus, setValidationStatus] = useState({
     firstname: false,
@@ -81,12 +80,12 @@ export default function Signup() {
         e.preventDefault();
         messages.setMessage("Email ID is already taken");
         messages.setSnackBar(true);
-        setHelperText("Email Id is Already Taken");
+      
         if (validationStatus.emailId === false) {
           validationStatus.emailId = true;
         }
         setTimeout(() => {
-          setHelperText("");
+       
           validationStatus.emailId = false;
         }, 2000);
         return false;
@@ -179,7 +178,6 @@ export default function Signup() {
               value={values.emailId}
               fullWidth={true}
               error={validationStatus.emailId}
-              helperText={helperText}
               id="outlined-basic"
               label="Email Id"
               helperText="Enter valid Email ID"

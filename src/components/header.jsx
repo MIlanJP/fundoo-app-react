@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useContext} from "react";
 import Bars from "../Assets/menu.svg";
 import bulb from "../Assets/bulb.png";
 import styles from "../scss/icons.module.scss";
@@ -14,11 +14,24 @@ import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import MoreVertIcon from "@material-ui/icons/AppsRounded";
 import ViewStreamRoundedIcon from "@material-ui/icons/ViewStreamRounded";
 import PersonSharpIcon from "@material-ui/icons/PersonSharp";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import Auth from "../services/Auth";
+import { useHistory } from "react-router-dom";
+import MessageContext from "../components/messagecontext";
 export default function Header() {
+    const history = useHistory();
+  const messages = useContext(MessageContext);
+
   const [searchStyles, setSearchstyles] = useState([
     "0",
     "rgb(241,243,244)",
     "none",
+    "none",
+  ]);
+
+  const [logoutPopUpStyle, setLogoutPopUpStyle] = useState([
+    "0",
+    "-10",
     "none",
   ]);
 
@@ -121,6 +134,19 @@ export default function Header() {
       transition: "opacity .25s",
       pointerEvents: searchStyles[2],
     },
+    logOutPopUp:{
+        position: "absolute",
+        right:"10px",
+        transition: "opacity .5s",
+        opacity:logoutPopUpStyle[0],
+        zIndex:logoutPopUpStyle[1],
+        pointerEvents:logoutPopUpStyle[2],
+        top:"70px",
+        padding:"0 10px 0 10px",
+        border:'none',
+        boxShadow: "0 0 1px 1px black",
+        background:"rgb(241,243,244)",
+    },
   }));
 
   const classes = useStyles();
@@ -177,17 +203,47 @@ export default function Header() {
           <IconButton className={classes.iconButton} aria-label="menu">
             <ViewStreamRoundedIcon className={classes.appsIcon} />
           </IconButton>
-          <IconButton className={classes.iconButton} aria-label="menu">
+          <IconButton className={classes.iconButton} aria-label="menu"
+          component={Link}
+          to='/profile'
+          >
             <SettingsOutlinedIcon className={classes.appsIcon} />
           </IconButton>{" "}
         </div>
         <div className={classes.appIconList}>
-          <IconButton className={`${classes.iconAppButton}`} aria-label="menu">
+          <IconButton className={`${classes.iconAppButton}`} aria-label="menu"
+                 component={Link}
+                 to='/profile/bin'
+          >
             <MoreVertIcon className={classes.appsIconGrid} />
           </IconButton>
-          <IconButton className={`${classes.iconAppButton}`} aria-label="menu">
+          <IconButton className={`${classes.iconAppButton}`}
+          onClick={()=>{
+              if(logoutPopUpStyle[0]==='0'){
+                setLogoutPopUpStyle(['1','10','auto'])
+              }else{
+                setLogoutPopUpStyle(['0','-10','none'])
+              }
+          }}
+          aria-label="menu"
+          >
             <PersonSharpIcon className={classes.appsIconGrid} />
           </IconButton>
+          <div className={classes.logOutPopUp}
+                  onClick={() => {
+                    Auth.logout(() => {
+                      history.push("/login");
+                      localStorage.removeItem('token')
+                      messages.setMessage("you Have successfully logged out");
+                      messages.setSnackBar(true);
+                    });
+                  }}
+          >
+          Logout 
+          <IconButton className={`${classes.iconAppButton}`} aria-label="menu">
+            <ExitToAppIcon className={classes.logOutPopUpIcon} />
+          </IconButton>
+          </div>
         </div>
       </div>
     </header>

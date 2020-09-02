@@ -8,6 +8,8 @@ import Forgotpassword from "./pages/forgotpassword";
 import Resetpassword from "./pages/resetPassword";
 import Profile from "./pages/profile";
 import ProtectedRoute from "./services/protected.route";
+import {ThemeProvider} from '@material-ui/styles'
+import theme from './theme/theme'
 import { MessageProvider } from "./components/messagecontext";
 import Snackbars from './components/SnackBars'
 
@@ -52,6 +54,7 @@ export default class App extends Component {
 
   render() {
     return (
+      <ThemeProvider theme={theme}>
       <MessageProvider
         value={{ message: this.state.message, 
           setMessage: this.setMessage,
@@ -66,9 +69,10 @@ export default class App extends Component {
           <Route path="/signup" component={() => <Signup />} />
           <Route  path="/forgotpassword" component={() => <Forgotpassword />} />
           <Route path="/resetpassword" component={() => <Resetpassword />} />
-          <ProtectedRoute path="/profile" component={() => <Profile />} />
+          <Route path="/profile" component={() => <Profile />} />
         </div>
       </MessageProvider>
+      </ThemeProvider>
     );
   }
 }

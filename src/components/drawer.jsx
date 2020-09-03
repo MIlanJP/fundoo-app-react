@@ -15,7 +15,8 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import { Link } from "react-router-dom";
-import { IconButton } from "@material-ui/core";
+import { IconButton,Typography } from "@material-ui/core";
+
 
 export default function Drawers(props) {
 
@@ -23,13 +24,14 @@ export default function Drawers(props) {
 
   const useStyles = makeStyles((theme) => ({
     root: {
+      ...theme.typography.labels,
+
       width: "250px",
     },
     paper: {
+      ...theme.typography.labels,
       top: "65px",
       width:"250px",
-      // zIndex: -1,
-      // paddingLeft: "80px",
       transition:'1s',
 
     },
@@ -52,6 +54,7 @@ export default function Drawers(props) {
 
     },
     mainDrawerLayout: {
+      ...theme.typography.labels,
       width:props.showDrawer ? 'auto':"50px",
       "& a":{
         textDecoration: "none",
@@ -60,14 +63,11 @@ export default function Drawers(props) {
 
     },
     label:{
+      ...theme.typography.labels,
       zIndex:'10',
       color:'black',
       borderTopRightRadius:'20px',
       borderBottomRightRadius:'20px',
-
-      '& $selected': {
-        backgroundColor: 'blue',
-      },
       opacity:props.showDrawer ? '1' : '0',
       transition:"opacity .5s"
     },
@@ -84,7 +84,6 @@ export default function Drawers(props) {
     },
     selectedIcon:{
       borderRadius:'50%',
-      // opacity:props.showDrawer?'1':'0',
       marginLeft:"10px",
       background:'rgb(254,239,195)',
       padding:"14px 2px 16px 2px",
@@ -121,7 +120,7 @@ export default function Drawers(props) {
       {props.listOfLabels.map((text, index) => {
         return (
           <Link
-            className={selectedLabel===text? classes.selectedIcon :classes.labelIcons}
+            className={selectedLabel===text ? classes.selectedIcon :classes.labelIcons}
             to={
               index === 0
                 ? "/profile"
@@ -133,20 +132,23 @@ export default function Drawers(props) {
                 ? `/profile/label/${text}`
                 : `/profile/${text}`
             }
-            onMouseOver={() => {
+            onMouseEnter={() => {
               if (!showLabel && !props.showDrawer) {
-                props.setShowDrawer(true);
-                setShowLabel(true);
-                // setOnMouseOverHoverLabel(true)
+                setShowLabel(true);      
+                    props.setShowDrawer(true);           
               }
             }}
-
             onClick={() => {
               if (text !== "Edit Labels" && index !== 0) {
                 props.setHeading(`  ${text}`);
               }
               if (index === 0) {
                 props.setHeading("Keep");
+              }
+              props.setShowDrawer(true)
+              props.setHeading(text)
+              if(text!=="Edit Labels"){
+                setSelectedLabel(text)
               }
             }}
           >
@@ -198,7 +200,12 @@ export default function Drawers(props) {
                   ? `/profile/label/${text}`
                   : `/profile/${text}`  
               }
-
+                onClick={() => {
+                  if(text==="Edit Labels"){
+                   props.setEditLabelsPopUpDisplay(!props.editLabelsPopUpDisplay)
+                   props.setShowDrawer(false)
+                  }
+                }}
               >
               <ListItem
                 button
@@ -211,10 +218,13 @@ export default function Drawers(props) {
                   if (index === 0) {
                     props.setHeading("Keep");
                   }
-                  setSelectedLabel(text)
+
+                  if(text!=="Edit Labels"){
+                    setSelectedLabel(text)
+                  }
                 }}
 
-                className={text===selectedLabel? classes.selectedLabel: classes.label}
+                className={text===selectedLabel ? classes.selectedLabel: classes.label}
               ><ListItemIcon
               className={classes.ListIcon}
               onClick={() => {
@@ -239,11 +249,11 @@ export default function Drawers(props) {
               ) : (
                 <LabelOutlinedIcon />
               )}
-              </ListItemIcon>
-                <ListItemText
+              </ListItemIcon>               <ListItemText
                 className={classes.sideBarLabel}
                   primary={text}
                 />
+
               </ListItem>
               </Link>
             );

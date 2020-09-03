@@ -14,7 +14,21 @@ const theme = createMuiTheme({
       selected:"rgb(254,239,195)",
     }
   },
-
+  typography: {
+    tab:{
+      fontFamily:"Raleway",
+      fontWeight:700,
+      fontSize:"1rem",
+      minWidth:10,
+      textTransform:"none"
+    },
+    labels:{
+      fontFamily:"Pacifico",
+      textTransform:"none",
+      fontSize:"1rem",
+      color:"white"
+    }
+  }
 });
 
 export default theme; 

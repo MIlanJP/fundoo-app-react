@@ -1,13 +1,13 @@
 import axios from 'axios'
 
 export   const  ApiCall=(data,url,method)=>{
-    axios({
-     method,
-     url,
-     data
-   }).then(data=>{
-     return data;}
-     ).catch(err=>{
-       return err
-     });
+  return new Promise((resolve, reject) => {
+    axios({ method, url, data })
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
  }

@@ -9,21 +9,24 @@ import Notes from '../components/notes'
 import Reminder from '../components/reminder'
 import Archieve from '../components/archieve'
 import Drawer from '../components/drawer'
+import Drawer1 from '../components/drawer1'
 import styles from "../scss/profile.module.scss"
 
 export default function Profile() {
   const [routesPages]=useState([Notes,Reminder,Label,Archieve,Bin])
   const [routesName]=useState(["Notes","Reminder","Label","Archieve","Bin"])
-  const [labels]=useState(["Milan","Milan1"])
+  const [labels]=useState(["Milan","Milan1","Milan3"])
   const [tabs]=useState(["Notes","Reminder",...labels,"Edit Labels","Archieve","Bin"])
   const [heading,setHeading]=useState('Keep')
   const [showDrawer,setShowDrawer]=useState(false);
   return (
     <>
      <Header setShowDrawer={setShowDrawer} showDrawer={showDrawer} heading={heading}  />
-     <div className={styles.DrawerLayout}  >
+     <div className={styles.DrawerLayout} >
      <Drawer listOfLabels={tabs} showDrawer={showDrawer} setHeading={setHeading}  setShowDrawer={setShowDrawer}  />
      </div>
+    {/* <Drawer1 listOfLabels={tabs} showDrawer={showDrawer} setHeading={setHeading}  setShowDrawer={setShowDrawer}  /> */}
+  
      <Route  exact path="/profile" component={Notes}/>
      {routesPages.map((PageComponent,index)=>{
        if(index!==2&&index!==0){

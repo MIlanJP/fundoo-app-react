@@ -9,7 +9,6 @@ import Notes from '../components/notes'
 import Reminder from '../components/reminder'
 import Archieve from '../components/archieve'
 import Drawer from '../components/drawer'
-import Drawer1 from '../components/drawer1'
 import styles from "../scss/profile.module.scss"
 
 export default function Profile() {
@@ -30,7 +29,7 @@ export default function Profile() {
      <Route  exact path="/profile" component={Notes}/>
      {routesPages.map((PageComponent,index)=>{
        if(index!==2&&index!==0){
-         return <Route key={ routesName[index].toLowerCase()}  exact path={`/profile/${routesName[index].toLowerCase()}`} 
+         return <Route key={ routesName[index]}  exact path={`/profile/${routesName[index]}`} 
          component={PageComponent}
          />
        }else{
@@ -38,7 +37,7 @@ export default function Profile() {
            const collectLabel=[];
             labels.forEach((data)=>{
               collectLabel.push(
-                <Route key={uuid()}  exact path={`/profile/label/${data.toLowerCase()}`} 
+                <Route key={uuid()}  exact path={`/profile/label/${data}`} 
                   >
                   <PageComponent labelName={data}/>
                 </Route>

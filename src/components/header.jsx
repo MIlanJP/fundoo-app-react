@@ -122,9 +122,10 @@ export default function Header(props) {
     },
     menuIconButton: {
       margin: "9px 10px 0 15px",
-      padding: "9px",
+    
       height: "70%",
-      background:props.showDrawer ? 'rgb(241,243,244)' :''
+      padding:"5px 12px 5px 12px",
+      background:props.showDrawer ? 'rgb(206, 206, 206)' :''
     },
     menuIcon: {
       fontSize: "1.5rem",
@@ -223,7 +224,7 @@ export default function Header(props) {
             aria-label="search"
           >
             <ClearSharpIcon className={classes.searchIcon} />
-          </IconButton>
+          </IconButton >
         </Paper>
       </div>
 

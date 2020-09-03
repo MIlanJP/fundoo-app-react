@@ -31,7 +31,9 @@ export default class App extends Component {
         "Your Email ID is not found":"error",
         "Email ID is already taken" :"error",
         "Some Error Occured while processing request":"error",
-        "Error Occured while resetting password":'error'
+        "Error Occured while resetting password":'error',
+        "Label Already present":'error',
+"Empty Name cannot be given":'error'
       }
       
     };

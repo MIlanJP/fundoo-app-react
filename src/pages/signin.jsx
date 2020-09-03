@@ -34,7 +34,6 @@ export default function Login(props) {
   }
 
   function TriggerLogin() {
-// console.log(process.env.BASEURL)
     const data={
       email:values.emailId,
       password:values.password

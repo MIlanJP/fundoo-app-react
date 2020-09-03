@@ -1,8 +1,8 @@
 import React, { useState ,useContext} from "react";
 import Bars from "../Assets/menu.svg";
 import bulb from "../Assets/bulb.png";
-import styles from "../scss/icons.module.scss";
-import headerStyles from "../scss/header.module.scss";
+// import styles from "../scss/icons.module.scss";
+// import headerStyles from "../scss/header.module.scss";
 import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles } from "@material-ui/core/styles";
 import { IconButton, Paper, InputBase, SvgIcon } from "@material-ui/core";
@@ -124,6 +124,7 @@ export default function Header(props) {
       margin: "9px 10px 0 15px",
       padding: "9px",
       height: "70%",
+      background:props.showDrawer ? 'rgb(241,243,244)' :''
     },
     menuIcon: {
       fontSize: "1.5rem",
@@ -235,16 +236,12 @@ export default function Header(props) {
             <ViewStreamRoundedIcon className={classes.appsIcon} />
           </IconButton>
           <IconButton className={classes.iconButton} aria-label="menu"
-          component={Link}
-          to='/profile'
           >
             <SettingsOutlinedIcon className={classes.appsIcon} />
           </IconButton>{" "}
         </div>
         <div className={classes.appIconList}>
           <IconButton className={`${classes.iconAppButton}`} aria-label="menu"
-                 component={Link}
-                 to='/profile/bin'
           >
             <MoreVertIcon className={classes.appsIconGrid} />
           </IconButton>

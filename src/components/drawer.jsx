@@ -24,12 +24,11 @@ export default function Drawers(props) {
 
   const useStyles = makeStyles((theme) => ({
     root: {
-      ...theme.typography.labels,
 
       width: "250px",
     },
     paper: {
-      ...theme.typography.labels,
+     
       top: "65px",
       width:"250px",
       transition:'1s',
@@ -40,6 +39,7 @@ export default function Drawers(props) {
       position: "relative",
       top:"2px",
       display: "flex",
+      height:'10%',
       flexDirection: "column",
       alignItems: "flex-start",
       paddingLeft:'13px',
@@ -47,14 +47,12 @@ export default function Drawers(props) {
 
     },
     sideBarLabel:{
-      fontFamily:"'Syne', sans-serif !important",
-      fontSize:".8rem",
+      ...theme.typography.labels,
       opacity:props.showDrawer ? '1' : '0',
       transition:"opacity .5s"
 
     },
     mainDrawerLayout: {
-      ...theme.typography.labels,
       width:props.showDrawer ? 'auto':"50px",
       "& a":{
         textDecoration: "none",
@@ -95,11 +93,21 @@ export default function Drawers(props) {
   const [showLabel, setShowLabel] = useState(false);
 
   useEffect(() => {
+    
     let location=window.location.pathname
  if(location.includes("/label/")){
   location=location.split("/label/")[1]
- setSelectedLabel(location)
- props.setHeading(location)
+ location=decodeURI(location)
+ let restoredLabels=[];
+ restoredLabels=[...JSON.parse(localStorage.getItem('labels'))]
+ if(restoredLabels.includes(location)){
+  setSelectedLabel(location)
+  props.setHeading(location)
+ }else{
+  setSelectedLabel("Notes")
+  props.setHeading("Keep")
+ }
+
  }else if(location.includes("/profile/")){
   location=location.split("/profile/")[1]
  setSelectedLabel(location)
@@ -250,9 +258,10 @@ export default function Drawers(props) {
                 <LabelOutlinedIcon />
               )}
               </ListItemIcon>               <ListItemText
-                className={classes.sideBarLabel}
-                  primary={text}
-                />
+                  // primary={text}
+                ><Typography  className={classes.sideBarLabel}>
+                  {text}
+                  </Typography> </ListItemText>
 
               </ListItem>
               </Link>

@@ -38,7 +38,7 @@ export default function Header(props) {
   const useStyles = makeStyles((theme) => ({
     // Main Layout
     root: {
-      display: "flex",
+      display: "inline-flex",
       float: "right",
       justifyContent: "space-between",
       flexDirection: "row",
@@ -80,9 +80,10 @@ export default function Header(props) {
 
     middlePortion: {
       paddingTop: "8px",
-      width: "57vw",
+      width: "57%",
       height: "60px",
       position: "relative",
+      justifyContent:'flex-start',
     },
 
     search: {
@@ -91,7 +92,7 @@ export default function Header(props) {
       paddingLeft: "5px",
       height: "80%",
       display: "flex",
-      width: "98%",
+      width: "85%",
       flexDirection: "row",
       background: searchStyles[1],
       transition: "background 1s",
@@ -106,7 +107,7 @@ export default function Header(props) {
       flexDirection: "row",
       justifyContent: "flex-end",
       alignSelf: "flex-end",
-      width: "30%",
+      // width: "30%",
     },
 
     appIconBar: {
@@ -266,6 +267,7 @@ export default function Header(props) {
                     Auth.logout(() => {
                       history.push("/login");
                       localStorage.removeItem('token')
+                      localStorage.removeItem('loginTime')
                       messages.setMessage("you Have successfully logged out");
                       messages.setSnackBar(true);
                     });

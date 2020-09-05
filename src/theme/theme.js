@@ -2,6 +2,8 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
 import red from '@material-ui/core/colors/red';
 
+const LabelFont="'Roboto', sans-serif"
+
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -16,19 +18,32 @@ const theme = createMuiTheme({
   },
   typography: {
     tab:{
-      fontFamily:"Raleway",
+      fontFamily:"Roboto",
       fontWeight:700,
-      fontSize:"1rem",
-      minWidth:10,
+      fontSize:10,
+      // minWidth:10,
       textTransform:"none"
     },
     labels:{
-      fontFamily:"Pacifico",
+      fontFamily:LabelFont,
+      fontWeight:500,
       textTransform:"none",
-      fontSize:"1rem",
-      color:"white"
-    }
-  }
+      fontSize:13,
+      color:"black"
+    },
+        // fontFamily: [
+        //   '-apple-system',
+        //   'BlinkMacSystemFont',
+        //   '"Segoe UI"',
+        //   'Roboto',
+        //   '"Helvetica Neue"',
+        //   'Arial',
+        //   'sans-serif',
+        //   '"Apple Color Emoji"',
+        //   '"Segoe UI Emoji"',
+        //   '"Segoe UI Symbol"',
+        // ].join(','),
+      },
 });
 
 export default theme; 

@@ -136,7 +136,6 @@ export default function Signup() {
         <Grid
           className={styles.gridContainer}
           container
-          spacing={1}
           direction="row"
           justify="center"
           alignItems="center"

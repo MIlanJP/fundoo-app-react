@@ -39,6 +39,8 @@ const [displaySmallsearch ,setDisplaySmallSearch]=useState(false)
     "none",
   ]);
 
+
+
   const useStyles = makeStyles((theme) => ({
     // Main Layout
     root: {

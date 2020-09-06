@@ -44,6 +44,14 @@ const apicall = (data, url, method) => {
       "POST"
     );
   }
+
+  getAllLists() {
+    const token=localStorage.getItem("token");
+    return apicall('',`${baseURL}notes/getNotesList?access_token=${token}`,'GET')
+  }
+
+
+
 }
 
 export default new Service();

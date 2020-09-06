@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext,useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -9,10 +9,10 @@ import {
 } from "@material-ui/core";
 import styles from "../scss/login.module.scss";
 import "../css/logo.css";
+import Auth from "../services/Auth"
 import { Link, useHistory } from "react-router-dom";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import Auth from "../services/Auth";
 import services from "../services/userservices";
 import MessageContext from "../components/messagecontext";
 import Logo from "../components/Logo";
@@ -28,6 +28,19 @@ export default function Login(props) {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(()=>{
+    console.log(new Date())
+
+    console.log(Auth.isAuthenticated())
+      if(Auth.isAuthenticated()){
+        console.log(Auth.isAuthenticated())
+        Auth.login(() => {
+          history.push(window.location.pathname)
+        });
+        
+      }
+  },[])
 
   function handleOnChange(e) {
     setValues({ ...values, [e.currentTarget.name]: e.currentTarget.value });

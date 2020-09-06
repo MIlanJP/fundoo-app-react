@@ -1,0 +1,7 @@
+export const ADD_LABEL="AddLabel"
+export const DELETE_LABEL="DeleteLabel"
+export const UPDATE_LABEL="UpdateLabel"
+export const GET_LABEL="GetLabel"
+export const GET_ALL_LABELS="getAllLabels"
+export const FETCH_USERS_REQUESTS="getusersRequest"
+export const FETCH_USER_FAILURE="FETCH_USER_FAILURE"

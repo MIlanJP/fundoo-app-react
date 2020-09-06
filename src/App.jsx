@@ -8,6 +8,7 @@ import Forgotpassword from "./pages/forgotpassword";
 import Resetpassword from "./pages/resetPassword";
 import Profile from "./pages/profile";
 import ProtectedRoute from "./services/protected.route";
+import ProtectedRoute1 from "./services/protected1.route";
 import {ThemeProvider} from '@material-ui/styles'
 import theme from './theme/theme'
 import { MessageProvider } from "./components/messagecontext";
@@ -67,11 +68,11 @@ export default class App extends Component {
         <Snackbars type={this.state.messagesList[this.state.message]} 
         message={this.state.message} show={this.state.showSnackBar}  />
         <div className={styles.container}>
-          <Route path="/login" component={() => <Login />} />
-          <Route path="/signup" component={() => <Signup />} />
-          <Route  path="/forgotpassword" component={() => <Forgotpassword />} />
-          <Route path="/resetpassword" component={() => <Resetpassword />} />
-          <Route path="/profile" component={() => <Profile />} />
+          <ProtectedRoute1 path="/login" component={() => <Login />} />
+          <ProtectedRoute1 path="/signup" component={() => <Signup />} />
+          <ProtectedRoute1  path="/forgotpassword" component={() => <Forgotpassword />} />
+          <ProtectedRoute1 path="/resetpassword" component={() => <Resetpassword />} />
+          <ProtectedRoute path="/profile" component={() => <Profile />} />
         </div>
       </MessageProvider>
       </ThemeProvider>

@@ -1,9 +1,9 @@
-import React, { useState,useContext,useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import MessageContext from "../components/messagecontext";
 import Header from "../components/header";
 import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
-import { Route } from "react-router-dom";
+import { Route ,useHistory} from "react-router-dom";
 import uuid from "react-uuid";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -16,7 +16,11 @@ import Notes from "../components/notes";
 import Reminder from "../components/reminder";
 import Archieve from "../components/archieve";
 import Drawer from "../components/drawer";
+import {addNoteBeforeClick} from '../redux'
+
 import styles from "../scss/profile.module.scss";
+import {useSelector ,useDispatch} from 'react-redux'
+
 
 import {
   Dialog,
@@ -24,16 +28,15 @@ import {
   Typography,
   ListItem,
   List,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
   InputBase,
   IconButton,
-  ListItemIcon,
 } from "@material-ui/core";
 
 export default function Profile() {
   const messages = useContext(MessageContext);
+  const history=useHistory()
+  const addNoteFeature=  useDispatch()
+  const addNote=useSelector(state=>state.addNoteFeature.addNote)
 
   const [routesPages] = useState([Notes, Reminder, Label, Archieve, Bin]);
   const [routesName] = useState([
@@ -43,8 +46,9 @@ export default function Profile() {
     "Archieve",
     "Bin",
   ]);
-  const [labels, setLabels] = useState(["Milan", "Milan1", "Milan3"]);
-  const [tabs,setTabs] = useState([
+  // const [labels, setLabels] = useState(["Milan", "Milan1", "Milan3"]);
+  const [labels, setLabels] = useState([]);
+  const [tabs, setTabs] = useState([
     "Notes",
     "Reminder",
     ...labels,
@@ -74,7 +78,6 @@ export default function Profile() {
       // ...theme.typography.labels,
       textAlign: "center",
     },
-    PopUpBox: {},
     dialogBox: {
       zIndex: 25,
     },
@@ -84,15 +87,32 @@ export default function Profile() {
       justifyContent: "space-between",
     },
     EditDoneIcon: {},
+    popUpBackgorund: {
+      width: "100vw",
+      height: "100vh",
+      background: "rgb(145,145,145)",
+      display: editLabelsPopUpDisplay ? "" : "none",
+    },
   }));
 
   useEffect(() => {
-    
-  }, [])
+    if(localStorage.getItem('labels')!==null){
+      let restoredLabels=[];
+      restoredLabels=[...JSON.parse(localStorage.getItem('labels'))]
+      let restoreTabs=[];
+      restoreTabs.push(...startTabs,...restoredLabels,...endTabs)
+     setLabels([...restoredLabels])
+     setTabs([...restoreTabs])
+    }
+
+  }, []);
 
   const classes = useStyles();
   return (
-    <>
+    <div 
+className={classes.Label}
+
+    >
       <Header
         setShowDrawer={setShowDrawer}
         showDrawer={showDrawer}
@@ -107,19 +127,28 @@ export default function Profile() {
           setEditLabelsPopUpDisplay={setEditLabelsPopUpDisplay}
           editLabelsPopUpDisplay={editLabelsPopUpDisplay}
           labels={labels}
+          setLabels={setLabels}
         />
       </div>
-      {/* <Drawer1 listOfLabels={tabs} showDrawer={showDrawer} setHeading={setHeading}  setShowDrawer={setShowDrawer}  /> */}
 
-      <Route exact path="/profile" component={Notes} />
+<div className={styles.pageSize} 
+// onClick={()=>{
+
+//   addNoteFeature(addNoteBeforeClick())
+// }}
+
+>
+<Route exact path="/profile" component={Notes} />
       {routesPages.map((PageComponent, index) => {
         if (index !== 2 && index !== 0) {
           return (
             <Route
+            className='pageRoutes'
               key={routesName[index]}
               exact
               path={`/profile/${routesName[index]}`}
               component={PageComponent}
+
             />
           );
         } else {
@@ -136,6 +165,7 @@ export default function Profile() {
           }
         }
       })}
+</div>
       {editLabelsPopUpDisplay ? (
         // <div
         //   className={styles.editPopupBackground}
@@ -153,6 +183,7 @@ export default function Profile() {
           // onBlur={()=>{
           //   setEditLabelsPopUpDisplay(false)
           // }}
+          disableBackdropClick={true}
         >
           <DialogTitle id="simple-dialog-title" className={classes.PopUpBox}>
             <Typography variant="button" className={classes.PopUpLabel}>
@@ -182,28 +213,34 @@ export default function Profile() {
                 onChange={(e) => {
                   setPopUpTargetAutoFocusAddNewValue(e.currentTarget.value);
                 }}
-                helperText="fdd"
+               
+                onLoad={(e) => {
+                   console.log( e.parentElement.parentElement.parentElement.parentElement.parentElement,"Printing")
+                }}
               />
               {popUpTargetAutoFocusAddNew ? (
                 <IconButton
                   onClick={() => {
-                    if (popUpTargetAutoFocusAddNewValue !== ""&&!labels.includes(popUpTargetAutoFocusAddNewValue)) {
+                    if (
+                      popUpTargetAutoFocusAddNewValue !== "" &&
+                      !tabs.includes(popUpTargetAutoFocusAddNewValue)
+                    ) {
                       let items = [...labels];
                       items.push(popUpTargetAutoFocusAddNewValue);
+                      localStorage.setItem('labels',JSON.stringify(items))
                       setLabels([...items]);
-                      let totalItems=[];
-                      totalItems.push(...startTabs)
-                      totalItems.push(...items)
-                      totalItems.push(...endTabs)
-                      setTabs([...totalItems])
+                      let totalItems = [];
+                      totalItems.push(...startTabs,...items,...endTabs);
+                      setTabs([...totalItems]);
                       setPopUpTargetAutoFocusAddNewValue("");
-                    }else if(popUpTargetAutoFocusAddNewValue===''){
-                      messages.setMessage("Empty Name cannot be given");
-                      messages.setSnackBar(true);
-                    }else{
-                      messages.setMessage("Label Already present");
-                      messages.setSnackBar(true);
+                    } else if (popUpTargetAutoFocusAddNewValue === "") {
+                      // messages.setMessage("Empty Name cannot be given");
+                      // messages.setSnackBar(true);
+                    } else {
+                      // messages.setMessage("Label Already present");
+                      // messages.setSnackBar(true);
                     }
+                   
                   }}
                 >
                   <DoneIcon />
@@ -212,15 +249,20 @@ export default function Profile() {
             </ListItem>
             {labels.map((text, index) => (
               <ListItem
+              autoFocus={text === popUpTargetAutoFocus}
                 button
                 className={classes.popUpListRow}
                 onMouseOver={(e) => {
                   let name =
                     e.currentTarget.firstElementChild.nextElementSibling
                       .firstElementChild.value;
-                  console.log(name, text);
                   setpopUpTargetLabelValue(name);
                 }}
+
+                onMouseLeave={()=>{
+                  setpopUpTargetLabelValue(null);
+                }}
+
               >
                 {popTargetLabelValue === text || focusValue === text ? (
                   <IconButton
@@ -233,11 +275,17 @@ export default function Profile() {
                         return item !== name;
                       });
                       setLabels([...itemsPresent]);
-                      let totalItems=[];
-                      totalItems.push(...startTabs)
-                      totalItems.push(...itemsPresent)
-                      totalItems.push(...endTabs)
-                      setTabs([...totalItems])
+                      localStorage.setItem('labels', JSON.stringify(itemsPresent));
+                      let totalItems = [];
+                      totalItems.push(...startTabs,...itemsPresent,...endTabs);
+                      setTabs([...totalItems]);
+    let location=window.location.pathname
+   let labelLocation=location.split("/label/")[1]
+   labelLocation=decodeURI(labelLocation)
+   if( location.includes("/label/")&& name===labelLocation){
+    setHeading('Keep')
+    history.push('/profile')
+   }
                     }}
                   >
                     <DeleteIcon />
@@ -256,21 +304,24 @@ export default function Profile() {
                     items[index] = item;
                     setLabels([...items]);
                     setFocusValue(e.currentTarget.value);
-                    let totalItems=[];
-                   totalItems.push(...startTabs)
-                   totalItems.push(...items)
-                   totalItems.push(...endTabs)
-                   setTabs([...totalItems])
+                    let totalItems = [];
+                    totalItems.push(...startTabs,...items,...endTabs);
+                    setTabs([...totalItems]);
                   }}
-                  z
-                  autoFocus={text === popUpTargetAutoFocus}
+                  
+                 
                   onFocus={(e) => {
-                    // console.log(text,e.currentTarget.value)
                     setFocusValue(e.currentTarget.value);
+                    if(popUpTargetAutoFocusAddNewValue==='')
+                    {
+                      setPopUpTargetAutoFocusAddNew(false)
+                    }
+                    
                   }}
                   onBlur={() => {
                     setFocusValue(null);
                   }}
+
                 />
                 {focusValue === text ? (
                   <IconButton>
@@ -285,7 +336,6 @@ export default function Profile() {
                         const name = (e.currentTarget.parentElement.parentElement.previousElementSibling.firstChild.autofocus =
                           "true");
                         setPopUpTargetAutoFocus(name);
-                        console.log(name);
                       }}
                     />
                   </IconButton>
@@ -296,6 +346,12 @@ export default function Profile() {
         </Dialog>
       ) : // </div>
       null}
-    </>
+      {/* <div className={classes.popUpBackgorund}
+      onClick={()=>{
+        setEditLabelsPopUpDisplay(false)
+
+      }}
+      ></div> */}
+    </div>
   );
 }

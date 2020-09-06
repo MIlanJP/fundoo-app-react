@@ -1,13 +1,32 @@
-.drawerLayout{
-    position: absolute;
-    top:70px;
+//
+.drawerLayout {
+  position: absolute;
+  top: 70px;
 }
-// .editPopupBackground{
-//  position: absolute;
-//  top:0px;
-//  left:0px;
-// width:100vw;
-// height:100vh;
-// background:rgba(137,138,139,.5);
-// z-index: 20;
+
+.Label {
+  text-align: center;
+  height: calc(100vh - 75px);
+  width: 100vw;
+}
+
+// .pagesOfProfile{
+//     text-align: center;
+//     height:calc(100vh - 100px);
+//     width:100vw;
+//     z-index: 19;
 // }
+.pageSize {
+  top: 0px;
+  position: relative;
+  max-width: calc(100vw - 100px);
+  height: calc(100vh - 70px);
+  left: 70px;
+  z-index: 1;
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border: aquamarine;
+  justify-content: center;
+}

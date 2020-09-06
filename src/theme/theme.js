@@ -30,6 +30,13 @@ const theme = createMuiTheme({
       textTransform:"none",
       fontSize:13,
       color:"black"
+    },  
+      addnote:{
+      fontFamily:LabelFont,
+      fontWeight:500,
+      textTransform:"none",
+      fontSize:12,
+      color:"black"
     },
         // fontFamily: [
         //   '-apple-system',

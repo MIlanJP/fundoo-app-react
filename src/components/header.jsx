@@ -1,11 +1,13 @@
 import React, { useState ,useContext} from "react";
 import Bars from "../Assets/menu.svg";
 import bulb from "../Assets/bulb.png";
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+// import { useTheme} from "@material-ui/core/styles"
 // import styles from "../scss/icons.module.scss";
 // import headerStyles from "../scss/header.module.scss";
 import MenuIcon from "@material-ui/icons/Menu";
 import { makeStyles } from "@material-ui/core/styles";
-import { IconButton, Paper, InputBase, SvgIcon } from "@material-ui/core";
+import { IconButton, Paper, InputBase, SvgIcon, useTheme } from "@material-ui/core";
 import ClearSharpIcon from "@material-ui/icons/ClearSharp";
 import { Link } from "react-router-dom";
 import SearchIcon from "@material-ui/icons/Search";
@@ -21,7 +23,9 @@ import MessageContext from "../components/messagecontext";
 export default function Header(props) {
     const history = useHistory();
   const messages = useContext(MessageContext);
-
+  const theme=useTheme()
+const matchesSearch=useMediaQuery(theme.breakpoints.down('xs'))
+const [displaySmallsearch ,setDisplaySmallSearch]=useState(false)
   const [searchStyles, setSearchstyles] = useState([
     "0",
     "rgb(241,243,244)",
@@ -44,7 +48,7 @@ export default function Header(props) {
       flexDirection: "row",
       width: "100vw",
       height: "65px",
-      flexGrow: "3",
+      flexGrow: 2,
       borderBottomStyle: "inset",
     },
 
@@ -53,6 +57,7 @@ export default function Header(props) {
       flexDirection: "row",
       minWidth: "250px",
       height: "100%",
+     zIndex:matchesSearch&&displaySmallsearch ? "-10":'',
     },
 
     keepTitle:{
@@ -82,7 +87,8 @@ export default function Header(props) {
       paddingTop: "8px",
       width: "57%",
       height: "60px",
-      position: "relative",
+      position:"relative",
+      left:"-5%",
       justifyContent:'flex-start',
     },
 
@@ -91,8 +97,10 @@ export default function Header(props) {
       borderRadius: "8px",
       paddingLeft: "5px",
       height: "80%",
+      position:matchesSearch?"absolute":'relative',
       display: "flex",
-      width: "85%",
+      width: "92%",
+
       flexDirection: "row",
       background: searchStyles[1],
       transition: "background 1s",
@@ -107,7 +115,7 @@ export default function Header(props) {
       flexDirection: "row",
       justifyContent: "flex-end",
       alignSelf: "flex-end",
-      // width: "30%",
+      width:matchesSearch? "30%":'auto',
     },
 
     appIconBar: {
@@ -162,9 +170,59 @@ export default function Header(props) {
         boxShadow: "0 0 1px 1px black",
         background:"rgb(241,243,244)",
     },
+    serachButtonWhenScreenSmall:{
+      marginRight:"15px",
+      position:"relative",
+      left:"-10%",
+      height:"3rem",
+      padding:'5px 15px 5px 15px'
+    },
+    smallSearchInput:{
+      display:matchesSearch&&displaySmallsearch ? "flex":'none',
+      position:'absolute', 
+      left:"3%",
+      top:"2px",
+      height:"70px",
+      width:'50%',
+      zIndex:'30',
+    },
+
+
   }));
 
   const classes = useStyles();
+
+  const searchPortion=(
+    <Paper
+      component="form"
+      className={`${classes.search} ${classes.paper}  `}
+    >
+      <IconButton className={classes.iconButton} aria-label="menu">
+        <SearchIcon />
+      </IconButton>
+      <InputBase
+        fullWidth
+        className={classes.input}
+        classes={{ placeholder: classes.searchBarPlaceHolder }}
+        placeholder=" Search"
+        onFocus={() => {
+          setSearchstyles(["1", "white", "auto", ""]);
+        }}
+        onBlur={() => {
+          setSearchstyles(["0", "rgb(241,243,244)", "none", "none"]);
+          setDisplaySmallSearch(false);
+
+        }}
+        inputProps={{ "aria-label": "search content" }}
+      />
+      <IconButton
+        className={`${classes.iconButtonMenu} ${classes.clearSearch}`}
+        aria-label="search"
+      >
+        <ClearSharpIcon className={classes.searchIcon} />
+      </IconButton >
+    </Paper>
+  )
 
   return (
     <header className={classes.root}>
@@ -192,48 +250,26 @@ export default function Header(props) {
             <Link className={classes.otherTitle} >{props.heading}</Link>
           </>
 
-      }
-       
-       
-       
+      }      
       </div>
 
-      <div className={classes.middlePortion}>
-        <Paper
-          component="form"
-          className={`${classes.search} ${classes.paper}  `}
-        >
-          <IconButton className={classes.iconButton} aria-label="menu">
-            <SearchIcon />
-          </IconButton>
-          <InputBase
-            fullWidth
-            className={classes.input}
-            classes={{ placeholder: classes.searchBarPlaceHolder }}
-            placeholder=" Search"
-            onFocus={() => {
-              setSearchstyles(["1", "white", "auto", ""]);
-            }}
-            onBlur={() => {
-              setSearchstyles(["0", "rgb(241,243,244)", "none", "none"]);
-            }}
-            inputProps={{ "aria-label": "search content" }}
-          />
-          <IconButton
-            type="submit"
-            className={`${classes.iconButtonMenu} ${classes.clearSearch}`}
-            aria-label="search"
-          >
-            <ClearSharpIcon className={classes.searchIcon} />
-          </IconButton >
-        </Paper>
-      </div>
+    {matchesSearch? <div className={classes.smallSearchInput}  >{searchPortion}</div>  :    <div className={classes.middlePortion}>
+ {searchPortion}</div>}
+  
+  {/* {matchesSearch? null:searchPortion} */}
+
 
       <div className={classes.rightPortion}>
         <div className={classes.appIconBar}>
-          <IconButton className={classes.iconButton} aria-label="menu">
-            <RefreshSharpIcon className={classes.appsIcon} />
-          </IconButton>
+        {matchesSearch?  <IconButton 
+        onClick={() => {
+          setDisplaySmallSearch(true)
+        }}
+        className={classes.serachButtonWhenScreenSmall} aria-label="menu">
+        <SearchIcon />
+      </IconButton>:null}
+      
+
           <IconButton className={classes.iconButton} aria-label="menu">
             <ViewStreamRoundedIcon className={classes.appsIcon} />
           </IconButton>

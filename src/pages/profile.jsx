@@ -72,7 +72,6 @@ export default function Profile() {
       // ...theme.typography.labels,
       textAlign: "center",
     },
-    PopUpBox: {},
     dialogBox: {
       zIndex: 25,
     },
@@ -122,9 +121,9 @@ export default function Profile() {
           setLabels={setLabels}
         />
       </div>
-      {/* <Drawer1 listOfLabels={tabs} showDrawer={showDrawer} setHeading={setHeading}  setShowDrawer={setShowDrawer}  /> */}
 
-      <Route exact path="/profile" component={Notes} />
+<div className={styles.pageSize}  >
+<Route exact path="/profile" component={Notes} />
       {routesPages.map((PageComponent, index) => {
         if (index !== 2 && index !== 0) {
           return (
@@ -149,6 +148,7 @@ export default function Profile() {
           }
         }
       })}
+</div>
       {editLabelsPopUpDisplay ? (
         // <div
         //   className={styles.editPopupBackground}

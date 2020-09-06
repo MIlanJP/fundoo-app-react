@@ -1,15 +1,32 @@
-// 
-.drawerLayout{
-    position: absolute;
-    top:70px;
+//
+.drawerLayout {
+  position: absolute;
+  top: 70px;
 }
 
-.Label{
-    text-align: center;
+.Label {
+  text-align: center;
+  height: calc(100vh - 75px);
+  width: 100vw;
 }
-.pageSize{
-    top:70px;
-    position:relative;
-    max-width:calc(100vw - 73px);
-    left:70px;
+
+// .pagesOfProfile{
+//     text-align: center;
+//     height:calc(100vh - 100px);
+//     width:100vw;
+//     z-index: 19;
+// }
+.pageSize {
+  top: 0px;
+  position: relative;
+  max-width: calc(100vw - 100px);
+  height: calc(100vh - 70px);
+  left: 70px;
+  z-index: 1;
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border: aquamarine;
+  justify-content: center;
 }

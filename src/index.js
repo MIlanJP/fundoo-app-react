@@ -2,12 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App.jsx';
+import {useSelector ,useDispatch} from 'react-redux'
 import * as serviceWorker from './serviceWorker';
+import {Provider} from 'react-redux'
 import{ BrowserRouter} from 'react-router-dom'
+import store from './redux/store'
 
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
+  <BrowserRouter >
+  <Provider store={store}>
+    <App
+      //   onBlur={() => {
+      //     dispatch(addNoteBeforeClick())
+      // }}
+    />
+    </Provider>
   </BrowserRouter>,
   document.getElementById('root')
 );

@@ -1,19 +1,23 @@
 import React from "react";
 import { IconButton, Paper, InputBase } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import {useSelector ,useDispatch} from 'react-redux'
+import {addNoteAfterClick} from '../redux'
+import {addNoteBeforeClick} from '../redux'
 import CheckBoxOutlinedIcon from "@material-ui/icons/CheckBoxOutlined";
 import BrushOutlinedIcon from "@material-ui/icons/BrushOutlined";
 import CropOriginalOutlinedIcon from "@material-ui/icons/CropOriginalOutlined";
-
-function CreateNoteTabBeforeClick(props) {
+import onClickOutside from "react-onclickoutside";
+ function CreateNoteTabBeforeClick(props){
+  const addNoteFeature=  useDispatch()
   const useStyles = makeStyles((theme) => ({
     addNotePortion: {
       height: "43px",
-     
-      // alignSelf: "center",
       borderRadius:'15px',
-      position: "absolute",
-      left:'calc( 50% - 200px  )',
+      marginRight:"auto",
+      position: "relative",
+      width:"47%",
+      right:'calc( 40% - 200px  )',
       top:"28px",
     },
     paper: {
@@ -41,8 +45,10 @@ function CreateNoteTabBeforeClick(props) {
   }));
   const classes = useStyles();
 
+  CreateNoteTabBeforeClick.handleClickOutside=()=>{addNoteFeature(addNoteBeforeClick())}
+
   return (
-    <div className={classes.addNotePortion}>
+
       <Paper
         component="form"
         className={` ${classes.paper}  `}
@@ -53,6 +59,10 @@ function CreateNoteTabBeforeClick(props) {
           fullWidth
           className={classes.input}
           inputProps={{ "aria-label": "search content" }}
+          onFocus={() => {
+            addNoteFeature(addNoteAfterClick())
+          }}
+
         />
         <IconButton type="submit" aria-label="search">
           <CheckBoxOutlinedIcon className={classes.iconButton} />
@@ -64,8 +74,14 @@ function CreateNoteTabBeforeClick(props) {
           <CropOriginalOutlinedIcon />
         </IconButton>
       </Paper>
-    </div>
+
   );
 }
 
-export default CreateNoteTabBeforeClick;
+const clickOutsideConfig = {
+  handleClickOutside: () => CreateNoteTabBeforeClick.handleClickOutside,
+
+};
+
+export default onClickOutside(CreateNoteTabBeforeClick, clickOutsideConfig);
+

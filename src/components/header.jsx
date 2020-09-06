@@ -216,6 +216,7 @@ const [displaySmallsearch ,setDisplaySmallSearch]=useState(false)
         inputProps={{ "aria-label": "search content" }}
       />
       <IconButton
+
         className={`${classes.iconButtonMenu} ${classes.clearSearch}`}
         aria-label="search"
       >

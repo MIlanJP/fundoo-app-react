@@ -16,7 +16,11 @@ import Notes from "../components/notes";
 import Reminder from "../components/reminder";
 import Archieve from "../components/archieve";
 import Drawer from "../components/drawer";
+import {addNoteBeforeClick} from '../redux'
+
 import styles from "../scss/profile.module.scss";
+import {useSelector ,useDispatch} from 'react-redux'
+
 
 import {
   Dialog,
@@ -31,6 +35,8 @@ import {
 export default function Profile() {
   const messages = useContext(MessageContext);
   const history=useHistory()
+  const addNoteFeature=  useDispatch()
+  const addNote=useSelector(state=>state.addNoteFeature.addNote)
 
   const [routesPages] = useState([Notes, Reminder, Label, Archieve, Bin]);
   const [routesName] = useState([
@@ -103,7 +109,10 @@ export default function Profile() {
 
   const classes = useStyles();
   return (
-    <>
+    <div 
+className={classes.Label}
+
+    >
       <Header
         setShowDrawer={setShowDrawer}
         showDrawer={showDrawer}
@@ -122,16 +131,24 @@ export default function Profile() {
         />
       </div>
 
-<div className={styles.pageSize}  >
+<div className={styles.pageSize} 
+// onClick={()=>{
+
+//   addNoteFeature(addNoteBeforeClick())
+// }}
+
+>
 <Route exact path="/profile" component={Notes} />
       {routesPages.map((PageComponent, index) => {
         if (index !== 2 && index !== 0) {
           return (
             <Route
+            className='pageRoutes'
               key={routesName[index]}
               exact
               path={`/profile/${routesName[index]}`}
               component={PageComponent}
+
             />
           );
         } else {
@@ -335,6 +352,6 @@ export default function Profile() {
 
       }}
       ></div> */}
-    </>
+    </div>
   );
 }

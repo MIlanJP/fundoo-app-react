@@ -1,15 +1,18 @@
-import React from "react";
+import React,{useEffect} from "react";
 import styles from "../scss/profile.module.scss";
 import CreateNoteTabBeforeClick from "./CreateNoteTabBeforeClick";
-import { addNoteBeforeClick } from "../redux";
+import { addNoteBeforeClick ,fetchAllUserData} from "../redux";
 import CreateNoteTabAfterClick from "./CreateNoteTabAfterClick";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
+import service from '../services/userservices'
+import Auth from "../services/Auth";
 
 export default function Notes() {
-  const addNoteFeature = useDispatch();
-
+  const dispatch = useDispatch();
+const loadingStatus= useSelector((state) => state.labels.loading)
+const loadedLabels= useSelector((state) => state.labels.userData)
   const addFeature = useSelector((state) => state.addNoteFeature.addNote);
 
   const useStyles = makeStyles((theme) => ({
@@ -29,7 +32,12 @@ export default function Notes() {
 
   const classes = useStyles();
 
-  return (
+  useEffect(() => {
+    dispatch(fetchAllUserData())
+   console.log(loadedLabels)
+  }, [])
+
+  return (<>
     <div className={classes.AddNoteLabels}>
       {addFeature ? (
         <CreateNoteTabAfterClick className={classes.PopUp} />
@@ -37,5 +45,7 @@ export default function Notes() {
         <CreateNoteTabBeforeClick className={classes.PopUp} />
       )}
     </div>
+
+    </>
   );
 }

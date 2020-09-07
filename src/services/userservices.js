@@ -1,30 +1,18 @@
-import axios from "axios";
 import { ApiCall } from "./apicall";
 
 const baseURL = "http://fundoonotes.incubation.bridgelabz.com/api/";
 
-const apicall = (data, url, method) => {
-  return new Promise((resolve, reject) => {
-    axios({ method, url, data })
-      .then((response) => {
-        resolve(response);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-};
 
- class Service {
+ class UserService {
   signUp(data) {
-    return apicall(data, `${baseURL}user/userSignUp`, "POST");
+    return ApiCall(data, `${baseURL}user/userSignUp`, "POST");
   }
   signIn(data) {
-    return apicall(data, `${baseURL}user/login`, "POST");
+    return ApiCall(data, `${baseURL}user/login`, "POST");
   }
 
   resetPassword(accessToken, newPassword) {
-    return apicall(
+    return ApiCall(
       newPassword,
       `${baseURL}user/reset-password?access_token=${accessToken}`,
       "POST"
@@ -33,25 +21,18 @@ const apicall = (data, url, method) => {
 
   recoverEmailID(email) {
     const data={email}
-    return apicall(data, `${baseURL}user/reset`, "POST");
+    return ApiCall(data, `${baseURL}user/reset`, "POST");
   }
 
   setNewPassWord(url, newPassword) {
     const data={newPassword}
-    return apicall(
+    return ApiCall(
       data,
       `${baseURL}user/reset-password?access_token=${url.split("/")[2]}`,
       "POST"
     );
   }
 
-  getAllLists() {
-    const token=localStorage.getItem("token");
-    return apicall('',`${baseURL}notes/getNotesList?access_token=${token}`,'GET')
-  }
-
-
-
 }
 
-export default new Service();
+export default new UserService();

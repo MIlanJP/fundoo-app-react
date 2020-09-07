@@ -7,6 +7,7 @@ import {
   ListItemIcon,
 } from "@material-ui/core";
 import { useState ,useEffect} from "react";
+import {useSelector,useDispatch } from 'react-redux'
 import { makeStyles } from "@material-ui/core/styles";
 import EmojiObjectsOutlinedIcon from "@material-ui/icons/EmojiObjectsOutlined";
 import NotificationsNoneOutlinedIcon from "@material-ui/icons/NotificationsNoneOutlined";
@@ -19,12 +20,12 @@ import { IconButton,Typography } from "@material-ui/core";
 
 
 export default function Drawers(props) {
-
+const dispatch = useDispatch();
   const [selectedLabel, setSelectedLabel] = useState("Notes");
-
+// const listoFlabels=useSelector((state) => state.labels.labelList)
+  const listoFlabels=useSelector((state) => state.labels.labelList)
   const useStyles = makeStyles((theme) => ({
     root: {
-
       width: "250px",
     },
     paper: {
@@ -94,6 +95,7 @@ export default function Drawers(props) {
 
   useEffect(() => {
     
+ 
     let location=window.location.pathname
  if(location.includes("/label/")){
   location=location.split("/label/")[1]
@@ -125,16 +127,16 @@ export default function Drawers(props) {
       }
     }}
     >
-      {props.listOfLabels.map((text, index) => {
+      {listoFlabels.map((text, index) => {
         return (
           <Link
             className={selectedLabel===text ? classes.selectedIcon :classes.labelIcons}
             to={
               index === 0
                 ? "/profile"
-                : index === props.listOfLabels.length - 3
+                : index === listoFlabels.length - 3
                 ? "#"
-                : index > props.listOfLabels.length - 3
+                : index > listoFlabels.length - 3
                 ? `/profile/${text}`
                 : index > 1
                 ? `/profile/label/${text}`
@@ -166,11 +168,11 @@ export default function Drawers(props) {
                 <EmojiObjectsOutlinedIcon />
               ) : index === 1 ? (
                 <NotificationsNoneOutlinedIcon />
-              ) : index === props.listOfLabels.length - 1 ? (
+              ) : index === listoFlabels.length - 1 ? (
                 <DeleteOutlinedIcon />
-              ) : index === props.listOfLabels.length - 2 ? (
+              ) : index === listoFlabels.length - 2 ? (
                 <ArchiveOutlinedIcon />
-              ) : index === props.listOfLabels.length - 3 ? (
+              ) : index === listoFlabels.length - 3 ? (
                 <EditOutlinedIcon />
               ) : (
                 <LabelOutlinedIcon />
@@ -194,15 +196,15 @@ export default function Drawers(props) {
         <List
 
         >
-          {props.listOfLabels.map((text, index) => {
+          {listoFlabels.map((text, index) => {
             return (
               <Link
               to={
                 index === 0
                   ? "/profile"
-                  : index === props.listOfLabels.length - 3
+                  : index === listoFlabels.length - 3
                   ? "#"
-                  : index > props.listOfLabels.length - 3
+                  : index > listoFlabels.length - 3
                   ? `/profile/${text}`
                   : index > 1
                   ? `/profile/label/${text}`
@@ -248,11 +250,11 @@ export default function Drawers(props) {
                 <EmojiObjectsOutlinedIcon />
               ) : index === 1 ? (
                 <NotificationsNoneOutlinedIcon />
-              ) : index === props.listOfLabels.length - 1 ? (
+              ) : index === listoFlabels.length - 1 ? (
                 <DeleteOutlinedIcon />
-              ) : index === props.listOfLabels.length - 2 ? (
+              ) : index === listoFlabels.length - 2 ? (
                 <ArchiveOutlinedIcon />
-              ) : index === props.listOfLabels.length - 3 ? (
+              ) : index === listoFlabels.length - 3 ? (
                 <EditOutlinedIcon />
               ) : (
                 <LabelOutlinedIcon />

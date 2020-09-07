@@ -5,6 +5,7 @@ import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import { Route ,useHistory} from "react-router-dom";
 import uuid from "react-uuid";
+import { addNoteBeforeClick ,fetchAllUserData,fetchLabelList} from "../redux";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import DoneIcon from "@material-ui/icons/Done";
@@ -16,8 +17,7 @@ import Notes from "../components/notes";
 import Reminder from "../components/reminder";
 import Archieve from "../components/archieve";
 import Drawer from "../components/drawer";
-import {addNoteBeforeClick} from '../redux'
-
+import OutsideClickHandler from "react-outside-click-x";
 import styles from "../scss/profile.module.scss";
 import {useSelector ,useDispatch} from 'react-redux'
 
@@ -35,6 +35,10 @@ import {
 export default function Profile() {
   const messages = useContext(MessageContext);
   const history=useHistory()
+  const dispatch = useDispatch();
+  const loadingStatus= useSelector((state) => state.labels.loading)
+  const loadedUserData= useSelector((state) => state.labels.userData)
+  const loadedLabels= useSelector((state) => state.labels.labelList)
   const addNoteFeature=  useDispatch()
   const addNote=useSelector(state=>state.addNoteFeature.addNote)
 
@@ -48,6 +52,8 @@ export default function Profile() {
   ]);
   // const [labels, setLabels] = useState(["Milan", "Milan1", "Milan3"]);
   const [labels, setLabels] = useState([]);
+  const labelss=useSelector((state) => state.labels.labelList)
+  const onlyLabels=useSelector((state) => state.labels.onlyLabelsList)
   const [tabs, setTabs] = useState([
     "Notes",
     "Reminder",
@@ -75,10 +81,10 @@ export default function Profile() {
 
   const useStyles = makeStyles((theme) => ({
     PopUpLabel: {
-      // ...theme.typography.labels,
       textAlign: "center",
     },
     dialogBox: {
+     
       zIndex: 25,
     },
     popUpListRow: {
@@ -96,6 +102,10 @@ export default function Profile() {
   }));
 
   useEffect(() => {
+    dispatch(fetchAllUserData())
+
+    dispatch(fetchLabelList())
+   console.log(loadedLabels)
     if(localStorage.getItem('labels')!==null){
       let restoredLabels=[];
       restoredLabels=[...JSON.parse(localStorage.getItem('labels'))]
@@ -132,10 +142,7 @@ className={classes.Label}
       </div>
 
 <div className={styles.pageSize} 
-// onClick={()=>{
 
-//   addNoteFeature(addNoteBeforeClick())
-// }}
 
 >
 <Route exact path="/profile" component={Notes} />
@@ -152,9 +159,9 @@ className={classes.Label}
             />
           );
         } else {
-          if (index === 2 && labels.length > 0) {
+          if (index === 2 && labelss.length > 0) {
             const collectLabel = [];
-            labels.forEach((data) => {
+            labelss.forEach((data) => {
               collectLabel.push(
                 <Route key={uuid()} exact path={`/profile/label/${data}`}>
                   <PageComponent labelName={data} />
@@ -167,22 +174,12 @@ className={classes.Label}
       })}
 </div>
       {editLabelsPopUpDisplay ? (
-        // <div
-        //   className={styles.editPopupBackground}
-        //   onClick={() => {
-        //     // setEditLabelsPopUpDisplay(false)
-        //   }}
-        // >
+
         <Dialog
           aria-labelledby="simple-dialog-title"
           open={editLabelsPopUpDisplay}
-          // onClick={() => {
-          //   setEditLabelsPopUpDisplay(!editLabelsPopUpDisplay);
-          // }}
           className={classes.dialogBox}
-          // onBlur={()=>{
-          //   setEditLabelsPopUpDisplay(false)
-          // }}
+
           disableBackdropClick={true}
         >
           <DialogTitle id="simple-dialog-title" className={classes.PopUpBox}>
@@ -247,7 +244,7 @@ className={classes.Label}
                 </IconButton>
               ) : null}
             </ListItem>
-            {labels.map((text, index) => (
+            {onlyLabels.map((text, index) => (
               <ListItem
               autoFocus={text === popUpTargetAutoFocus}
                 button

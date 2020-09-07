@@ -12,6 +12,9 @@ export default function Label() {
 
   const addFeature = useSelector((state) => state.addNoteFeature.addNote);
 
+    
+
+
   const useStyles = makeStyles((theme) => ({
     AddNoteLabels: {
       position: "relative",
@@ -19,7 +22,7 @@ export default function Label() {
       width: "49%",
       display: "flex",
       flexDirection: "column",
-      zIndex: 0,
+      zIndex: 2,
       height: '40px',
     },
     PopUp: {
@@ -30,7 +33,9 @@ export default function Label() {
   const classes = useStyles();
 
   return (
-    <div className={classes.AddNoteLabels}>
+    <div className={classes.AddNoteLabels}
+
+    >
       {addFeature ? (
         <CreateNoteTabAfterClick className={classes.PopUp} />
       ) : (

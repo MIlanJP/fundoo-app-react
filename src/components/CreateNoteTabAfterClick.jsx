@@ -8,6 +8,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import OutsideClickHandler from "react-outside-click-x";
 import { useDispatch } from "react-redux";
 import AddAlertOutlinedIcon from "@material-ui/icons/AddAlertOutlined";
 import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
@@ -53,10 +54,12 @@ function CreateNoteTabAfterClick(props) {
       color: "black",
     },
     closeButton: {
-      position: "absolute",
-      right: "10px",
-      bottom: "10px",
+      position: "relative",
+      left: "35%",
+     outline:"none",
+     boxShadow:"none",
       background: "white",
+      textTransform: "Capitalize",
     },
     input: {
       ...theme.typography.addnote,
@@ -126,8 +129,14 @@ function CreateNoteTabAfterClick(props) {
   );
 
   return (
-    <div className={classes.addNotePortion}
-  
+    <OutsideClickHandler
+      className={classes.addNotePortion}
+      onOutsideClick={() => {
+        console.log(addNote,"Printing")
+          if(addNote!=false){
+            addNoteFeature(addNoteBeforeClick());
+          }
+      }}
     >
       <Paper component="form" className={` ${classes.paper}  `} boxShadow={10}>
         {pinnedStatus ? pinned : unPinned}
@@ -168,18 +177,16 @@ function CreateNoteTabAfterClick(props) {
           <IconButton className={classes.iconButton} aria-label="menu">
             <UndoOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
-          <Button
-            variant="contained"
-            className={classes.closeButton}
-            onClick={() => {
-              addNoteFeature(addNoteBeforeClick());
-            }}
+          <Button variant="contained" className={classes.closeButton}
+                onClick={() => {
+                    addNoteFeature(addNoteBeforeClick());
+                  }}
           >
-            ADD
+            Close
           </Button>
         </div>
       </Paper>
-    </div>
+    </OutsideClickHandler>
   );
 }
 

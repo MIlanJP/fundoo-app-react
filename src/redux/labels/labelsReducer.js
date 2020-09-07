@@ -2,6 +2,8 @@ import * as actions from './labelsType'
 
 const initialState = {
     loading :false,
+    userID:"",
+    emailId:'',
     labelList:[],
     onlyLabelsList:[],
     userData:{},
@@ -45,6 +47,37 @@ const initialState = {
                 ...state,
                 loading:false,
                 onlyLabelsList:action.payload
+            }
+        }
+        case actions.GET_USER_ID:{
+            return {
+                ...state,
+                loading:false,
+                userID:action.payload
+            }
+        }
+        case actions.SET_EMAIL_ID:{
+            return {
+                ...state,
+                loading:false,
+                emailId:action.payload
+            }
+        }
+        case actions.UPDATE_LABEL_ID_INSTATE:{
+            let listOfObjects=[]
+            const labelsObject=state.onlyLabelsList
+            labelsObject.forEach(label=>{
+                if(label.id===action.id){
+                    label.label=action.labelName
+                    listOfObjects.push(label)
+                }else{
+                        listOfObjects.push(label)
+                }
+            })
+            return {
+                ...state,
+                loading:false,
+                emailId:action.payload
             }
         }
         default: return state;

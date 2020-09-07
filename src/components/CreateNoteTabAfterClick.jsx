@@ -133,7 +133,7 @@ function CreateNoteTabAfterClick(props) {
       className={classes.addNotePortion}
       onOutsideClick={() => {
         console.log(addNote,"Printing")
-          if(addNote!=false){
+          if(addNote!==false){
             addNoteFeature(addNoteBeforeClick());
           }
       }}

@@ -307,6 +307,7 @@ const [displaySmallsearch ,setDisplaySmallSearch]=useState(false)
                       history.push("/login");
                       localStorage.removeItem('token')
                       localStorage.removeItem('loginTime')
+                      localStorage.removeItem('emailId')
                       messages.setMessage("you Have successfully logged out");
                       messages.setSnackBar(true);
                     });

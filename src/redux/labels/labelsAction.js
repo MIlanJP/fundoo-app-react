@@ -1,5 +1,7 @@
 import * as actions from "./labelsType";
 import services from "../../services/labelservice";
+import labelservice from '../../services/labelservice'
+import {useSelector} from 'react-redux'
 export const getAllLabels = (userData) => {
   return {
     type: actions.GET_ALL_NOTES,
@@ -34,6 +36,12 @@ export const addLabel = (successMessge) => {
   };
 };
 
+export const getUserId = (userId) => {
+    return {
+      type: actions.GET_USER_ID,
+      payload: userId,
+    };
+  };
 export const getLabelLists = (labelLists) => {
   return {
     type: actions.GET_ALL_THE_LABELS,
@@ -41,8 +49,23 @@ export const getLabelLists = (labelLists) => {
   };
 };
 
+export const setEmailId = (emailId) => {
+    return {
+      type: actions.SET_EMAIL_ID,
+      payload: emailId,
+    };
+  };
+
+  export const UpdateLabelonChange = (id,labelName)=>{
+      return {
+          type:actions.UPDATE_LABEL_ID_INSTATE,
+          id:id,
+          labelName:labelName
+      }
+  }
 
 // API ACTIONS
+
 
 
 export const fetchAllUserData = () => {
@@ -64,7 +87,8 @@ export const fetchAllUserData = () => {
 
 export const fetchLabelList = () => {
   return (dispatch) => {
-    let list = [];
+    let list1 = [];
+    let list2 = [];
     const startTabs = ["Notes", "Reminder"];
     const endTabs = ["Edit Labels", "Archieve", "Bin"];
     const lists = [];
@@ -74,12 +98,14 @@ export const fetchLabelList = () => {
       .then((response) => {
         const listofLabels = response.data.data.details.map((label) => {
           if (label.isDeleted === false) {
-            list.push(label.label);
+            list1.push(label.label);
+            list2.push(label);
           }
         });
         
-        lists.push(...startTabs, ...list, ...endTabs);
-        dispatch(onlyLabelLists(list))
+        lists.push(...startTabs, ...list1, ...endTabs);
+        localStorage.setItem('labels',JSON.stringify(list1))
+        dispatch(onlyLabelLists(list2))
         dispatch(getLabelLists(lists));
       })
       .catch((error) => {
@@ -88,10 +114,27 @@ export const fetchLabelList = () => {
         const endTabs = ["Edit Labels", "Archieve", "Bin"];
         const errorMessage = error;
         const lists = [];
-        lists.push(...startTabs, ...list, ...endTabs);
+        lists.push(...startTabs, ...list1, ...endTabs);
         dispatch(getLabelLists(lists));
         dispatch(fetchUserFailed(errorMessage));
       });
   };
 };
 
+export const fetchUserIdByEmail=(emailId)=>{
+    return (dispatch)=>{
+        services.getUserID().then(data=>{
+            let userID=''
+            const userId=data.data.filter(data=>{ if(data.email==emailId){
+                userID=data.id
+                console.log(data.id)
+                dispatch(getUserId(data.id))
+                return data.id
+            }})
+            
+        }).catch(error=>{
+            dispatch(fetchUserFailed(error.errorMessage));
+        })
+    }
+
+}

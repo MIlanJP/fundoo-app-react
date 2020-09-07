@@ -3,9 +3,9 @@ import MessageContext from "../components/messagecontext";
 import Header from "../components/header";
 import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
-import { Route ,useHistory} from "react-router-dom";
+import { Route, useHistory } from "react-router-dom";
 import uuid from "react-uuid";
-import { addNoteBeforeClick ,fetchAllUserData,fetchLabelList} from "../redux";
+import { fetchUserIdByEmail, fetchAllUserData, fetchLabelList,UpdateLabelonChange } from "../redux";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import DoneIcon from "@material-ui/icons/Done";
@@ -19,8 +19,7 @@ import Archieve from "../components/archieve";
 import Drawer from "../components/drawer";
 import OutsideClickHandler from "react-outside-click-x";
 import styles from "../scss/profile.module.scss";
-import {useSelector ,useDispatch} from 'react-redux'
-
+import { useSelector, useDispatch } from "react-redux";
 
 import {
   Dialog,
@@ -31,16 +30,18 @@ import {
   InputBase,
   IconButton,
 } from "@material-ui/core";
+import labelservice from "../services/labelservice";
 
 export default function Profile() {
   const messages = useContext(MessageContext);
-  const history=useHistory()
+  const history = useHistory();
   const dispatch = useDispatch();
-  const loadingStatus= useSelector((state) => state.labels.loading)
-  const loadedUserData= useSelector((state) => state.labels.userData)
-  const loadedLabels= useSelector((state) => state.labels.labelList)
-  const addNoteFeature=  useDispatch()
-  const addNote=useSelector(state=>state.addNoteFeature.addNote)
+  const loadingStatus = useSelector((state) => state.labels.loading);
+  const loadedUserData = useSelector((state) => state.labels.userData);
+  const loadedLabels = useSelector((state) => state.labels.labelList);
+  const userId = useSelector((state) => state.labels.userID);
+  const addNoteFeature = useDispatch();
+  const addNote = useSelector((state) => state.addNoteFeature.addNote);
 
   const [routesPages] = useState([Notes, Reminder, Label, Archieve, Bin]);
   const [routesName] = useState([
@@ -52,8 +53,8 @@ export default function Profile() {
   ]);
   // const [labels, setLabels] = useState(["Milan", "Milan1", "Milan3"]);
   const [labels, setLabels] = useState([]);
-  const labelss=useSelector((state) => state.labels.labelList)
-  const onlyLabels=useSelector((state) => state.labels.onlyLabelsList)
+  const labelss = useSelector((state) => state.labels.labelList);
+  const onlyLabels = useSelector((state) => state.labels.onlyLabelsList);
   const [tabs, setTabs] = useState([
     "Notes",
     "Reminder",
@@ -84,7 +85,6 @@ export default function Profile() {
       textAlign: "center",
     },
     dialogBox: {
-     
       zIndex: 25,
     },
     popUpListRow: {
@@ -102,27 +102,24 @@ export default function Profile() {
   }));
 
   useEffect(() => {
-    dispatch(fetchAllUserData())
+    dispatch(fetchAllUserData());
 
-    dispatch(fetchLabelList())
-   console.log(loadedLabels)
-    if(localStorage.getItem('labels')!==null){
-      let restoredLabels=[];
-      restoredLabels=[...JSON.parse(localStorage.getItem('labels'))]
-      let restoreTabs=[];
-      restoreTabs.push(...startTabs,...restoredLabels,...endTabs)
-     setLabels([...restoredLabels])
-     setTabs([...restoreTabs])
+    dispatch(fetchLabelList());
+    dispatch(fetchUserIdByEmail(localStorage.getItem("emailId")));
+    console.log(loadedLabels);
+    if (localStorage.getItem("labels") !== null) {
+      let restoredLabels = [];
+      restoredLabels = [...JSON.parse(localStorage.getItem("labels"))];
+      let restoreTabs = [];
+      restoreTabs.push(...startTabs, ...restoredLabels, ...endTabs);
+      setLabels([...restoredLabels]);
+      setTabs([...restoreTabs]);
     }
-
   }, []);
 
   const classes = useStyles();
   return (
-    <div 
-className={classes.Label}
-
-    >
+    <div className={classes.Label}>
       <Header
         setShowDrawer={setShowDrawer}
         showDrawer={showDrawer}
@@ -141,45 +138,39 @@ className={classes.Label}
         />
       </div>
 
-<div className={styles.pageSize} 
-
-
->
-<Route exact path="/profile" component={Notes} />
-      {routesPages.map((PageComponent, index) => {
-        if (index !== 2 && index !== 0) {
-          return (
-            <Route
-            className='pageRoutes'
-              key={routesName[index]}
-              exact
-              path={`/profile/${routesName[index]}`}
-              component={PageComponent}
-
-            />
-          );
-        } else {
-          if (index === 2 && labelss.length > 0) {
-            const collectLabel = [];
-            labelss.forEach((data) => {
-              collectLabel.push(
-                <Route key={uuid()} exact path={`/profile/label/${data}`}>
-                  <PageComponent labelName={data} />
-                </Route>
-              );
-            });
-            return collectLabel;
+      <div className={styles.pageSize}>
+        <Route exact path="/profile" component={Notes} />
+        {routesPages.map((PageComponent, index) => {
+          if (index !== 2 && index !== 0) {
+            return (
+              <Route
+                className="pageRoutes"
+                key={routesName[index]}
+                exact
+                path={`/profile/${routesName[index]}`}
+                component={PageComponent}
+              />
+            );
+          } else {
+            if (index === 2 && labelss.length > 0) {
+              const collectLabel = [];
+              labelss.forEach((data) => {
+                collectLabel.push(
+                  <Route key={uuid()} exact path={`/profile/label/${data}`}>
+                    <PageComponent labelName={data} />
+                  </Route>
+                );
+              });
+              return collectLabel;
+            }
           }
-        }
-      })}
-</div>
+        })}
+      </div>
       {editLabelsPopUpDisplay ? (
-
         <Dialog
           aria-labelledby="simple-dialog-title"
           open={editLabelsPopUpDisplay}
           className={classes.dialogBox}
-
           disableBackdropClick={true}
         >
           <DialogTitle id="simple-dialog-title" className={classes.PopUpBox}>
@@ -210,9 +201,12 @@ className={classes.Label}
                 onChange={(e) => {
                   setPopUpTargetAutoFocusAddNewValue(e.currentTarget.value);
                 }}
-               
                 onLoad={(e) => {
-                   console.log( e.parentElement.parentElement.parentElement.parentElement.parentElement,"Printing")
+                  console.log(
+                    e.parentElement.parentElement.parentElement.parentElement
+                      .parentElement,
+                    "Printing"
+                  );
                 }}
               />
               {popUpTargetAutoFocusAddNew ? (
@@ -222,22 +216,28 @@ className={classes.Label}
                       popUpTargetAutoFocusAddNewValue !== "" &&
                       !tabs.includes(popUpTargetAutoFocusAddNewValue)
                     ) {
-                      let items = [...labels];
+                      const data = {
+                        label: popUpTargetAutoFocusAddNewValue,
+                        isDeleted: false,
+                        userId: userId,
+                      };
+                      labelservice.addLabel(data);
+                      dispatch(fetchLabelList());
+                      let items = [...labelss];
                       items.push(popUpTargetAutoFocusAddNewValue);
-                      localStorage.setItem('labels',JSON.stringify(items))
+                      localStorage.setItem(
+                        "labels",
+                        JSON.stringify(onlyLabels.label)
+                      );
+
                       setLabels([...items]);
                       let totalItems = [];
-                      totalItems.push(...startTabs,...items,...endTabs);
+                      totalItems.push(...startTabs, ...items, ...endTabs);
                       setTabs([...totalItems]);
                       setPopUpTargetAutoFocusAddNewValue("");
                     } else if (popUpTargetAutoFocusAddNewValue === "") {
-                      // messages.setMessage("Empty Name cannot be given");
-                      // messages.setSnackBar(true);
                     } else {
-                      // messages.setMessage("Label Already present");
-                      // messages.setSnackBar(true);
                     }
-                   
                   }}
                 >
                   <DoneIcon />
@@ -246,7 +246,7 @@ className={classes.Label}
             </ListItem>
             {onlyLabels.map((text, index) => (
               <ListItem
-              autoFocus={text === popUpTargetAutoFocus}
+                autoFocus={text.label === popUpTargetAutoFocus}
                 button
                 className={classes.popUpListRow}
                 onMouseOver={(e) => {
@@ -255,13 +255,12 @@ className={classes.Label}
                       .firstElementChild.value;
                   setpopUpTargetLabelValue(name);
                 }}
-
-                onMouseLeave={()=>{
+                onMouseLeave={() => {
                   setpopUpTargetLabelValue(null);
                 }}
-
               >
-                {popTargetLabelValue === text || focusValue === text ? (
+                {popTargetLabelValue === text.label ||
+                focusValue === text.label ? (
                   <IconButton
                     onClick={(e) => {
                       let name =
@@ -272,17 +271,27 @@ className={classes.Label}
                         return item !== name;
                       });
                       setLabels([...itemsPresent]);
-                      localStorage.setItem('labels', JSON.stringify(itemsPresent));
+                      localStorage.setItem(
+                        "labels",
+                        JSON.stringify(itemsPresent)
+                      );
                       let totalItems = [];
-                      totalItems.push(...startTabs,...itemsPresent,...endTabs);
-                      setTabs([...totalItems]);
-    let location=window.location.pathname
-   let labelLocation=location.split("/label/")[1]
-   labelLocation=decodeURI(labelLocation)
-   if( location.includes("/label/")&& name===labelLocation){
-    setHeading('Keep')
-    history.push('/profile')
-   }
+                      totalItems.push(
+                        ...startTabs,
+                        ...itemsPresent,
+                        ...endTabs
+                      );
+                    
+                      let location = window.location.pathname;
+                      let labelLocation = location.split("/label/")[1];
+                      labelLocation = decodeURI(labelLocation);
+                      if (
+                        location.includes("/label/") &&
+                        name === labelLocation
+                      ) {
+                        setHeading("Keep");
+                        history.push("/profile");
+                      }
                     }}
                   >
                     <DeleteIcon />
@@ -293,7 +302,7 @@ className={classes.Label}
                   </IconButton>
                 )}
                 <InputBase
-                  value={text}
+                  value={text.label}
                   onChange={(e) => {
                     const items = [...labels];
                     let item = items[index];
@@ -302,25 +311,29 @@ className={classes.Label}
                     setLabels([...items]);
                     setFocusValue(e.currentTarget.value);
                     let totalItems = [];
-                    totalItems.push(...startTabs,...items,...endTabs);
+                    totalItems.push(...startTabs, ...items, ...endTabs);
                     setTabs([...totalItems]);
+                    dispatch(UpdateLabelonChange(text.id,e.currentTarget.value))
+
                   }}
-                  
-                 
                   onFocus={(e) => {
                     setFocusValue(e.currentTarget.value);
-                    if(popUpTargetAutoFocusAddNewValue==='')
-                    {
-                      setPopUpTargetAutoFocusAddNew(false)
+                    if (popUpTargetAutoFocusAddNewValue === "") {
+                      setPopUpTargetAutoFocusAddNew(false);
                     }
-                    
                   }}
-                  onBlur={() => {
+                  onBlur={(e) => {
                     setFocusValue(null);
+                    if(text.label!==popUpTargetAutoFocusAddNewValue){
+                      const data={
+                        label:e.currentTarget.value
+                      }
+                      labelservice.updateLabel(text.id,data)
+                      dispatch(fetchLabelList());
+                    }
                   }}
-
                 />
-                {focusValue === text ? (
+                {focusValue === text.label ? (
                   <IconButton>
                     <DoneIcon />
                   </IconButton>
@@ -333,6 +346,10 @@ className={classes.Label}
                         const name = (e.currentTarget.parentElement.parentElement.previousElementSibling.firstChild.autofocus =
                           "true");
                         setPopUpTargetAutoFocus(name);
+                        if(text.label!==popUpTargetAutoFocusAddNewValue){
+                          labelservice.updateLabel(text.id)
+                          dispatch(fetchLabelList());
+                        }
                       }}
                     />
                   </IconButton>

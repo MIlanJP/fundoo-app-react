@@ -8,6 +8,8 @@ import {
   Button,
 } from "@material-ui/core";
 import styles from "../scss/login.module.scss";
+import {fetchUserIdByEmail,setEmailId} from '../redux'
+import {useDispatch} from 'react-redux'
 import "../css/logo.css";
 import Auth from "../services/Auth"
 import { Link, useHistory } from "react-router-dom";
@@ -21,6 +23,7 @@ export default function Login(props) {
   const message1 = useContext(MessageContext);
   const history = useHistory();
   const [message] = useState("");
+  const dispatch=useDispatch();
 
   const [values, setValues] = useState({
     emailId: "",
@@ -36,6 +39,7 @@ export default function Login(props) {
       if(Auth.isAuthenticated()){
         console.log(Auth.isAuthenticated())
         Auth.login(() => {
+        dispatch(fetchUserIdByEmail(localStorage.getItem('emailId')))
           history.push(window.location.pathname)
         });
         
@@ -55,6 +59,8 @@ export default function Login(props) {
       .then((data) => {
         if(data.status===200){
         localStorage.setItem("token",data.data.id)
+        dispatch(fetchUserIdByEmail(values.emailId))
+        localStorage.setItem('emailId',values.emailId)
         message1.setMessage("You Have Logged In Sucessfully");
         message1.setSnackBar(true);
         Auth.login(() => {

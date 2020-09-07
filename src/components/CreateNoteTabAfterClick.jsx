@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   IconButton,
   Paper,
@@ -6,24 +6,46 @@ import {
   Icon,
   SvgIcon,
   Button,
+  ListItem,
+  Checkbox,
+  ListItemIcon,
+  ListItemText,
+  List,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import OutsideClickHandler from "react-outside-click-x";
 import { useDispatch } from "react-redux";
 import AddAlertOutlinedIcon from "@material-ui/icons/AddAlertOutlined";
+import ClearIcon from "@material-ui/icons/Clear";
 import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
+import AddIcon from '@material-ui/icons/Add';
 import PaletteOutlinedIcon from "@material-ui/icons/PaletteOutlined";
 import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import UndoOutlinedIcon from "@material-ui/icons/UndoOutlined";
 import CropOriginalOutlinedIcon from "@material-ui/icons/CropOriginalOutlined";
 import { useSelector } from "react-redux";
-import { addNoteBeforeClick, pinIt, unPinIt } from "../redux";
+import {
+  addNoteBeforeClick,
+  pinIt,
+  unPinIt,
+  hideListFeature,
+  setDescriptList,
+} from "../redux";
 function CreateNoteTabAfterClick(props) {
+  const descriptionList = useSelector(
+    (state) => state.notes.descriptionCheckBoxList
+  );
+
+  const [onFocusText, setOnFocusText] = useState("");
+  const [showClearIcon, setShowClearIcon] = useState("");
+  const [displayOnHover, setDisplayOnHover] = useState(false);
   const pinnedStatus = useSelector((state) => state.pinFeature.pinNote);
   const dispatch = useDispatch();
-  const addNoteFeature = useDispatch();
   const addNote = useSelector((state) => state.addNoteFeature.addNote);
+  const displayListFeature = useSelector(
+    (state) => state.notes.displayListFeature
+  );
   const useStyles = makeStyles((theme) => ({
     addNotePortion: {
       borderRadius: "15px",
@@ -56,8 +78,8 @@ function CreateNoteTabAfterClick(props) {
     closeButton: {
       position: "relative",
       left: "35%",
-     outline:"none",
-     boxShadow:"none",
+      outline: "none",
+      boxShadow: "none",
       background: "white",
       textTransform: "Capitalize",
     },
@@ -77,15 +99,18 @@ function CreateNoteTabAfterClick(props) {
       margin: "2px 0 5px 5px",
       width: "80%",
     },
-    // background: {
-    //   position: "absolute",
-    //   height: "200vh",
-    //   left:"50vw",
-    //   width: "110vw",
-    //   color:'transparent',
-    //   background:"transparent",
-    //   cursor:"pointer"
-    // },
+    listItem: {
+      width: "100%",
+      height: "25px",
+      marginLeft: "5px",
+      boxShadow: " 0 0 1px 1px",
+      //   borderBottomStyle: 'inset',
+      //   borderTopStyle: 'groove'
+    },
+
+    listInput: {
+      width: "90%",
+    },
     pinIcon: {
       position: "absolute",
       right: "10px",
@@ -97,7 +122,6 @@ function CreateNoteTabAfterClick(props) {
     },
   }));
   const classes = useStyles();
-
   const unPinned = (
     <IconButton
       className={classes.pinIcon}
@@ -128,14 +152,103 @@ function CreateNoteTabAfterClick(props) {
     </IconButton>
   );
 
+  const inputsToAddLabel = displayListFeature ? (
+    <List>
+      {descriptionList.map((description, index) => {
+        return (
+          <ListItem className={classes.listItem}
+          onMouseOver={(e) => {
+            // setDisplayOnHover(true)
+            setShowClearIcon(e.currentTarget.firstChild.nextSibling.firstChild.value)
+
+          }}
+          onMouseLeave={(e) => {
+            // setDisplayOnHover(false)
+            setShowClearIcon('')
+          }}
+          >
+            <ListItemIcon>
+            {index===descriptionList.length-1?
+            <AddIcon/>    :
+            <Checkbox
+            edge="start"
+            //   checked={true}
+            tabIndex={-1}
+            disableRipple
+              inputProps={{ 'aria-labelledby': index }}
+          />
+        }
+
+            </ListItemIcon>
+            <InputBase
+              className={classes.listInput}
+              placeholder="List Item"
+              value={descriptionList[index]}
+              onChange={(e) => {
+                setOnFocusText(e.currentTarget.value);
+                let descriptList = descriptionList;
+                descriptList[index] = e.currentTarget.value;
+                if (
+                  index === descriptionList.length - 1 &&
+                  e.currentTarget.value !== ""
+                ) {
+                  descriptList.push("");
+                  dispatch(setDescriptList([...descriptList]));
+                } else if (
+                  index === descriptionList.length - 2 &&
+                  e.currentTarget.value === ""
+                ) {
+                  descriptList.pop();
+                  dispatch(setDescriptList([...descriptList]));
+                } else {
+                  dispatch(setDescriptList([...descriptList]));
+                }
+              }}
+              onFocus={(e) => {
+                setOnFocusText(e.currentTarget.value);
+              }}
+            />
+            {/* <IconButton className={classes.iconButton} aria-label="menu"> */}
+
+            {onFocusText === description || showClearIcon===description ? (
+              <ClearIcon
+                className={classes.bottomIcons}
+                onClick={() => {
+                  if (index !== descriptionList.length - 1) {
+                    let descriptList = descriptionList.filter(
+                      (list) => list !== description
+                    );
+                    dispatch(setDescriptList([...descriptList]));
+                  }
+                }}
+              />
+            ) : null}
+
+            {/* </IconButton> */}
+          </ListItem>
+        );
+      })}
+    </List>
+  ) : (
+    <InputBase
+      multiline={true}
+      rowsMax={20}
+      placeholder=" Take a note..."
+      fullWidth
+      className={classes.input}
+      inputProps={{ "aria-label": "search content" }}
+    />
+  );
+
   return (
     <OutsideClickHandler
       className={classes.addNotePortion}
       onOutsideClick={() => {
-        console.log(addNote,"Printing")
-          if(addNote!==false){
-            addNoteFeature(addNoteBeforeClick());
-          }
+        console.log(addNote, "Printing");
+        if (addNote !== false) {
+          dispatch(addNoteBeforeClick());
+          dispatch(hideListFeature());
+        }
       }}
     >
       <Paper component="form" className={` ${classes.paper}  `} boxShadow={10}>
@@ -146,14 +259,8 @@ function CreateNoteTabAfterClick(props) {
           className={classes.titleInput}
           inputProps={{ "aria-label": "search content" }}
         />
-        <InputBase
-          multiline={true}
-          rowsMax={20}
-          placeholder=" Take a note..."
-          fullWidth
-          className={classes.input}
-          inputProps={{ "aria-label": "search content" }}
-        />
+        {inputsToAddLabel}
+
         <div className={classes.iconColumn}>
           <IconButton className={classes.iconButton} aria-label="menu">
             <AddAlertOutlinedIcon className={classes.bottomIcons} />
@@ -177,10 +284,12 @@ function CreateNoteTabAfterClick(props) {
           <IconButton className={classes.iconButton} aria-label="menu">
             <UndoOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
-          <Button variant="contained" className={classes.closeButton}
-                onClick={() => {
-                    addNoteFeature(addNoteBeforeClick());
-                  }}
+          <Button
+            variant="contained"
+            className={classes.closeButton}
+            onClick={() => {
+              dispatch(addNoteBeforeClick());
+            }}
           >
             Close
           </Button>

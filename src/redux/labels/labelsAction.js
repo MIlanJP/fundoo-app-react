@@ -125,7 +125,7 @@ export const fetchUserIdByEmail=(emailId)=>{
     return (dispatch)=>{
         services.getUserID().then(data=>{
             let userID=''
-            const userId=data.data.filter(data=>{ if(data.email==emailId){
+            const userId=data.data.filter(data=>{ if(data.email===emailId){
                 userID=data.id
                 console.log(data.id)
                 dispatch(getUserId(data.id))

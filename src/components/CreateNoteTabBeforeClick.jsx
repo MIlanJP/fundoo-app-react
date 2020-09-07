@@ -1,15 +1,13 @@
 import React from "react";
 import { IconButton, Paper, InputBase } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import {useSelector ,useDispatch} from 'react-redux'
-import {addNoteAfterClick} from '../redux'
-import {addNoteBeforeClick} from '../redux'
+import {useDispatch} from 'react-redux'
+import {addNoteAfterClick,showListFeature} from '../redux'
 import CheckBoxOutlinedIcon from "@material-ui/icons/CheckBoxOutlined";
 import BrushOutlinedIcon from "@material-ui/icons/BrushOutlined";
 import CropOriginalOutlinedIcon from "@material-ui/icons/CropOriginalOutlined";
-import onClickOutside from "react-onclickoutside";
  function CreateNoteTabBeforeClick(props){
-  const addNoteFeature=  useDispatch()
+  const dispatch=  useDispatch()
   const useStyles = makeStyles((theme) => ({
     addNotePortion: {
       height: "43px",
@@ -45,7 +43,6 @@ import onClickOutside from "react-onclickoutside";
   }));
   const classes = useStyles();
 
-  CreateNoteTabBeforeClick.handleClickOutside=()=>{addNoteFeature(addNoteBeforeClick())}
 
   return (
 
@@ -60,11 +57,17 @@ import onClickOutside from "react-onclickoutside";
           className={classes.input}
           inputProps={{ "aria-label": "search content" }}
           onFocus={() => {
-            addNoteFeature(addNoteAfterClick())
+            dispatch(addNoteAfterClick())
           }}
 
         />
-        <IconButton type="submit" aria-label="search">
+        <IconButton  aria-label="search"
+        onClick={()=>{
+dispatch(showListFeature())
+dispatch(addNoteAfterClick())
+
+        }}
+        >
           <CheckBoxOutlinedIcon className={classes.iconButton} />
         </IconButton>
         <IconButton className={classes.iconButton} aria-label="menu">
@@ -78,10 +81,6 @@ import onClickOutside from "react-onclickoutside";
   );
 }
 
-const clickOutsideConfig = {
-  handleClickOutside: () => CreateNoteTabBeforeClick.handleClickOutside,
 
-};
-
-export default onClickOutside(CreateNoteTabBeforeClick, clickOutsideConfig);
+export default CreateNoteTabBeforeClick;
 

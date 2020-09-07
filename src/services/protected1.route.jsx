@@ -8,18 +8,18 @@ export default function ProtectedRoute({ component: Component, ...rest }) {
       {...rest}
       render={(props) => {
         if (Auth.isAuthenticated()) {
-            return (
-                <Redirect
-                  to={{
-                    pathname: "/profile",
-                    state: {
-                      from: props.location,
-                    },
-                  }}
-                />
-              );
+          return (
+            <Redirect
+              to={{
+                pathname: "/profile",
+                state: {
+                  from: props.location,
+                },
+              }}
+            />
+          );
         } else {
-            return <Component {...props} />;
+          return <Component {...props} />;
         }
       }}
     />

@@ -263,6 +263,8 @@ export default function Profile() {
                 focusValue === text.label ? (
                   <IconButton
                     onClick={(e) => {
+                      labelservice.deleteLabel(text.id)
+                      dispatch(fetchLabelList());
                       let name =
                         e.currentTarget.nextElementSibling.firstElementChild
                           .value;
@@ -293,6 +295,7 @@ export default function Profile() {
                         history.push("/profile");
                       }
                     }}
+                    
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -330,6 +333,7 @@ export default function Profile() {
                       }
                       labelservice.updateLabel(text.id,data)
                       dispatch(fetchLabelList());
+                      setHeading(e.currentTarget.value)
                     }
                   }}
                 />

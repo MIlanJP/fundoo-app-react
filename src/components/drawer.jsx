@@ -77,6 +77,8 @@ const dispatch = useDispatch();
     },
     selectedLabel:{
       ...theme.action,
+      paddingTop:"20px",
+      paddingDown:"20px",
       borderTopRightRadius:'20px',
       borderBottomRightRadius:'20px',
       color:'red',

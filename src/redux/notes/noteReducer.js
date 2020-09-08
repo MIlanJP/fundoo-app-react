@@ -1,8 +1,11 @@
 import * as actions from './noteType'
-
+import userData from './userStaticdata.json'
 const initialState={
     displayListFeature:false,
     descriptionCheckBoxList:[''],
+    userData:userData.data.data,
+    pinnedNotes:userData.data.data.filter(pinned=> pinned.isPined===true),
+    unPinnedNotes:userData.data.data.filter(pinned=> pinned.isPined===false)
 }
 
 const reducer=(state=initialState,action)=>{

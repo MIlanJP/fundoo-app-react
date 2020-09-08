@@ -44,6 +44,7 @@ const [displaySmallsearch ,setDisplaySmallSearch]=useState(false)
   const useStyles = makeStyles((theme) => ({
     // Main Layout
     root: {
+      position:"fixed",
       display: "inline-flex",
       float: "right",
       justifyContent: "space-between",
@@ -52,6 +53,8 @@ const [displaySmallsearch ,setDisplaySmallSearch]=useState(false)
       height: "65px",
       flexGrow: 2,
       borderBottomStyle: "inset",
+      zIndex:'30',
+      background:"white",
     },
 
     leftPortion: {

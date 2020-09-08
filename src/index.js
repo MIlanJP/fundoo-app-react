@@ -11,11 +11,7 @@ import store from './redux/store'
 ReactDOM.render(
   <BrowserRouter >
   <Provider store={store}>
-    <App
-      //   onBlur={() => {
-      //     dispatch(addNoteBeforeClick())
-      // }}
-    />
+    <App    />
     </Provider>
   </BrowserRouter>,
   document.getElementById('root')

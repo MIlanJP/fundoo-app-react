@@ -54,6 +54,8 @@ const dispatch = useDispatch();
 
     },
     mainDrawerLayout: {
+      zIndex:'25',  
+      position:"fixed",
       width:props.showDrawer ? 'auto':"50px",
       "& a":{
         textDecoration: "none",
@@ -192,7 +194,6 @@ const dispatch = useDispatch();
         open={props.showDrawer}
         classes={{
           docked: classes.root,
-          modal: classes.root1,
           paperAnchorLeft: classes.paper,
         }}
         className={classes.root}

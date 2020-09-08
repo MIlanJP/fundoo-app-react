@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 
-export default function Label() {
+export default function Label(props) {
   const addNoteFeature = useDispatch();
 
   const addFeature = useSelector((state) => state.addNoteFeature.addNote);

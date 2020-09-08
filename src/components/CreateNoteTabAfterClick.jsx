@@ -76,7 +76,7 @@ function CreateNoteTabAfterClick(props) {
       color: "black",
     },
     closeButton: {
-      position: "relative",
+      position: "absloute",
       left: "35%",
       outline: "none",
       boxShadow: "none",

@@ -10,7 +10,9 @@ import {
   Checkbox,
   ListItemIcon,
   ListItemText,
+useTheme ,
   List,
+  useMediaQuery,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 // import OutsideClickHandler from "react-outside-click-x";
@@ -33,13 +35,16 @@ import {
   setDescriptList,
 } from "../redux";
 function LabelView(props) {
+  const theme = useTheme();
+  const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
+
   const descriptionList = useSelector(
     (state) => state.notes.descriptionCheckBoxList
   );
 
   const [onFocusText, setOnFocusText] = useState("");
   const [showClearIcon, setShowClearIcon] = useState("");
-  const [displayOnHover, setDisplayOnHover] = useState(false);
+  const [displayIconOnHover, setDisplayIconOnHover] = useState(true);
   const pinnedStatus = useSelector((state) => state.pinFeature.pinNote);
   const dispatch = useDispatch();
   const addNote = useSelector((state) => state.addNoteFeature.addNote);
@@ -55,9 +60,11 @@ function LabelView(props) {
       position: "relative",
       display: "flex",
       flexDirection: "row",
-
+      margin:"15px 7px 15px 7px ",
+      width:matchesExtraSmallSize? '100%': '225px',
       //   left: "-27.25%",
       zIndex: "-2",
+  
     },
     paper: {
       display: "flex",
@@ -68,10 +75,14 @@ function LabelView(props) {
       boxShadow: "0px 2px 2px 2px rgba(146, 144, 144, 0.54)",
       paddingRight: "10px",
       zIndex: 3,
+      minHeight:"100px"
     },
     iconButton: {
-      margin: "0 2px 0 4px",
-      padding: "5px 5px 5px px ",
+      // margin: "0 2px 0 4px",
+      padding: "10px",
+      "&:hover":{
+        background:'gray',
+      }
     },
     bottomIcons: {
       height: "17px",
@@ -95,7 +106,7 @@ function LabelView(props) {
       paddingLeft: "15px",
     },
     iconColumn: {
-      marginTop: "10px",
+      padding: "1px",
     },
     titleInput: {
       padding: "5px 20px 5px 10px",
@@ -234,7 +245,7 @@ function LabelView(props) {
     </List>
   ) : (
     <InputBase
-    value={props.userData.description}
+        value={props.userData.description}
       multiline={true}
       rowsMax={20}
       placeholder=" Take a note..."
@@ -248,18 +259,24 @@ function LabelView(props) {
     <div
       className={classes.addNotePortion}
     >
-      <Paper component="form" className={` ${classes.paper}  `} boxShadow={10}>
+      <Paper component="form" className={` ${classes.paper}  `} boxShadow={10}
+      onMouseOver={(e) => {
+        setDisplayIconOnHover(true)
+      }}
+      onMouseLeave={(e) => {
+        setDisplayIconOnHover(false)
+      }}
+      >
         {pinnedStatus ? pinned : unPinned}
         <InputBase
           placeholder=" Title"
-          fullWidth
+          fullWidth 
           value={props.userData.title}
           className={classes.titleInput}
           inputProps={{ "aria-label": "search content" }}
         />
         {inputsToAddLabel}
-
-        <div className={classes.iconColumn}>
+      {!displayIconOnHover?    <div className={classes.iconColumn}>
           <IconButton className={classes.iconButton} aria-label="menu">
             <AddAlertOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
@@ -279,16 +296,9 @@ function LabelView(props) {
           <IconButton className={classes.iconButton} aria-label="menu">
             <MoreVertOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
-          <IconButton className={classes.iconButton} aria-label="menu">
-            <UndoOutlinedIcon className={classes.bottomIcons} />
-          </IconButton>
-          <Button
-            variant="contained"
-            className={classes.closeButton}
-          >
-            Close
-          </Button>
-        </div>
+
+        </div>:null}
+     
       </Paper>
     </div>
   );

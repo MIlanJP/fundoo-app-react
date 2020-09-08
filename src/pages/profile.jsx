@@ -191,7 +191,6 @@ export default function Profile() {
               <IconButton>
                 <AddOutlinedIcon />
               </IconButton>
-              ,
               <InputBase
                 placeholder="Create New Labels"
                 value={popUpTargetAutoFocusAddNewValue}

@@ -136,7 +136,6 @@ export default function Profile() {
 
   useEffect(() => {
     dispatch(fetchAllUserData());
-
     dispatch(fetchLabelList());
     dispatch(fetchUserIdByEmail(localStorage.getItem("emailId")));
     console.log(loadedLabels);

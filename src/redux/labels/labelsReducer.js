@@ -6,7 +6,7 @@ const initialState = {
     emailId:'',
     labelList:[],
     onlyLabelsList:[],
-    userData:{},
+    userData:[],
     pinnedLabel:{},
     deletedLabel:{},
     archievedLabels:{},

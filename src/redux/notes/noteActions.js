@@ -1,5 +1,6 @@
 import * as actions from './noteType'
-
+import service from '../../services/labelservice'
+import {fetchLabelList} from '../labels/labelsAction'
 export const showListFeature=()=>{
     return{
         type:actions.LIST_FEATURE_ON,
@@ -13,6 +14,12 @@ export const hideListFeature=()=>{
         payload:false
     }
 }
+export const fetchUserFailed = (error) => {
+    return {
+      type: actions.FETCH_USER_FAILURE,
+      payload: error,
+    };
+  };
 export const setDescriptList=(list)=>{
     return{
         type:actions.SET_DESCRIPTION_LIST,
@@ -54,4 +61,31 @@ export const updateArchievedStatusById=(id,condition)=>{
         payload:{id,condition}
     }
 }
+export const getAllLabels = (userData) => {
+    return {
+      type: actions.GET_ALL_NOTES,
+      payload: userData,
+    };
+  };
+  export const fetchUserReqests = (usersData) => {
+    return {
+      type: actions.FETCH_USERS_REQUESTS,
+    };
+  };
 
+export const fetchAllUserData = () => {
+    return (dispatch) => {
+      dispatch(fetchUserReqests);
+      service
+        .getAllLists()
+        .then((response) => {
+          const listofLabels = response.data.data.data;
+          dispatch(getAllLabels(listofLabels));
+          dispatch(fetchLabelList());
+        })
+        .catch((error) => {
+          const errorMessage = error;
+          dispatch(fetchUserFailed(errorMessage));
+        });
+    };
+  };

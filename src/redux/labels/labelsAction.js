@@ -68,22 +68,7 @@ export const setEmailId = (emailId) => {
 
 
 
-export const fetchAllUserData = () => {
-  return (dispatch) => {
-    dispatch(fetchUserReqests);
-    services
-      .getAllLists()
-      .then((response) => {
-        const listofLabels = response.data.data.data;
-        dispatch(getAllLabels(listofLabels));
-        dispatch(fetchLabelList());
-      })
-      .catch((error) => {
-        const errorMessage = error;
-        dispatch(fetchUserFailed(errorMessage));
-      });
-  };
-};
+
 
 export const fetchLabelList = () => {
   return (dispatch) => {

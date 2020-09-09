@@ -164,7 +164,7 @@ const [tickIcon,setTickIcon]=useState(false)
     </IconButton>
   );
 
-  const inputsToAddLabel = props.userData.noteCheckLists.length>0 ? (
+  const inputsToAddLabel = typeof props.userData.noteCheckLists !== 'undefined' &&props.userData.noteCheckLists.length>0 ? (
     <List>
       {props.userData.noteCheckLists.map((description, index) => {
         return (

@@ -3,8 +3,8 @@ import userData from './userStaticdata.json'
 const initialState={
     displayListFeature:false,
     descriptionCheckBoxList:[''],
-    userData:userData.data.data,
-    pinnedNotes:userData.data.data.filter(pinned=> pinned.isPined===true),
+    userData:[],
+    pinnedNotes:[],
     unPinnedNotes:userData.data.data.filter(pinned=> pinned.isPined===false),
     notesViewOnClick:{},
 }
@@ -15,6 +15,16 @@ switch(action.type){
         return{
             ...state,
             displayListFeature:true
+        }
+    }
+
+    case actions.GET_ALL_NOTES:{
+        return{
+            ...state,
+            loading:false,
+            userData:action.payload,
+            pinnedNotes:action.payload.filter(pinned=> pinned.isPined!==true),
+            unPinnedNotes:action.payload.filter(pinned=> pinned.isPined!==true),
         }
     }
 

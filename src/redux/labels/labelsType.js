@@ -1,12 +1,12 @@
-export const ADD_LABEL="AddLabel"
-export const DELETE_LABEL="DeleteLabel"
-export const UPDATE_LABEL="UpdateLabel"
-export const GET_LABEL="GetLabel"
+export const ADD_LABEL="ADD_LABEL"
+export const DELETE_LABEL="DELETE_LABEL"
+export const UPDATE_LABEL="UPDATE_LABEL"
+export const GET_LABEL="GET_LABEL"
 
 
 
-export const GET_ALL_NOTES="getAllLabels"
-export const FETCH_USERS_REQUESTS="getusersRequest"
+export const GET_ALL_NOTES="GET_ALL_LABELS"
+export const FETCH_USERS_REQUESTS="GET_USERS_REQUESTS"
 export const FETCH_USER_FAILURE="FETCH_USER_FAILURE"
 export const ADDLABEL="ADDLABEL"
 export const GET_ALL_THE_LABELS="GET_ALL_THE_LABELS"

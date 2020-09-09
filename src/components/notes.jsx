@@ -51,80 +51,87 @@ export default function Notes(props) {
   const calculateColumn=()=> {
     let mediumCount = 2;
     let largeCount = 4;
-    userData.filter(pinned=> pinned.isPined===false).map((data, index) => {
-      if (index % 2 === 0) {
-        unPinnedSmallerColumn1.push(<NotesView userData={data} />);
-      } else {
-        unPinnedSmallerColumn2.push(<NotesView userData={data} />);
+    userData.map((data, index) => {
+      console.log(data,'from ')
+      if(!data.isPined){
+        if (index % 2 === 0) {
+          unPinnedSmallerColumn1.push(<NotesView userData={data} />);
+        } else {
+          unPinnedSmallerColumn2.push(<NotesView userData={data} />);
+        }
+  
+        if (mediumCount === 0) {
+          unPinnedMediumColumn1.push(<NotesView userData={data} />);
+          mediumCount = 2;
+        } else if (mediumCount === 1) {
+          unPinnedMediumColumn2.push(<NotesView userData={data} />);
+        } else {
+          unPinnedMediumColumn3.push(<NotesView userData={data} />);
+         
+        }
+  
+        if (largeCount === 0) {
+          unPinnedLargeColumn1.push(<NotesView userData={data} />);
+          largeCount = 5;
+  
+        } else if (largeCount === 1) {
+          unPinnedLargeColumn2.push(<NotesView userData={data} />);
+        } else if (largeCount === 2) {
+          unPinnedLargeColumn3.push(<NotesView userData={data} />);
+        } else if (largeCount === 3) {
+          unPinnedLargeColumn4.push(<NotesView userData={data} />);
+        } else if(largeCount === 4) {
+          unPinnedLargeColumn5.push(<NotesView userData={data} />);
+        }
+        mediumCount--;
+        largeCount--;
       }
-
-      if (mediumCount === 0) {
-        unPinnedMediumColumn1.push(<NotesView userData={data} />);
-        mediumCount = 2;
-      } else if (mediumCount === 1) {
-        unPinnedMediumColumn2.push(<NotesView userData={data} />);
-      } else {
-        unPinnedMediumColumn3.push(<NotesView userData={data} />);
-       
-      }
-
-      if (largeCount === 0) {
-        unPinnedLargeColumn1.push(<NotesView userData={data} />);
-        largeCount = 5;
-
-      } else if (largeCount === 1) {
-        unPinnedLargeColumn2.push(<NotesView userData={data} />);
-      } else if (largeCount === 2) {
-        unPinnedLargeColumn3.push(<NotesView userData={data} />);
-      } else if (largeCount === 3) {
-        unPinnedLargeColumn4.push(<NotesView userData={data} />);
-      } else if(largeCount === 4) {
-        unPinnedLargeColumn5.push(<NotesView userData={data} />);
-      }
-      mediumCount--;
-      largeCount--;
+     
 return null
     });
 
-    userData.filter(pinned=> pinned.isPined===true).map((data, index) => {
+    pinnedNotes.map((data, index) => {
+      if(data.isPined){
         if (index % 2 === 0) {
-            pinnedSmallerColumn1.push(<NotesView userData={data} />);
-          } else {
-            pinnedSmallerColumn2.push(<NotesView userData={data} />);
-          }
-    
-          if (mediumCount === 0) {
-            mediumCount = 3;
-            pinnedMediumColumn1.push(<NotesView userData={data} />);
-          } else if (mediumCount === 1) {
-            pinnedMediumColumn2.push(<NotesView userData={data} />);
-          } else {
-            pinnedMediumColumn3.push(<NotesView userData={data} />);
-          }
-    
-          if (largeCount === 0) {
-            pinnedLargeColumn1.push(<NotesView userData={data} />);
-            largeCount = 5;
-          } else if (largeCount === 1) {
-            pinnedLargeColumn2.push(<NotesView userData={data} />);
-          } else if (largeCount === 2) {
-            pinnedLargeColumn3.push(<NotesView userData={data} />);
-          } else if (largeCount === 3) {
-            pinnedLargeColumn4.push(<NotesView userData={data} />);
-          } else if(largeCount === 4) {
-            pinnedLargeColumn5.push(<NotesView userData={data} />);
-          }
-          mediumCount--;
-      largeCount--;
+          pinnedSmallerColumn1.push(<NotesView userData={data} />);
+        } else {
+          pinnedSmallerColumn2.push(<NotesView userData={data} />);
+        }
+  
+        if (mediumCount === 0) {
+          mediumCount = 3;
+          pinnedMediumColumn1.push(<NotesView userData={data} />);
+        } else if (mediumCount === 1) {
+          pinnedMediumColumn2.push(<NotesView userData={data} />);
+        } else {
+          pinnedMediumColumn3.push(<NotesView userData={data} />);
+        }
+  
+        if (largeCount === 0) {
+          pinnedLargeColumn1.push(<NotesView userData={data} />);
+          largeCount = 5;
+        } else if (largeCount === 1) {
+          pinnedLargeColumn2.push(<NotesView userData={data} />);
+        } else if (largeCount === 2) {
+          pinnedLargeColumn3.push(<NotesView userData={data} />);
+        } else if (largeCount === 3) {
+          pinnedLargeColumn4.push(<NotesView userData={data} />);
+        } else if(largeCount === 4) {
+          pinnedLargeColumn5.push(<NotesView userData={data} />);
+        }
+        mediumCount--;
+    largeCount--;
+      }
+       
 return null
     });
   }
   
-  useEffect(()=>{
+  useEffect(()=>{ 
     calculateColumn()
-  },[userData])
-    calculateColumn();
-
+  },userData,unPinnedNotes,pinnedNotes)
+    
+  calculateColumn()
 
 
   const useStyles = makeStyles((theme) => ({
@@ -198,7 +205,7 @@ return null
 
 
   
-
+console.log(unPinnedNotes.length > 0)
   const noOfColumnsOnExtraSmallColumn = (
     <div className={classes.extraSmallRow}>
       {pinnedNotes.length > 0

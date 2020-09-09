@@ -29,14 +29,13 @@ import CropOriginalOutlinedIcon from "@material-ui/icons/CropOriginalOutlined";
 import { useSelector } from "react-redux";
 import {
   addNoteBeforeClick,
-  pinIt,
-  unPinIt,
   hideListFeature,
   setDescriptList,
   notesViewOnClick,
   updateTitleFromId,
   updateDescriptionById,
-  updateArchievedStatusById
+  updateArchievedStatusById,
+  setPinnedStatus,
 } from "../redux";
 function NotesViewOnClick(props) {
   const descriptionList = useSelector(
@@ -137,7 +136,7 @@ top:"3px",
   const unPinned = (
     <IconButton
       className={classes.pinIcon}
-      onClick={() => dispatch(pinIt())}
+      onClick={() => dispatch(setPinnedStatus(true,data[0].id))}
       onPointerOut={() => {}}
     >
       <svg
@@ -152,7 +151,7 @@ top:"3px",
   );
 
   const pinned = (
-    <IconButton className={classes.pinIcon} onClick={() => dispatch(unPinIt())}>
+    <IconButton className={classes.pinIcon} onClick={() => dispatch(setPinnedStatus(false,data[0].id))}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -268,7 +267,7 @@ top:"3px",
       }}
     >
       <Paper component="form" className={` ${classes.paper}  `} >
-        {pinnedStatus ? pinned : unPinned}
+        {data[0].isPined ? pinned : unPinned}
         <InputBase
           placeholder=" Title"
           fullWidth

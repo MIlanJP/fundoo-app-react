@@ -31,11 +31,18 @@ import {
   List,
   InputBase,
   IconButton,
+  useTheme,
+  useMediaQuery
 } from "@material-ui/core";
 import labelservice from "../services/labelservice";
 
 export default function Profile() {
   // const messages = useContext(MessageContext);
+  const theme = useTheme();
+  const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
+  const matchesSmallSize = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchesMediumSize = useMediaQuery(theme.breakpoints.down("md"));
+  const matchesLargeSize = useMediaQuery(theme.breakpoints.down("lg"));
   const history = useHistory();
   const dispatch = useDispatch();
   // const loadingStatus = useSelector((state) => state.labels.loading);
@@ -105,7 +112,7 @@ export default function Profile() {
       // position:'absolute'
     },dialogContent:{
       minWidth:"350px",
-      width: '40vw',
+      width:matchesLargeSize? '40vw': matchesSmallSize? '100vw':matchesExtraSmallSize? '500px':"",
       minHeight:'150px',
     },dialogBlock:{
 

@@ -8,13 +8,13 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {  useTheme } from "@material-ui/core";
 import NotesView from "./notesView";
 
-export default function Notes() {
+export default function Notes(props) {
   const theme = useTheme();
   const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
   const matchesSmallSize = useMediaQuery(theme.breakpoints.down("sm"));
   const matchesMediumSize = useMediaQuery(theme.breakpoints.down("md"));
   const matchesLargeSize = useMediaQuery(theme.breakpoints.down("(max-width:1150px)"));
-  const matchesExtraLargeSize = useMediaQuery(theme.breakpoints.down("xl"));
+
 
   const addFeature = useSelector((state) => state.addNoteFeature.addNote);
   const pinnedNotes = useSelector((state) => state.notes.pinnedNotes);
@@ -34,13 +34,6 @@ export default function Notes() {
   const unPinnedLargeColumn4 = [];
   const unPinnedLargeColumn5 = [];
 
-  const unPinnedExtraLargeColumn1 = [];
-  const unPinnedExtraLargeColumn2 = [];
-  const unPinnedExtraLargeColumn3 = [];
-  const unPinnedExtraLargeColumn4 = [];
-  const unPinnedExtraLargeColumn5 = [];
-  const unPinnedExtraLargeColumn6 = [];
-
   const pinnedSmallerColumn1 = [];
   const pinnedSmallerColumn2 = [];
 
@@ -54,18 +47,11 @@ export default function Notes() {
   const pinnedLargeColumn4 = [];
   const pinnedLargeColumn5 = [];
 
-  const pinnedExtraLargeColumn1 = [];
-  const pinnedExtraLargeColumn2 = [];
-  const pinnedExtraLargeColumn3 = [];
-  const pinnedExtraLargeColumn4 = [];
-  const pinnedExtraLargeColumn5 = [];
-  const pinnedExtraLargeColumn6 = [];
 
-  function calculateColumns() {
+  const calculateColumn=()=> {
     let mediumCount = 2;
     let largeCount = 4;
-    let extraLargeCount = 5;
-    unPinnedNotes.map((data, index) => {
+    userData.filter(pinned=> pinned.isPined===false).map((data, index) => {
       if (index % 2 === 0) {
         unPinnedSmallerColumn1.push(<NotesView userData={data} />);
       } else {
@@ -95,29 +81,12 @@ export default function Notes() {
       } else if(largeCount === 4) {
         unPinnedLargeColumn5.push(<NotesView userData={data} />);
       }
-
-      if (extraLargeCount === 0) {
-        unPinnedExtraLargeColumn1.push(<NotesView userData={data} />);
-        extraLargeCount = 6;
-
-      } else if (extraLargeCount === 1) {
-        unPinnedExtraLargeColumn2.push(<NotesView userData={data} />);
-      } else if (extraLargeCount === 2) {
-        unPinnedExtraLargeColumn3.push(<NotesView userData={data} />);
-      } else if (extraLargeCount === 3) {
-        unPinnedExtraLargeColumn4.push(<NotesView userData={data} />);
-      } else if (extraLargeCount === 4) {
-        unPinnedExtraLargeColumn5.push(<NotesView userData={data} />);
-      }  else{
-        unPinnedExtraLargeColumn6.push(<NotesView userData={data} />);
-      }
       mediumCount--;
-      extraLargeCount--;
       largeCount--;
-
+return null
     });
 
-    pinnedNotes.map((data, index) => {
+    userData.filter(pinned=> pinned.isPined===true).map((data, index) => {
         if (index % 2 === 0) {
             pinnedSmallerColumn1.push(<NotesView userData={data} />);
           } else {
@@ -126,7 +95,6 @@ export default function Notes() {
     
           if (mediumCount === 0) {
             mediumCount = 3;
-
             pinnedMediumColumn1.push(<NotesView userData={data} />);
           } else if (mediumCount === 1) {
             pinnedMediumColumn2.push(<NotesView userData={data} />);
@@ -145,37 +113,26 @@ export default function Notes() {
             pinnedLargeColumn4.push(<NotesView userData={data} />);
           } else if(largeCount === 4) {
             pinnedLargeColumn5.push(<NotesView userData={data} />);
-           
           }
-    
-          if (extraLargeCount === 0) {
-            pinnedExtraLargeColumn1.push(<NotesView userData={data} />);
-            extraLargeCount = 6;
-          } else if (extraLargeCount === 1) {
-            pinnedExtraLargeColumn2.push(<NotesView userData={data} />);
-          } else if (extraLargeCount === 2) {
-            pinnedExtraLargeColumn3.push(<NotesView userData={data} />);
-          } else if (extraLargeCount === 3) {
-            pinnedExtraLargeColumn4.push(<NotesView userData={data} />);
-          } else if (extraLargeCount === 4) {
-            pinnedExtraLargeColumn5.push(<NotesView userData={data} />);
-          }  else{
-            pinnedExtraLargeColumn6.push(<NotesView userData={data} />);
-          }
-          extraLargeCount--;
-          largeCount--;
           mediumCount--;
-
+      largeCount--;
+return null
     });
   }
-  calculateColumns();
+  
+  useEffect(()=>{
+    calculateColumn()
+  },[userData])
+    calculateColumn();
+
+
 
   const useStyles = makeStyles((theme) => ({
     AddNoteLabels: {
       position: "relative",
       //   top: "30px",
       minWidth: "300px",
-      width: "49%",
+      width:matchesExtraSmallSize? '100%': "49%",
       display: "flex",
       flexDirection: "column",
       zIndex: 0,
@@ -239,7 +196,8 @@ export default function Notes() {
 
   const classes = useStyles();
 
-  useEffect(() => {});
+
+  
 
   const noOfColumnsOnExtraSmallColumn = (
     <div className={classes.extraSmallRow}>

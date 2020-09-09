@@ -1,21 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IconButton,
   Paper,
   InputBase,
+  Icon,
+  SvgIcon,
+  Button,
   ListItem,
   Checkbox,
   ListItemIcon,
-useTheme ,
+  ListItemText,
   List,
-  useMediaQuery,
 } from "@material-ui/core";
-import NotesViewOnClick from './NotesViewOnClick'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
+import {reduxForm,Field} from 'redux-form'
 import { makeStyles } from "@material-ui/core/styles";
-// import OutsideClickHandler from "react-outside-click-x";
-import { useDispatch,useSelector } from "react-redux";
-import {setPinnedStatus,notesViewOnClick} from '../redux'
+import OutsideClickHandler from "react-outside-click-x";
+import { useDispatch } from "react-redux";
 import AddAlertOutlinedIcon from "@material-ui/icons/AddAlertOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
 import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
@@ -23,57 +24,73 @@ import AddIcon from '@material-ui/icons/Add';
 import PaletteOutlinedIcon from "@material-ui/icons/PaletteOutlined";
 import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
+import UndoOutlinedIcon from "@material-ui/icons/UndoOutlined";
 import CropOriginalOutlinedIcon from "@material-ui/icons/CropOriginalOutlined";
-function LabelView(props) {
-  const theme = useTheme();
-  const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
-  const dispatch=useDispatch();
-const [tickIcon,setTickIcon]=useState(false)
+import { useSelector } from "react-redux";
+import {
+  addNoteBeforeClick,
+  pinIt,
+  unPinIt,
+  hideListFeature,
+  setDescriptList,
+  notesViewOnClick,
+  updateTitleFromId,
+  updateDescriptionById,
+  updateArchievedStatusById
+} from "../redux";
+function NotesViewOnClick(props) {
+  const descriptionList = useSelector(
+    (state) => state.notes.descriptionCheckBoxList
+  );
+ const data=useSelector(state=>state.notes.userData.filter(data=>   data.id===props.userData.id))
+ console.log(data,'printingdd')
   const [onFocusText, setOnFocusText] = useState("");
   const [showClearIcon, setShowClearIcon] = useState("");
-  const [displayIconOnHover, setDisplayIconOnHover] = useState(true);
-  // const [,setNotesViewOnClick] = useState(false)
-
-
-
+  const [displayOnHover, setDisplayOnHover] = useState(false);
+  const pinnedStatus = useSelector((state) => state.pinFeature.pinNote);
+  const dispatch = useDispatch();
+  const addNote = useSelector((state) => state.addNoteFeature.addNote);
+  const displayListFeature = useSelector(
+    (state) => state.notes.displayListFeature
+  );
   const useStyles = makeStyles((theme) => ({
-    addNotePortion: {
+    addingNotePortion: {
       borderRadius: "15px",
-      position: "relative",
+      position: " relative",
+      height:"100%",
+      // top: '0px',
+      width:"100%",
       display: "flex",
       flexDirection: "row",
-      padding:"15px 7px 15px 7px ",
-      width:matchesExtraSmallSize ? '100%': '225px',
-      //   left: "-27.25%",
-  
+
+
     },
     paper: {
       display: "flex",
       height: "100%",
       width: "100%",
       flexDirection: "column",
-      // borderStyle: "inset",
-      border:tickIcon? "solid 2px":'none',
-      padding:"0 0 35px 0",
       borderRadius: "8px",
-      boxShadow: displayIconOnHover? '1px 1px 1px 2px rgba(146, 144, 144, 0.54)': "0px 2px 2px 4px rgba(146, 144, 144, 0.54)",
-      paddingRight: "10px",
-      minHeight:"100px"
+      boxShadow: "none",
+      // paddingRight: "10px",
     },
     iconButton: {
-      padding: "10px",
- 
+      margin: "0 2px 0 4px",
+      padding: "5px 5px 5px px ",
+    },
+    clearIcons:{
+position:'relative',
+top:"3px",
     },
     bottomIcons: {
-      position:"relative",
-      top:"-5px",
       height: "17px",
       width: "17px",
-      // color: "gray",
+      color: "black",
     },
     closeButton: {
-      position: "relative",
-    //   left: "35%",
+      position: "absloute",
+    //   right:'5px',
+    // bottom:'15px',
       outline: "none",
       boxShadow: "none",
       background: "white",
@@ -83,18 +100,15 @@ const [tickIcon,setTickIcon]=useState(false)
       ...theme.typography.addnote,
       width: "100%",
       fontSize: 16,
-      margin: "2px 0 0 0",
       borderRadius: "15px",
-      paddingLeft: "15px",
     },
     iconColumn: {
-      position:"absolute",
-      bottom:"5px",
-      padding: "1px",
+      marginTop: "45px",
+    //   position: "absolute",
+    // bottom: "-137px",
     },
     titleInput: {
-      padding: "5px 20px 5px 10px",
-      margin: "2px 0 5px 5px",
+
       width: "80%",
     },
     listItem: {
@@ -111,30 +125,20 @@ const [tickIcon,setTickIcon]=useState(false)
     },
     pinIcon: {
       position: "absolute",
-      right: "10px",
-      top: "20px",
+      right: "-5px",
+      top: "-5px",
       width: "45px",
       height: "45px",
       color: "black",
       background: "white",
     },
-    tickIcon:{
-      position: "absolute", 
-      zIndex:"5",
-      top:"1px",
-      left:'-5px',
-      color:'black',
-      cursor:'pointer',
-      // pointer:'cursor'
-      // background:'white',
-    },
-
   }));
   const classes = useStyles();
   const unPinned = (
     <IconButton
       className={classes.pinIcon}
-      onClick={() => {dispatch(setPinnedStatus(true,props.userData.id))}}
+      onClick={() => dispatch(pinIt())}
+      onPointerOut={() => {}}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -148,11 +152,7 @@ const [tickIcon,setTickIcon]=useState(false)
   );
 
   const pinned = (
-    <IconButton className={classes.pinIcon}
-    onClick={() => {dispatch(setPinnedStatus(false,props.userData.id))}}
-
-    
-    >
+    <IconButton className={classes.pinIcon} onClick={() => dispatch(unPinIt())}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -164,9 +164,9 @@ const [tickIcon,setTickIcon]=useState(false)
     </IconButton>
   );
 
-  const inputsToAddLabel = props.userData.noteCheckLists.length>0 ? (
+  const inputsToAddLabel = displayListFeature ? (
     <List>
-      {props.userData.noteCheckLists.map((description, index) => {
+      {descriptionList.map((description, index) => {
         return (
           <ListItem className={classes.listItem}
           onMouseOver={(e) => {
@@ -180,7 +180,7 @@ const [tickIcon,setTickIcon]=useState(false)
           }}
           >
             <ListItemIcon>
-            {index===props.userData.noteCheckLists.length-1?
+            {index===descriptionList.length-1?
             <AddIcon/>    :
             <Checkbox
             edge="start"
@@ -195,10 +195,26 @@ const [tickIcon,setTickIcon]=useState(false)
             <InputBase
               className={classes.listInput}
               placeholder="List Item"
-              value={description.itemName}
-              onClick={(e) =>{
-                console.log(props.userData)
-                dispatch(notesViewOnClick(true, props.userData))
+              value={descriptionList[index]}
+              onChange={(e) => {
+                setOnFocusText(e.currentTarget.value);
+                let descriptList = descriptionList;
+                descriptList[index] = e.currentTarget.value;
+                if (
+                  index === descriptionList.length - 1 &&
+                  e.currentTarget.value !== ""
+                ) {
+                  descriptList.push("");
+                  dispatch(setDescriptList([...descriptList]));
+                } else if (
+                  index === descriptionList.length - 2 &&
+                  e.currentTarget.value === ""
+                ) {
+                  descriptList.pop();
+                  dispatch(setDescriptList([...descriptList]));
+                } else {
+                  dispatch(setDescriptList([...descriptList]));
+                }
               }}
               onFocus={(e) => {
                 setOnFocusText(e.currentTarget.value);
@@ -206,72 +222,70 @@ const [tickIcon,setTickIcon]=useState(false)
             />
             {/* <IconButton className={classes.iconButton} aria-label="menu"> */}
 
-            {onFocusText === description.itemName || showClearIcon===description.itemName ? (
+            {onFocusText === description || showClearIcon===description ? (
               <ClearIcon
-                className={classes.bottomIcons}
-                // onClick={() => {
-                //   if (index !== descriptionList.length - 1) {
-                //     let descriptList = descriptionList.filter(
-                //       (list) => list !== description
-                //     );
-                //   }
-                // }}
+                className={classes.clearIcons}
+                onClick={() => {
+                  if (index !== descriptionList.length - 1) {
+                    let descriptList = descriptionList.filter(
+                      (list) => list !== description
+                    );
+                    dispatch(setDescriptList([...descriptList]));
+                  }
+                }}
               />
             ) : null}
 
+            {/* </IconButton> */}
           </ListItem>
         );
       })}
     </List>
   ) : (
     <InputBase
-        value={props.userData.description}
       multiline={true}
       rowsMax={20}
       placeholder=" Take a note..."
       fullWidth
+      value={data[0].description}
+      onChange={(e) => {
+        dispatch(updateDescriptionById(e.currentTarget.value,data[0].id))
+      }}
       className={classes.input}
       inputProps={{ "aria-label": "search content" }}
-      onClick={()=>{
-        dispatch(notesViewOnClick(true, props.userData))
-      }}
     />
   );
 
   return (
-   <div
-      className={classes.addNotePortion}
-      onMouseOver={(e) => {
-        setDisplayIconOnHover(false)
+    <div
+      className={classes.addingNotePortion}
+      onOutsideClick={() => {
+        console.log(addNote, "Printing");
+        if (addNote !== false) {
+          dispatch(addNoteBeforeClick());
+          dispatch(hideListFeature());
+        }
       }}
-      onMouseLeave={(e) => {
-        setDisplayIconOnHover(true)
-      }}
-   >
-      {!displayIconOnHover|| tickIcon ?    
-      < CheckCircleIcon className={classes.tickIcon} onClick={(e) =>{setTickIcon(!tickIcon)}}  />
-      : null}
-
-      <Paper component="form" className={` ${classes.paper}  `} boxShadow={10}
-
-      >
-        {props.userData.isPined ? !displayIconOnHover&&pinned : !displayIconOnHover&&unPinned}
+    >
+      <Paper component="form" className={` ${classes.paper}  `} >
+        {pinnedStatus ? pinned : unPinned}
         <InputBase
           placeholder=" Title"
-          fullWidth 
-          value={props.userData.title}
+          fullWidth
+          value={data[0].title}
           className={classes.titleInput}
-          inputProps={{ "aria-label": "search content" }}
-          onClick={(e) =>{
-            console.log(props.userData)
-            dispatch(notesViewOnClick(true, props.userData))
+          onChange={(e)=>{
+            dispatch(updateTitleFromId(e.currentTarget.value,data[0].id))
           }}
+          inputProps={{ "aria-label": "search content" }}
         />
         {inputsToAddLabel}
-      {!displayIconOnHover?    <div className={classes.iconColumn}>
+
+        <div className={classes.iconColumn}>
           <IconButton className={classes.iconButton} aria-label="menu">
             <AddAlertOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
+
           <IconButton className={classes.iconButton} aria-label="menu">
             <PersonAddOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
@@ -281,19 +295,35 @@ const [tickIcon,setTickIcon]=useState(false)
           <IconButton className={classes.iconButton} aria-label="menu">
             <CropOriginalOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
-          <IconButton className={classes.iconButton} aria-label="menu">
-            <ArchiveOutlinedIcon className={classes.bottomIcons} />
+          <IconButton className={classes.iconButton} aria-label="menu"
+                      onClick={()=>{
+                        console.log(data)
+                        dispatch(updateArchievedStatusById(data[0].id,!data[0].isArchived))
+                      }}
+          >
+            <ArchiveOutlinedIcon className={classes.bottomIcons} 
+
+            />
           </IconButton>
           <IconButton className={classes.iconButton} aria-label="menu">
             <MoreVertOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
-
-        </div>:null}
-     
+          <IconButton className={classes.iconButton} aria-label="menu">
+            <UndoOutlinedIcon className={classes.bottomIcons} />
+          </IconButton>
+          <Button
+            variant="contained"
+            className={classes.closeButton}
+            onClick={() => {
+              dispatch(notesViewOnClick(false,{}));
+            }}
+          >
+            Close
+          </Button>
+        </div>
       </Paper>
     </div>
-
   );
 }
 
-export default LabelView;
+export default NotesViewOnClick;

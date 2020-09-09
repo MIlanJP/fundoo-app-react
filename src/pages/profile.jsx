@@ -5,11 +5,12 @@ import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import { Route, useHistory } from "react-router-dom";
 import uuid from "react-uuid";
-import { fetchUserIdByEmail, fetchAllUserData, fetchLabelList,UpdateLabelonChange } from "../redux";
+import { fetchUserIdByEmail, fetchAllUserData, fetchLabelList,UpdateLabelonChange,notesViewOnClick } from "../redux";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import DoneIcon from "@material-ui/icons/Done";
 import Label from "../components/label";
+import NotesViewOnClick from '../components/NotesViewOnClick';
 import Bin from "../components/bin";
 import LabelIcon from "@material-ui/icons/Label";
 import { makeStyles } from "@material-ui/core/styles";
@@ -23,6 +24,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import {
   Dialog,
+  DialogContent,
   DialogTitle,
   Typography,
   ListItem,
@@ -33,15 +35,15 @@ import {
 import labelservice from "../services/labelservice";
 
 export default function Profile() {
-  const messages = useContext(MessageContext);
+  // const messages = useContext(MessageContext);
   const history = useHistory();
   const dispatch = useDispatch();
-  const loadingStatus = useSelector((state) => state.labels.loading);
-  const loadedUserData = useSelector((state) => state.labels.userData);
+  // const loadingStatus = useSelector((state) => state.labels.loading);
+  // const loadedUserData = useSelector((state) => state.labels.userData);
   const loadedLabels = useSelector((state) => state.labels.labelList);
   const userId = useSelector((state) => state.labels.userID);
-  const addNoteFeature = useDispatch();
-  const addNote = useSelector((state) => state.addNoteFeature.addNote);
+  // const addNoteFeature = useDispatch();
+  // const addNote = useSelector((state) => state.addNoteFeature.addNote);
 
   const [routesPages] = useState([Notes, Reminder, Label, Archieve, Bin]);
   const [routesName] = useState([
@@ -51,7 +53,7 @@ export default function Profile() {
     "Archieve",
     "Bin",
   ]);
-  // const [labels, setLabels] = useState(["Milan", "Milan1", "Milan3"]);
+  const noteViewOnClick=useSelector((state=>state.notes.notesViewOnClick))
   const [labels, setLabels] = useState([]);
   const labelss = useSelector((state) => state.labels.labelList);
   const onlyLabels = useSelector((state) => state.labels.onlyLabelsList);
@@ -99,6 +101,30 @@ export default function Profile() {
       background: "rgb(145,145,145)",
       display: editLabelsPopUpDisplay ? "" : "none",
     },
+    noteViewOnClick:{
+      // position:'absolute'
+    },dialogContent:{
+      minWidth:"350px",
+      width: '40vw',
+      minHeight:'150px',
+    },dialogBlock:{
+
+      width:"75vw",
+
+    },
+    dialogWidth:{
+      width:'75vw',
+      backgroundColor: 'rgb(236,236,236)'
+        },
+        dialogScrollPaper:{
+
+          background:'rgba(255, 255, 255, 0.65)',
+        },
+        dialoggScrollPaper:{
+          position: "relative",
+          top: '-70px',
+          borderRadius:'8px',
+        },
   }));
 
   useEffect(() => {
@@ -168,10 +194,13 @@ export default function Profile() {
       </div>
       {editLabelsPopUpDisplay ? (
         <Dialog
+        TransitionComponent='Zoom'
           aria-labelledby="simple-dialog-title"
           open={editLabelsPopUpDisplay}
           className={classes.dialogBox}
-          disableBackdropClick={true}
+          onBackdropClick={()=>{
+            setEditLabelsPopUpDisplay(false)
+           }}
         >
           <DialogTitle id="simple-dialog-title" className={classes.PopUpBox}>
             <Typography variant="button" className={classes.PopUpLabel}>
@@ -363,12 +392,20 @@ export default function Profile() {
         </Dialog>
       ) : // </div>
       null}
-      {/* <div className={classes.popUpBackgorund}
-      onClick={()=>{
-        setEditLabelsPopUpDisplay(false)
+ {noteViewOnClick.condition?
 
-      }}
-      ></div> */}
+ <Dialog open={noteViewOnClick.condition}
+ onBackdropClick={()=>{
+  dispatch(notesViewOnClick(false,{}));
+ }}
+ classes={{ container: classes.dialogScrollPaper,paperScrollPaper:classes.dialoggScrollPaper }}
+ maxWidth='md'
+ disableBackdropClick={true} className={styles.dialogBlock}   >
+  <DialogContent className={classes.dialogContent} >  <NotesViewOnClick userData={noteViewOnClick.data} className={classes.noteViewOnClick}   />
+  </DialogContent> </Dialog>
+: null
+
+}
     </div>
   );
 }

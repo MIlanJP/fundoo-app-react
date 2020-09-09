@@ -115,7 +115,7 @@ export const fetchLabelList = () => {
         const errorMessage = error;
         const lists = [];
         lists.push(...startTabs, ...list1, ...endTabs);
-        dispatch(getLabelLists(lists));
+        // dispatch(getLabelLists(lists));
         dispatch(fetchUserFailed(errorMessage));
       });
   };

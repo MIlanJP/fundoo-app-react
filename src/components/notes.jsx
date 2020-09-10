@@ -53,8 +53,7 @@ export default function Notes(props) {
     let mediumCount = 2;
     let largeCount = 4;
     userData.map((data, index) => {
-      console.log(data,'from ')
-      if(!data.isPined){
+      if(!data.isPined && !data.isDeleted){
         if (index % 2 === 0) {
           unPinnedSmallerColumn1.push(<NotesView userData={data} />);
         } else {
@@ -91,8 +90,8 @@ export default function Notes(props) {
 return null
     });
 
-    pinnedNotes.map((data, index) => {
-      if(data.isPined){
+    userData.map((data, index) => {
+      if(data.isPined  && !data.isDeleted){
         if (index % 2 === 0) {
           pinnedSmallerColumn1.push(<NotesView userData={data} />);
         } else {
@@ -138,7 +137,7 @@ return null
   const useStyles = makeStyles((theme) => ({
     AddNoteLabels: {
       position: "relative",
-      //   top: "30px",
+      alignSelf:'center',
       minWidth: "300px",
       width:matchesExtraSmallSize? '100%': "49%",
       display: "flex",
@@ -153,7 +152,7 @@ return null
     mainSection: {
       display: "flex",
       flexDirection: "column",
-      alignItems: "center",
+      alignItems: "flex-start",
       width: "100%",
       height: "100%",
     },
@@ -206,7 +205,6 @@ return null
 
 
   
-console.log(unPinnedNotes.length > 0)
   const noOfColumnsOnExtraSmallColumn = (
     <div className={classes.extraSmallRow}>
       {pinnedNotes.length > 0

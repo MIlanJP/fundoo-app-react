@@ -3,7 +3,7 @@ import userData from './userStaticdata.json'
 const initialState={
     loading:false,
     displayListFeature:false,
-    descriptionCheckBoxList:[''],
+    descriptionCheckBoxList:[{itemName:"",status:'open'}],
     userData:[],
     pinnedNotes:[],
     unPinnedNotes:userData.data.data.filter(pinned=> pinned.isPined===false),
@@ -93,6 +93,19 @@ switch(action.type){
             userData:state.userData.map(data=> {
                 if(action.payload.id===data.id){
                     data.isArchived = action.payload.condition
+                }
+                return data
+            })
+        }
+    }
+    case actions.UPDATE_REMINDER_BY_USER_ID:{
+        const reminder=[action.payload.reminderTime]
+
+        return{
+            ...state,
+            userData:state.userData.map(data=>{
+                if(data.id===action.payload.id){
+                    data.reminder=reminder
                 }
                 return data
             })

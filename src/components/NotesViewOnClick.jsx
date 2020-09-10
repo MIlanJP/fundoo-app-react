@@ -24,9 +24,11 @@ import AddIcon from '@material-ui/icons/Add';
 import PaletteOutlinedIcon from "@material-ui/icons/PaletteOutlined";
 import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
-import UndoOutlinedIcon from "@material-ui/icons/UndoOutlined";
 import CropOriginalOutlinedIcon from "@material-ui/icons/CropOriginalOutlined";
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import { useSelector } from "react-redux";
+import { CalculateTime } from './../util/calculateTime';
+
 import {
   addNoteBeforeClick,
   hideListFeature,
@@ -49,11 +51,25 @@ function NotesViewOnClick(props) {
   const pinnedStatus = useSelector((state) => state.pinFeature.pinNote);
   const dispatch = useDispatch();
   const addNote = useSelector((state) => state.addNoteFeature.addNote);
+  const [displayIconOnHoverClearButton, setDisplayIconOnHoverClearButton] = useState('');
   const displayListFeature = useSelector(
     (state) => state.notes.displayListFeature
   );
   const [title,setTitle]=useState(data[0].title)
   const [description,setDescription]=useState(data[0].description)
+  let [dateSection] = "";
+  let [timeSection] = "";
+  let [timeGotOver] = "";
+
+  if (
+    typeof data[0].reminder !== "undefined" &&
+    data[0].reminder.length > 0
+  ) {
+    const [date, time, over] = CalculateTime(props.userData.reminder[0]);
+    dateSection = date;
+    timeSection = time;
+    timeGotOver = over;
+  }
   const useStyles = makeStyles((theme) => ({
     addingNotePortion: {
       borderRadius: "15px",
@@ -74,6 +90,7 @@ function NotesViewOnClick(props) {
       borderRadius: "8px",
       boxShadow: "none",
       // paddingRight: "10px",
+      paddingBottom:'80px',
     },
     iconButton: {
       margin: "0 2px 0 4px",
@@ -90,8 +107,8 @@ top:"3px",
     },
     closeButton: {
       position: "absloute",
-    //   right:'5px',
-    // bottom:'15px',
+      
+      bottom: '0px',
       outline: "none",
       boxShadow: "none",
       background: "white",
@@ -104,9 +121,8 @@ top:"3px",
       borderRadius: "15px",
     },
     iconColumn: {
-      marginTop: "45px",
-    //   position: "absolute",
-    // bottom: "-137px",
+      position: "absolute",
+    bottom: "0px",
     },
     titleInput: {
 
@@ -132,6 +148,76 @@ top:"3px",
       height: "45px",
       color: "black",
       background: "white",
+    },
+    
+    reminderSection: {
+      fontSize: ".75rem",
+      background: "rgba(215, 212, 212, 0.8)",
+      // height:"20px",
+      display:"flex",
+      flexDirection:'row',
+      borderRadius: "15px",
+      border:'groove 1px ',
+      marginTop:"30px",
+      marginRight:"50px",
+      marginLeft:"3px",
+      height: '19px',
+      width:"150px"
+
+    },
+    reminderSectionCutOff: {
+      fontSize: ".75rem",
+      background: "rgba(215, 212, 212, 0.8)",
+      width:"150px",
+      display:"flex",
+      flexDirection:'row',
+      marginTop:"30px",
+      borderRadius: "15px",
+      border:'groove 1px ',
+      marginRight:"50px",
+      marginLeft:"3px",
+      height: '19px',
+      textDecoration: "line-through",
+    },
+    reminderClearIcon:{
+      marginLeft:"1%",
+      padding:"8px 3px 8px 0",
+      transition: ".25s",
+    },
+    reminderClearIconroot:{
+      fontSize:'.9rem',
+      transition: ".25s",
+    },
+    reminderTimeIcon:{
+      marginLeft:"5px",
+      padding:"3px 6px 3px 0px",
+    },
+    reminderTextSection: {
+      textAlign:'center',
+      justifyContent:'center',
+    },labelDisplaySection:{
+      fontSize: ".65rem",
+      background: "rgba(215, 212, 212, 0.8)",
+      // height:"20px",
+      display:"flex",
+      flexDirection:'row',
+      borderRadius: "15px",
+      border:'groove 1px ',
+alignItems:"center",
+
+      justifyContent: "space-between",
+    },
+    labelTextSection:{
+      textAlign:'center',
+      padding: "8px",
+      justifyContent:'center',
+      lineHeight: ".5rem",
+    },
+    labelSection:{
+      marginTop:'5px',
+      display:"flex",
+      paddingLeft:'3px',
+      flexDirection: "row",
     },
   }));
   const classes = useStyles();
@@ -249,6 +335,7 @@ top:"3px",
       placeholder=" Take a note..."
       fullWidth
       value={description}
+      rowsMin={4}
       onChange={(e) => {
         setDescription(e.currentTarget.value)
       }}
@@ -291,6 +378,56 @@ top:"3px",
         />
         {inputsToAddLabel}
 
+        {typeof data[0].reminder !== "undefined" &&
+        data[0].reminder.length > 0 ? (
+          <label
+            className={
+              !timeGotOver
+                ? classes.reminderSection
+                : classes.reminderSectionCutOff
+            }
+            onMouseOver={(e) => {
+              setDisplayIconOnHoverClearButton(true)
+            }}
+            onMouseLeave={(e) => {
+              setDisplayIconOnHoverClearButton(false)
+            }}
+          ><AccessTimeIcon className={classes.reminderTimeIcon}  classes={{root:classes.reminderClearIconroot}} />
+            {" "}
+            <div className={classes.reminderTextSection}  >{dateSection} {timeSection} </div>
+            {   displayIconOnHoverClearButton?  <IconButton  className={classes.reminderClearIcon}   >
+          <ClearIcon  classes={{root:classes.reminderClearIconroot}}/>{" "}
+
+          </IconButton>:null }
+          </label>
+        ) : null}
+       
+ {typeof data[0].noteLabels!=='undefined' && data[0].noteLabels.length>0?
+
+  <div className={classes.labelSection}  >      { data[0].noteLabels.map(data=>{
+         return  <div
+          className={
+               classes.labelDisplaySection
+          }
+        onMouseOver={(e) => {
+          console.log(e.currentTarget.firstElementChild.innerText)
+            setDisplayIconOnHoverClearButton(e.currentTarget.firstElementChild.innerText)
+        }}
+        onMouseLeave={(e) => {
+          setDisplayIconOnHoverClearButton('')
+        }}
+        >
+          {" "}
+          <div className={classes.labelTextSection}>{data.label} </div>
+          {   displayIconOnHoverClearButton===data.label ?  <IconButton  className={classes.reminderClearIcon}   >
+          <ClearIcon  classes={{root:classes.reminderClearIconroot}}/>{" "}
+
+          </IconButton>:null }
+        
+        </div>
+        })}</div>
+        :null}
+
         <div className={classes.iconColumn}>
           <IconButton className={classes.iconButton} aria-label="menu">
             <AddAlertOutlinedIcon className={classes.bottomIcons} />
@@ -317,9 +454,7 @@ top:"3px",
           <IconButton className={classes.iconButton} aria-label="menu">
             <MoreVertOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
-          <IconButton className={classes.iconButton} aria-label="menu">
-            <UndoOutlinedIcon className={classes.bottomIcons} />
-          </IconButton>
+ 
           <Button
             variant="contained"
             className={classes.closeButton}

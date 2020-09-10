@@ -22,30 +22,37 @@ import AddIcon from '@material-ui/icons/Add';
 import PaletteOutlinedIcon from "@material-ui/icons/PaletteOutlined";
 import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
+import labelService from '../services/labelservice'
 import UndoOutlinedIcon from "@material-ui/icons/UndoOutlined";
 import CropOriginalOutlinedIcon from "@material-ui/icons/CropOriginalOutlined";
 import { useSelector } from "react-redux";
 import {
   addNoteBeforeClick,
+  fetchAllUserData,
   pinIt,
   unPinIt,
   hideListFeature,
   setDescriptList,
 } from "../redux";
 function CreateNoteTabAfterClick(props) {
-  const descriptionList = useSelector(
-    (state) => state.notes.descriptionCheckBoxList
-  );
+  // const descriptionList = useSelector(
+  //   (state) => state.notes.descriptionCheckBoxList
+  // );
 
   const [onFocusText, setOnFocusText] = useState("");
   const [showClearIcon, setShowClearIcon] = useState("");
   const [displayOnHover, setDisplayOnHover] = useState(false);
-  const pinnedStatus = useSelector((state) => state.pinFeature.pinNote);
+  const [isArchived, setIsArchived] = useState(false);
+  const [pinnedStatus,setPinnedStatus] = useState(false);
   const dispatch = useDispatch();
   const addNote = useSelector((state) => state.addNoteFeature.addNote);
   const displayListFeature = useSelector(
     (state) => state.notes.displayListFeature
   );
+  const [title,setTitle]=useState('')
+  const [description,setDescription]=useState('')
+  const [color,setColor]=useState('#FFFFFF')
+  const [checklist,setCheckList]=useState([{itemName:"",status:'open'}],)
   const useStyles = makeStyles((theme) => ({
     addNotePortion: {
       borderRadius: "15px",
@@ -125,7 +132,7 @@ function CreateNoteTabAfterClick(props) {
   const unPinned = (
     <IconButton
       className={classes.pinIcon}
-      onClick={() => dispatch(pinIt())}
+      onClick={() =>setPinnedStatus(!pinnedStatus)}
       onPointerOut={() => {}}
     >
       <svg
@@ -140,7 +147,7 @@ function CreateNoteTabAfterClick(props) {
   );
 
   const pinned = (
-    <IconButton className={classes.pinIcon} onClick={() => dispatch(unPinIt())}>
+    <IconButton className={classes.pinIcon} onClick={() => setPinnedStatus(!pinnedStatus)}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -154,7 +161,7 @@ function CreateNoteTabAfterClick(props) {
 
   const inputsToAddLabel = displayListFeature ? (
     <List>
-      {descriptionList.map((description, index) => {
+      {checklist.map((descriptions, index) => {
         return (
           <ListItem className={classes.listItem}
           onMouseOver={(e) => {
@@ -168,14 +175,33 @@ function CreateNoteTabAfterClick(props) {
           }}
           >
             <ListItemIcon>
-            {index===descriptionList.length-1?
+            {index===checklist.length-1?
             <AddIcon/>    :
             <Checkbox
             edge="start"
-            //   checked={true}
+              checked={descriptions.status!=='open'}
             tabIndex={-1}
             disableRipple
               inputProps={{ 'aria-labelledby': index }}
+              onClick={() =>{
+                if(descriptions.status==='open'){
+                  const list=checklist.map(data=>{
+                    if(data.itemName===descriptions.itemName){
+                      data.status='close'
+                    }
+                    return data
+                  })
+                  setCheckList([...list])
+                }else{
+                  const list=checklist.map(data=>{
+                    if(data.itemName===descriptions.itemName){
+                      data.status='open'
+                    }
+                    return data
+                  })
+                  setCheckList([...list])
+                }
+              }}
           />
         }
 
@@ -183,25 +209,25 @@ function CreateNoteTabAfterClick(props) {
             <InputBase
               className={classes.listInput}
               placeholder="List Item"
-              value={descriptionList[index]}
+              value={descriptions.itemName}
               onChange={(e) => {
                 setOnFocusText(e.currentTarget.value);
-                let descriptList = descriptionList;
-                descriptList[index] = e.currentTarget.value;
+                let descriptList = checklist;
+                descriptList[index].itemName = e.currentTarget.value;
                 if (
-                  index === descriptionList.length - 1 &&
+                  index === checklist.length - 1 &&
                   e.currentTarget.value !== ""
                 ) {
-                  descriptList.push("");
-                  dispatch(setDescriptList([...descriptList]));
+                  descriptList.push({itemName:"",status:"open"});
+                  setCheckList([...descriptList]);
                 } else if (
-                  index === descriptionList.length - 2 &&
+                  index === checklist.length - 2 &&
                   e.currentTarget.value === ""
                 ) {
                   descriptList.pop();
-                  dispatch(setDescriptList([...descriptList]));
+                  setDescriptList([...descriptList]);
                 } else {
-                  dispatch(setDescriptList([...descriptList]));
+                  setDescriptList([...descriptList]);
                 }
               }}
               onFocus={(e) => {
@@ -210,15 +236,13 @@ function CreateNoteTabAfterClick(props) {
             />
             {/* <IconButton className={classes.iconButton} aria-label="menu"> */}
 
-            {onFocusText === description || showClearIcon===description ? (
+            {onFocusText === descriptions.itemName || showClearIcon===descriptions.itemName ? (
               <ClearIcon
                 className={classes.bottomIcons}
                 onClick={() => {
-                  if (index !== descriptionList.length - 1) {
-                    let descriptList = descriptionList.filter(
-                      (list) => list !== description
-                    );
-                    dispatch(setDescriptList([...descriptList]));
+                  if (index !== checklist.length - 1) {
+                    const list=checklist.filter(data=>data.itemName!==descriptions.itemName)
+                    setCheckList([...list])
                   }
                 }}
               />
@@ -233,8 +257,12 @@ function CreateNoteTabAfterClick(props) {
     <InputBase
       multiline={true}
       rowsMax={20}
+      value={description}
       placeholder=" Take a note..."
       fullWidth
+      onChange={(e)=>{
+        setDescription(e.currentTarget.value)
+      }}
       className={classes.input}
       inputProps={{ "aria-label": "search content" }}
     />
@@ -244,7 +272,6 @@ function CreateNoteTabAfterClick(props) {
     <OutsideClickHandler
       className={classes.addNotePortion}
       onOutsideClick={() => {
-        console.log(addNote, "Printing");
         if (addNote !== false) {
           dispatch(addNoteBeforeClick());
           dispatch(hideListFeature());
@@ -256,6 +283,11 @@ function CreateNoteTabAfterClick(props) {
         <InputBase
           placeholder=" Title"
           fullWidth
+          value={title}
+          onChange={(e) => {
+              setTitle(e.currentTarget.value)
+          
+          }}
           className={classes.titleInput}
           inputProps={{ "aria-label": "search content" }}
         />
@@ -275,7 +307,10 @@ function CreateNoteTabAfterClick(props) {
           <IconButton className={classes.iconButton} aria-label="menu">
             <CropOriginalOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
-          <IconButton className={classes.iconButton} aria-label="menu">
+          <IconButton className={classes.iconButton} aria-label="menu"
+          onClick={()=>{
+            setIsArchived(!isArchived)
+          }}>
             <ArchiveOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
           <IconButton className={classes.iconButton} aria-label="menu">
@@ -288,7 +323,25 @@ function CreateNoteTabAfterClick(props) {
             variant="contained"
             className={classes.closeButton}
             onClick={() => {
-              dispatch(addNoteBeforeClick());
+              const data={
+                title,
+                description,
+               checklist,
+                isPined:pinnedStatus,
+                color,
+                isArchived,
+
+              }
+              console.log("i was called")
+              if(title!==''|| description!==''||checklist[0].itemName!==''){
+                labelService.addNote(data).then(response =>{
+                  dispatch(addNoteBeforeClick());
+                  dispatch(fetchAllUserData());
+                })
+              }else{
+                dispatch(addNoteBeforeClick());
+              }
+
             }}
           >
             Close

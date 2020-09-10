@@ -47,6 +47,25 @@ class LabelService {
       "DELETE"
     );
   }
+
+  updateIsPined(data){
+    const token = localStorage.getItem("token");
+    return ApiCall(
+      data,
+      `${baseURL}notes/pinUnpinNotes?access_token=${token}`,
+      "POST"
+    );
+  }
+
+  addNote(data){
+    const token = localStorage.getItem("token");
+    return ApiCall(
+      data,
+      `${baseURL}notes/addNotes?access_token=${token}`,
+      "POST"
+    );
+  }
+
 }
 
 export default new LabelService();

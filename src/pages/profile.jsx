@@ -155,7 +155,6 @@ export default function Profile() {
     dispatch(fetchAllUserData());
     dispatch(fetchLabelList());
     dispatch(fetchUserIdByEmail(localStorage.getItem("emailId")));
-    console.log(loadedLabels);
     if (localStorage.getItem("labels") !== null) {
       let restoredLabels = [];
       restoredLabels = [...JSON.parse(localStorage.getItem("labels"))];
@@ -256,13 +255,7 @@ export default function Profile() {
                 onChange={(e) => {
                   setPopUpTargetAutoFocusAddNewValue(e.currentTarget.value);
                 }}
-                onLoad={(e) => {
-                  console.log(
-                    e.parentElement.parentElement.parentElement.parentElement
-                      .parentElement,
-                    "Printing"
-                  );
-                }}
+  
               />
               {popUpTargetAutoFocusAddNew ? (
                 <IconButton
@@ -439,6 +432,7 @@ export default function Profile() {
               userData={noteViewOnClick.data}
               className={classes.noteViewOnClick}
             />
+            
           </DialogContent>{" "}
         </Dialog>
       ) : null}

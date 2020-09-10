@@ -10,6 +10,7 @@ import {
   List,
   useMediaQuery,
 } from "@material-ui/core";
+import labelService from '../services/labelservice'
 import NotesViewOnClick from "./NotesViewOnClick";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { makeStyles } from "@material-ui/core/styles";
@@ -30,6 +31,7 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import CropOriginalOutlinedIcon from "@material-ui/icons/CropOriginalOutlined";
+import DateAndTimePicker from './DateTimePicker';
 function LabelView(props) {
   const theme = useTheme();
   const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
@@ -39,6 +41,7 @@ function LabelView(props) {
   const [showClearIcon, setShowClearIcon] = useState("");
   const [displayIconOnHover, setDisplayIconOnHover] = useState(true);
   const [displayIconOnHoverClearButton, setDisplayIconOnHoverClearButton] = useState('');
+  const [displayDateTimePicker,setDisplayDateTimePicker] = useState(false)
   // const [,setNotesViewOnClick] = useState(false)
 
   const useStyles = makeStyles((theme) => ({
@@ -145,7 +148,7 @@ function LabelView(props) {
       border:'groove 1px ',
       marginRight:"50px",
       marginLeft:"3px",
-      height:'35px',
+      height:'19px',
 
     },
     reminderSectionCutOff: {
@@ -158,10 +161,11 @@ function LabelView(props) {
       border:'groove 1px ',
       marginRight:"50px",
       marginLeft:"3px",
-      height:'35px',
+      height:'19px',
       textDecoration: "line-through",
     },
     reminderClearIcon:{
+      
       marginLeft:"1%",
       padding:"8px 3px 8px 0",
       transition: ".25s",
@@ -172,11 +176,10 @@ function LabelView(props) {
     },
     reminderTimeIcon:{
       marginLeft:"5px",
-      padding:"5px 3px 3px 0px",
+      padding:"3px 6px 3px 0px",
     },
     reminderTextSection: {
       textAlign:'center',
-      paddingTop: "8px",
       justifyContent:'center',
     },labelDisplaySection:{
       fontSize: ".65rem",
@@ -199,6 +202,7 @@ alignItems:"center",
     labelSection:{
       marginTop:'5px',
       display:"flex",
+      paddingLeft:'3px',
       flexDirection: "row",
     },
   }));
@@ -221,7 +225,13 @@ alignItems:"center",
     <IconButton
       className={classes.pinIcon}
       onClick={() => {
-        dispatch(setPinnedStatus(true, props.userData.id));
+        const data={
+          isPined:true,
+          noteIdList:[props.userData.id]
+        }
+        labelService.updateIsPined(data).then(
+          dispatch(setPinnedStatus(true, props.userData.id))
+        )
       }}
     >
       <svg
@@ -239,7 +249,13 @@ alignItems:"center",
     <IconButton
       className={classes.pinIcon}
       onClick={() => {
-        dispatch(setPinnedStatus(false, props.userData.id));
+        const data={
+          isPined:false,
+          noteIdList:[props.userData.id]
+        }
+        labelService.updateIsPined(data).then(
+          dispatch(setPinnedStatus(false, props.userData.id))
+        )
       }}
     >
       <svg
@@ -278,7 +294,7 @@ alignItems:"center",
                 ) : (
                   <Checkbox
                     edge="start"
-                    checked={props.userData.noteCheckLists.status === "close"}
+                    checked={description.status === "close"}
                     tabIndex={-1}
                     disableRipple
                     inputProps={{ "aria-labelledby": index }}
@@ -371,7 +387,7 @@ alignItems:"center",
             onMouseLeave={(e) => {
               setDisplayIconOnHoverClearButton(false)
             }}
-          ><AccessTimeIcon className={classes.reminderTimeIcon}  />
+          ><AccessTimeIcon className={classes.reminderTimeIcon} classes={{root:classes.reminderClearIconroot}}  />
             {" "}
             <div className={classes.reminderTextSection}  >{dateSection} {timeSection} </div>
             {   displayIconOnHoverClearButton?  <IconButton  className={classes.reminderClearIcon}   >
@@ -410,7 +426,11 @@ alignItems:"center",
        
         {!displayIconOnHover ? (
           <div className={classes.iconColumn}>
-            <IconButton className={classes.iconButton} aria-label="menu">
+            <IconButton className={classes.iconButton} aria-label="menu"
+            onClick={()=>{
+              setDisplayDateTimePicker(!displayDateTimePicker)
+            }}
+            >
               <AddAlertOutlinedIcon className={classes.bottomIcons} />
             </IconButton>
             <IconButton className={classes.iconButton} aria-label="menu">
@@ -441,6 +461,7 @@ alignItems:"center",
             </IconButton>
           </div>
         ) : null}
+       {displayDateTimePicker?  <DateAndTimePicker  displayDateTimePicker={displayDateTimePicker}  setDisplayDateTimePicker={setDisplayDateTimePicker}  userData={props.userData.id}  /  >:null }
       </Paper>
     </div>
   );

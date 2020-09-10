@@ -1,6 +1,7 @@
 import * as actions from './noteType'
 import userData from './userStaticdata.json'
 const initialState={
+    loading:false,
     displayListFeature:false,
     descriptionCheckBoxList:[''],
     userData:[],

@@ -52,6 +52,8 @@ function NotesViewOnClick(props) {
   const displayListFeature = useSelector(
     (state) => state.notes.displayListFeature
   );
+  const [title,setTitle]=useState(data[0].title)
+  const [description,setDescription]=useState(data[0].description)
   const useStyles = makeStyles((theme) => ({
     addingNotePortion: {
       borderRadius: "15px",
@@ -246,9 +248,13 @@ top:"3px",
       rowsMax={20}
       placeholder=" Take a note..."
       fullWidth
-      value={data[0].description}
+      value={description}
       onChange={(e) => {
-        dispatch(updateDescriptionById(e.currentTarget.value,data[0].id))
+        setDescription(e.currentTarget.value)
+      }}
+      onBlur={()=>{
+        dispatch(updateDescriptionById(description,data[0].id))
+
       }}
       className={classes.input}
       inputProps={{ "aria-label": "search content" }}
@@ -271,12 +277,17 @@ top:"3px",
         <InputBase
           placeholder=" Title"
           fullWidth
-          value={data[0].title}
+          value={ title}
           className={classes.titleInput}
           onChange={(e)=>{
-            dispatch(updateTitleFromId(e.currentTarget.value,data[0].id))
+              setTitle(e.currentTarget.value)
           }}
           inputProps={{ "aria-label": "search content" }}
+          
+          onBlur={()=>{
+            dispatch(updateTitleFromId(title,data[0].id))
+
+          }}
         />
         {inputsToAddLabel}
 
@@ -296,7 +307,6 @@ top:"3px",
           </IconButton>
           <IconButton className={classes.iconButton} aria-label="menu"
                       onClick={()=>{
-                        console.log(data)
                         dispatch(updateArchievedStatusById(data[0].id,!data[0].isArchived))
                       }}
           >

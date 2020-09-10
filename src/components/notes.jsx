@@ -14,6 +14,7 @@ export default function Notes(props) {
   const matchesSmallSize = useMediaQuery(theme.breakpoints.down("sm"));
   const matchesMediumSize = useMediaQuery(theme.breakpoints.down("md"));
   const matchesLargeSize = useMediaQuery(theme.breakpoints.down("(max-width:1150px)"));
+  
 
 
   const addFeature = useSelector((state) => state.addNoteFeature.addNote);

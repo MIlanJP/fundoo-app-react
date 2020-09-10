@@ -5,12 +5,18 @@ import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import { Route, useHistory } from "react-router-dom";
 import uuid from "react-uuid";
-import { fetchUserIdByEmail, fetchAllUserData, fetchLabelList,UpdateLabelonChange,notesViewOnClick } from "../redux";
+import {
+  fetchUserIdByEmail,
+  fetchAllUserData,
+  fetchLabelList,
+  UpdateLabelonChange,
+  notesViewOnClick,
+} from "../redux";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import DoneIcon from "@material-ui/icons/Done";
 import Label from "../components/label";
-import NotesViewOnClick from '../components/NotesViewOnClick';
+import NotesViewOnClick from "../components/NotesViewOnClick";
 import Bin from "../components/bin";
 import LabelIcon from "@material-ui/icons/Label";
 import { makeStyles } from "@material-ui/core/styles";
@@ -32,7 +38,8 @@ import {
   InputBase,
   IconButton,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  CircularProgress,
 } from "@material-ui/core";
 import labelservice from "../services/labelservice";
 
@@ -46,7 +53,7 @@ export default function Profile() {
   const history = useHistory();
   const dispatch = useDispatch();
   // const loadingStatus = useSelector((state) => state.labels.loading);
-  // const loadedUserData = useSelector((state) => state.labels.userData);
+  const loadedUserData = useSelector((state) => state.notes.userData);
   const loadedLabels = useSelector((state) => state.labels.labelList);
   const userId = useSelector((state) => state.labels.userID);
   // const addNoteFeature = useDispatch();
@@ -60,7 +67,7 @@ export default function Profile() {
     "Archieve",
     "Bin",
   ]);
-  const noteViewOnClick=useSelector((state=>state.notes.notesViewOnClick))
+  const noteViewOnClick = useSelector((state) => state.notes.notesViewOnClick);
   const [labels, setLabels] = useState([]);
   const labelss = useSelector((state) => state.labels.labelList);
   const onlyLabels = useSelector((state) => state.labels.onlyLabelsList);
@@ -108,30 +115,40 @@ export default function Profile() {
       background: "rgb(145,145,145)",
       display: editLabelsPopUpDisplay ? "" : "none",
     },
-    noteViewOnClick:{
+    noteViewOnClick: {
       // position:'absolute'
-    },dialogContent:{
-      minWidth:"350px",
-      width:matchesLargeSize? '40vw': matchesSmallSize? '100vw':matchesExtraSmallSize? '500px':"",
-      minHeight:'150px',
-    },dialogBlock:{
-
-      width:"75vw",
-
     },
-    dialogWidth:{
-      width:'75vw',
-      backgroundColor: 'rgb(236,236,236)'
-        },
-        dialogScrollPaper:{
-
-          background:'rgba(255, 255, 255, 0.65)',
-        },
-        dialoggScrollPaper:{
-          position: "relative",
-          top: '-70px',
-          borderRadius:'8px',
-        },
+    dialogContent: {
+      minWidth: "350px",
+      width: matchesLargeSize
+        ? "40vw"
+        : matchesSmallSize
+        ? "100vw"
+        : matchesExtraSmallSize
+        ? "500px"
+        : "",
+      minHeight: "150px",
+    },
+    dialogBlock: {
+      width: "75vw",
+    },
+    dialogWidth: {
+      width: "75vw",
+      backgroundColor: "rgb(236,236,236)",
+    },
+    dialogScrollPaper: {
+      background: "rgba(255, 255, 255, 0.65)",
+    },
+    dialoggScrollPaper: {
+      position: "relative",
+      top: "-70px",
+      borderRadius: "8px",
+    },
+    loadingIcon:{
+      position:'absolute',
+      left:"50vw",
+      top:"50vh"
+    },
   }));
 
   useEffect(() => {
@@ -152,6 +169,10 @@ export default function Profile() {
   const classes = useStyles();
   return (
     <div className={classes.Label}>
+      {typeof loadedUserData === "undefined" || loadedUserData.length === 0 ? (
+        <CircularProgress className={classes.loadingIcon} color="secondary" />
+      ) : null}
+
       <Header
         setShowDrawer={setShowDrawer}
         showDrawer={showDrawer}
@@ -200,13 +221,13 @@ export default function Profile() {
       </div>
       {editLabelsPopUpDisplay ? (
         <Dialog
-        TransitionComponent='Zoom'
+          TransitionComponent="Zoom"
           aria-labelledby="simple-dialog-title"
           open={editLabelsPopUpDisplay}
           className={classes.dialogBox}
-          onBackdropClick={()=>{
-            setEditLabelsPopUpDisplay(false)
-           }}
+          onBackdropClick={() => {
+            setEditLabelsPopUpDisplay(false);
+          }}
         >
           <DialogTitle id="simple-dialog-title" className={classes.PopUpBox}>
             <Typography variant="button" className={classes.PopUpLabel}>
@@ -297,7 +318,7 @@ export default function Profile() {
                 focusValue === text.label ? (
                   <IconButton
                     onClick={(e) => {
-                      labelservice.deleteLabel(text.id)
+                      labelservice.deleteLabel(text.id);
                       dispatch(fetchLabelList());
                       let name =
                         e.currentTarget.nextElementSibling.firstElementChild
@@ -317,7 +338,7 @@ export default function Profile() {
                         ...itemsPresent,
                         ...endTabs
                       );
-                    
+
                       let location = window.location.pathname;
                       let labelLocation = location.split("/label/")[1];
                       labelLocation = decodeURI(labelLocation);
@@ -329,7 +350,6 @@ export default function Profile() {
                         history.push("/profile");
                       }
                     }}
-                    
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -350,8 +370,9 @@ export default function Profile() {
                     let totalItems = [];
                     totalItems.push(...startTabs, ...items, ...endTabs);
                     setTabs([...totalItems]);
-                    dispatch(UpdateLabelonChange(text.id,e.currentTarget.value))
-
+                    dispatch(
+                      UpdateLabelonChange(text.id, e.currentTarget.value)
+                    );
                   }}
                   onFocus={(e) => {
                     setFocusValue(e.currentTarget.value);
@@ -361,13 +382,13 @@ export default function Profile() {
                   }}
                   onBlur={(e) => {
                     setFocusValue(null);
-                    if(text.label!==popUpTargetAutoFocusAddNewValue){
-                      const data={
-                        label:e.currentTarget.value
-                      }
-                      labelservice.updateLabel(text.id,data)
+                    if (text.label !== popUpTargetAutoFocusAddNewValue) {
+                      const data = {
+                        label: e.currentTarget.value,
+                      };
+                      labelservice.updateLabel(text.id, data);
                       dispatch(fetchLabelList());
-                      setHeading(e.currentTarget.value)
+                      setHeading(e.currentTarget.value);
                     }
                   }}
                 />
@@ -384,8 +405,8 @@ export default function Profile() {
                         const name = (e.currentTarget.parentElement.parentElement.previousElementSibling.firstChild.autofocus =
                           "true");
                         setPopUpTargetAutoFocus(name);
-                        if(text.label!==popUpTargetAutoFocusAddNewValue){
-                          labelservice.updateLabel(text.id)
+                        if (text.label !== popUpTargetAutoFocusAddNewValue) {
+                          labelservice.updateLabel(text.id);
                           dispatch(fetchLabelList());
                         }
                       }}
@@ -398,20 +419,29 @@ export default function Profile() {
         </Dialog>
       ) : // </div>
       null}
- {noteViewOnClick.condition?
-
- <Dialog open={noteViewOnClick.condition}
- onBackdropClick={()=>{
-  dispatch(notesViewOnClick(false,{}));
- }}
- classes={{ container: classes.dialogScrollPaper,paperScrollPaper:classes.dialoggScrollPaper }}
- maxWidth='md'
- disableBackdropClick={true} className={styles.dialogBlock}   >
-  <DialogContent className={classes.dialogContent} >  <NotesViewOnClick userData={noteViewOnClick.data} className={classes.noteViewOnClick}   />
-  </DialogContent> </Dialog>
-: null
-
-}
+      {noteViewOnClick.condition ? (
+        <Dialog
+          open={noteViewOnClick.condition}
+          onBackdropClick={() => {
+            dispatch(notesViewOnClick(false, {}));
+          }}
+          classes={{
+            container: classes.dialogScrollPaper,
+            paperScrollPaper: classes.dialoggScrollPaper,
+          }}
+          maxWidth="md"
+          disableBackdropClick={true}
+          className={styles.dialogBlock}
+        >
+          <DialogContent className={classes.dialogContent}>
+            {" "}
+            <NotesViewOnClick
+              userData={noteViewOnClick.data}
+              className={classes.noteViewOnClick}
+            />
+          </DialogContent>{" "}
+        </Dialog>
+      ) : null}
     </div>
   );
 }

@@ -12,7 +12,7 @@ import {
   ListItemText,
   List,
 } from "@material-ui/core";
-
+import labelservice from '../services/labelservice'
 import {reduxForm,Field} from 'redux-form'
 import { makeStyles } from "@material-ui/core/styles";
 import OutsideClickHandler from "react-outside-click-x";
@@ -38,6 +38,7 @@ import {
   updateDescriptionById,
   updateArchievedStatusById,
   setPinnedStatus,
+  removeReminderById,
 } from "../redux";
 function NotesViewOnClick(props) {
   const descriptionList = useSelector(
@@ -47,8 +48,10 @@ function NotesViewOnClick(props) {
  console.log(data,'printingdd')
   const [onFocusText, setOnFocusText] = useState("");
   const [showClearIcon, setShowClearIcon] = useState("");
+  const[reminderDate,setReminderDate]=useState(props.userData.reminder[0]);
   const [displayOnHover, setDisplayOnHover] = useState(false);
   const pinnedStatus = useSelector((state) => state.pinFeature.pinNote);
+  const reminderDateonPopUp = useSelector((state) => state.pinFeature.pinNote);
   const dispatch = useDispatch();
   const addNote = useSelector((state) => state.addNoteFeature.addNote);
   const [displayIconOnHoverClearButton, setDisplayIconOnHoverClearButton] = useState('');
@@ -65,11 +68,15 @@ function NotesViewOnClick(props) {
     typeof data[0].reminder !== "undefined" &&
     data[0].reminder.length > 0
   ) {
-    const [date, time, over] = CalculateTime(props.userData.reminder[0]);
+    const [date, time, over] = CalculateTime(reminderDate);
     dateSection = date;
     timeSection = time;
     timeGotOver = over;
   }
+
+  useEffect(()=>{}
+    ,[props.data]
+  )
   const useStyles = makeStyles((theme) => ({
     addingNotePortion: {
       borderRadius: "15px",
@@ -183,6 +190,7 @@ top:"3px",
       marginLeft:"1%",
       padding:"8px 3px 8px 0",
       transition: ".25s",
+      zIndex:2,
     },
     reminderClearIconroot:{
       fontSize:'.9rem',
@@ -339,8 +347,17 @@ alignItems:"center",
       onChange={(e) => {
         setDescription(e.currentTarget.value)
       }}
-      onBlur={()=>{
-        dispatch(updateDescriptionById(description,data[0].id))
+      onBlur={(e)=>{
+        const dataToBeUpdated={
+          noteId:data[0].id, 
+          title:title,
+          description:description
+        }
+        labelservice.updateNote(dataToBeUpdated).then(
+          response=>{
+            dispatch(updateDescriptionById(description,data[0].id))
+          }
+        )
 
       }}
       className={classes.input}
@@ -371,9 +388,19 @@ alignItems:"center",
           }}
           inputProps={{ "aria-label": "search content" }}
           
-          onBlur={()=>{
-            dispatch(updateTitleFromId(title,data[0].id))
-
+          onBlur={(e)=>{
+            const dataToBeUpdated={
+              noteId:data[0].id, 
+              title:title,
+              description:description
+            }
+            labelservice.updateNote(dataToBeUpdated).then(
+              response=>{
+                dispatch(updateTitleFromId(title,data[0].id))
+                // setTitle(title)
+              }
+            )
+    
           }}
         />
         {inputsToAddLabel}
@@ -395,8 +422,14 @@ alignItems:"center",
           ><AccessTimeIcon className={classes.reminderTimeIcon}  classes={{root:classes.reminderClearIconroot}} />
             {" "}
             <div className={classes.reminderTextSection}  >{dateSection} {timeSection} </div>
-            {   displayIconOnHoverClearButton?  <IconButton  className={classes.reminderClearIcon}   >
-          <ClearIcon  classes={{root:classes.reminderClearIconroot}}/>{" "}
+            {   displayIconOnHoverClearButton?  <IconButton  className={classes.reminderClearIcon} 
+              onClick={()=>{
+              dispatch( removeReminderById(data[0].id))
+                  }}
+            >
+          <ClearIcon  classes={{root:classes.reminderClearIconroot}}
+
+          />{" "}
 
           </IconButton>:null }
           </label>

@@ -65,6 +65,24 @@ class LabelService {
       "POST"
     );
   }
+  updateNote(data){
+    const token = localStorage.getItem("token");
+    return ApiCall(
+      data,
+      `${baseURL}notes/updateNotes?access_token=${token}`,
+      "POST"
+    );
+  }
+  
+
+  addUpdateReminderNotes(data){
+    const token = localStorage.getItem("token");
+    return ApiCall(
+      data,
+      `${baseURL}notes/addUpdateReminderNotes?access_token=${token}`,
+      "POST"
+    );
+  }
 
 }
 

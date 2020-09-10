@@ -126,10 +126,7 @@ return null
 return null
     });
   }
-  
-  useEffect(()=>{ 
-    calculateColumn()
-  },userData,unPinnedNotes,pinnedNotes)
+
     
   calculateColumn()
 

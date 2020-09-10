@@ -112,6 +112,18 @@ switch(action.type){
         }
     }
 
+    case actions.REMOVE_REMINDER_BY_USER_ID:{
+        return{
+            ...state,
+            userData:state.userData.map(data=>{
+                if(data.id===action.payload){
+                    data.reminder=[]
+                }
+                return data
+            })
+        }
+    }
+
     default : return state
 }
 }

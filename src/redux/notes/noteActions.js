@@ -78,6 +78,12 @@ export const getAllLabels = (userData) => {
       type:actions.UPDATE_REMINDER_BY_USER_ID,
       payload:{reminderTime,id}
     }
+  } 
+   export const removeReminderById=(id)=>{
+    return{
+      type:actions.REMOVE_REMINDER_BY_USER_ID,
+      payload:id
+    }
   }
 
 export const fetchAllUserData = () => {

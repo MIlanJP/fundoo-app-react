@@ -18,9 +18,12 @@ export default function Notes(props) {
 
 
   const addFeature = useSelector((state) => state.addNoteFeature.addNote);
-  const pinnedNotes = useSelector((state) => state.notes.pinnedNotes);
-  const unPinnedNotes = useSelector((state) => state.notes.unPinnedNotes);
   const userData = useSelector((state) => state.notes.userData);
+  const pinnedNotes = userData.filter(data=>data.isPined)
+  const unPinnedNotes = userData.filter(data=>!data.isPined)
+
+  const unPinnedExtraSmallRow=[]
+  const pinnedExtraSmallRow=[]
 
   const unPinnedSmallerColumn2 = [];
   const unPinnedSmallerColumn1 = [];
@@ -54,6 +57,8 @@ export default function Notes(props) {
     let largeCount = 4;
     userData.map((data, index) => {
       if(!data.isPined && !data.isDeleted){
+      unPinnedExtraSmallRow.push(<NotesView userData={data} />)
+
         if (index % 2 === 0) {
           unPinnedSmallerColumn1.push(<NotesView userData={data} />);
         } else {
@@ -92,6 +97,8 @@ return null
 
     userData.map((data, index) => {
       if(data.isPined  && !data.isDeleted){
+      pinnedExtraSmallRow.push(<NotesView userData={data} />)
+
         if (index % 2 === 0) {
           pinnedSmallerColumn1.push(<NotesView userData={data} />);
         } else {
@@ -149,7 +156,7 @@ return null
     mainSection: {
       display: "flex",
       flexDirection: "column",
-      alignItems: "flex-start",
+      alignItems: matchesExtraSmallSize? 'center':  "flex-start",
       width: "100%",
       height: "100%",
     },
@@ -204,15 +211,11 @@ return null
   
   const noOfColumnsOnExtraSmallColumn = (
     <div className={classes.extraSmallRow}>
-      {pinnedNotes.length > 0
-        ? pinnedNotes.map((data) => {
-            return <NotesView className={classes.smallNotes} userData={data} />;
-          })
+      {pinnedNotes.length > 0 ?
+        pinnedExtraSmallRow
         : null}
       {unPinnedNotes.length > 0
-        ? unPinnedNotes.map((data) => {
-            return <NotesView userData={data} />;
-          })
+        ? unPinnedExtraSmallRow
         : null}
     </div>
   );

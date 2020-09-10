@@ -84,6 +84,15 @@ class LabelService {
     );
   }
 
+  removeReminderNotes(data){
+    const token = localStorage.getItem("token");
+    return ApiCall(
+      data,
+      `${baseURL}notes/removeReminderNotes?access_token=${token}`,
+      "POST"
+    );
+  }
+
 }
 
 export default new LabelService();

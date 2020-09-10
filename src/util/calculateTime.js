@@ -2,6 +2,8 @@
      const months=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 const reminderDate=new Date(date)
 const today=new Date()
+reminderDate.setHours(reminderDate.getHours() - 5); 
+reminderDate.setMinutes(reminderDate.getMinutes() - 30);
 
 let yesterday = new Date()
 yesterday.setDate(yesterday.getDate()-1)

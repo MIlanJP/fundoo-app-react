@@ -424,7 +424,12 @@ alignItems:"center",
             <div className={classes.reminderTextSection}  >{dateSection} {timeSection} </div>
             {   displayIconOnHoverClearButton?  <IconButton  className={classes.reminderClearIcon} 
               onClick={()=>{
-              dispatch( removeReminderById(data[0].id))
+                const removeReminder={
+                  noteIdList:[data[0].id]
+                }
+                labelservice.removeReminderNotes(removeReminder).then(()=>{
+                  dispatch( removeReminderById(data[0].id))
+                })
                   }}
             >
           <ClearIcon  classes={{root:classes.reminderClearIconroot}}

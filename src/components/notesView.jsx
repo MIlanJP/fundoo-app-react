@@ -21,7 +21,9 @@ import {
   setPinnedStatus,
   notesViewOnClick,
   updateArchievedStatusById,
+  removeReminderById,
 } from "../redux";
+import labelservice from '../services/labelservice'
 import AddAlertOutlinedIcon from "@material-ui/icons/AddAlertOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
 import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
@@ -111,7 +113,7 @@ function LabelView(props) {
       width: "100%",
       height: "25px",
       marginLeft: "5px",
-      boxShadow: " 0 0 1px 1px",
+      // boxShadow: " 0 0 1px 1px",
       //   borderBottomStyle: 'inset',
       //   borderTopStyle: 'groove'
     },
@@ -169,6 +171,7 @@ function LabelView(props) {
       marginLeft:"1%",
       padding:"8px 3px 8px 0",
       transition: ".25s",
+      zIndex:2,
     },
     reminderClearIconroot:{
       fontSize:'.9rem',
@@ -204,6 +207,11 @@ alignItems:"center",
       display:"flex",
       paddingLeft:'3px',
       flexDirection: "row",
+      flexWrap: 'wrap',
+    },
+    collaboratorsTags:{
+      display:'flex',
+
     },
   }));
   let [dateSection] = "";
@@ -314,10 +322,10 @@ alignItems:"center",
                   setOnFocusText(e.currentTarget.value);
                 }}
               />
-              {onFocusText === description.itemName ||
+              {/* {onFocusText === description.itemName ||
               showClearIcon === description.itemName ? (
                 <ClearIcon className={classes.bottomIcons} />
-              ) : null}
+              ) : null} */}
             </ListItem>
           );
         })}
@@ -390,7 +398,16 @@ alignItems:"center",
           ><AccessTimeIcon className={classes.reminderTimeIcon} classes={{root:classes.reminderClearIconroot}}  />
             {" "}
             <div className={classes.reminderTextSection}  >{dateSection} {timeSection} </div>
-            {   displayIconOnHoverClearButton?  <IconButton  className={classes.reminderClearIcon}   >
+            {   displayIconOnHoverClearButton?  <IconButton  className={classes.reminderClearIcon} 
+                      onClick={()=>{
+                        console.log("IM GETTING CLICKED")
+                        const removeReminder={
+                          noteIdList:[props.userData.id]
+                        }
+                        labelservice.removeReminderNotes(removeReminder).then(()=>{
+                          dispatch( removeReminderById(props.userData.id))
+                        })
+                      }}  >
           <ClearIcon  classes={{root:classes.reminderClearIconroot}}/>{" "}
 
           </IconButton>:null }
@@ -412,9 +429,10 @@ alignItems:"center",
           setDisplayIconOnHoverClearButton('')
         }}
         >
-          {" "}
           <div className={classes.labelTextSection}>{data.label} </div>
-          {   displayIconOnHoverClearButton===data.label ?  <IconButton  className={classes.reminderClearIcon}   >
+          {   displayIconOnHoverClearButton===data.label ?  <IconButton  className={classes.reminderClearIcon} 
+
+          >
           <ClearIcon  classes={{root:classes.reminderClearIconroot}}/>{" "}
 
           </IconButton>:null }
@@ -461,6 +479,13 @@ alignItems:"center",
             </IconButton>
           </div>
         ) : null}
+        
+        {typeof props.userData.collaborators!=='undefined' && props.userData.collaborators.length>0? 
+        <div className={classes.collaboratorsTags}  > {         props.userData.collaborators.map(data=>{
+          return <div>{data.firstName[0].toUpperCase()}</div>
+        }) }</div>
+ :null  
+      }
        {displayDateTimePicker?  <DateAndTimePicker  displayDateTimePicker={displayDateTimePicker}  setDisplayDateTimePicker={setDisplayDateTimePicker}  userData={props.userData.id}  /  >:null }
       </Paper>
     </div>

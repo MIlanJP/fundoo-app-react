@@ -134,6 +134,9 @@ return null
     });
   }
 
+  useEffect(() => {
+    calculateColumn()
+  },[userData])
     
   calculateColumn()
 

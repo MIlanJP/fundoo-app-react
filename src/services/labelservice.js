@@ -1,4 +1,5 @@
 import { ApiCall } from "./apicall";
+import qs from 'qs'
 
 const baseURL = "http://fundoonotes.incubation.bridgelabz.com/api/";
 
@@ -8,7 +9,7 @@ class LabelService {
     return ApiCall(
       "",
       `${baseURL}notes/getNotesList?access_token=${token}`,
-      "GET"
+      "GET",'application/json'
     );
   }
   getLabelLists() {
@@ -16,18 +17,18 @@ class LabelService {
     return ApiCall(
       "",
       `${baseURL}noteLabels/getNoteLabelList?access_token=${token}`,
-      "GET"
+      "GET",'application/json'
     );
   }
 
   getUserID(data) {
     const token = localStorage.getItem("token");
-    return ApiCall(data, `${baseURL}user?access_token=${token}`, "GET");
+    return ApiCall(data, `${baseURL}user?access_token=${token}`, "GET",'application/json');
   }
 
   addLabel(data) {
     const token = localStorage.getItem("token");
-    return ApiCall(data, `${baseURL}noteLabels?access_token=${token}`, "POST");
+    return ApiCall(data, `${baseURL}noteLabels?access_token=${token}`, "POST",'application/json');
   }
 
   updateLabel(id, data) {
@@ -35,7 +36,7 @@ class LabelService {
     return ApiCall(
       data,
       `${baseURL}noteLabels/${id}/updateNoteLabel?access_token=${token}`,
-      "POST"
+      "POST",'application/json'
     );
   }
 
@@ -44,7 +45,7 @@ class LabelService {
     return ApiCall(
       "",
       `${baseURL}noteLabels/${id}/deleteNoteLabel?access_token=${token}`,
-      "DELETE"
+      "DELETE",'application/json'
     );
   }
 
@@ -53,7 +54,7 @@ class LabelService {
     return ApiCall(
       data,
       `${baseURL}notes/pinUnpinNotes?access_token=${token}`,
-      "POST"
+      "POST",'application/json'
     );
   }
 
@@ -62,7 +63,7 @@ class LabelService {
     return ApiCall(
       data,
       `${baseURL}notes/addNotes?access_token=${token}`,
-      "POST"
+      "POST",'application/json'
     );
   }
   updateNote(data){
@@ -70,7 +71,7 @@ class LabelService {
     return ApiCall(
       data,
       `${baseURL}notes/updateNotes?access_token=${token}`,
-      "POST"
+      "POST",'application/json'
     );
   }
   
@@ -80,16 +81,16 @@ class LabelService {
     return ApiCall(
       data,
       `${baseURL}notes/addUpdateReminderNotes?access_token=${token}`,
-      "POST"
+      "POST",'application/json'
     );
   }
 
   removeReminderNotes(data){
     const token = localStorage.getItem("token");
     return ApiCall(
-      data,
+      qs.stringify(data),
       `${baseURL}notes/removeReminderNotes?access_token=${token}`,
-      "POST"
+      "POST",'application/x-www-form-urlencoded'
     );
   }
 

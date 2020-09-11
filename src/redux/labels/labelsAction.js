@@ -36,10 +36,10 @@ export const addLabel = (successMessge) => {
   };
 };
 
-export const getUserId = (userId) => {
+export const getUserId = (userId,email,firstName,secondName) => {
     return {
       type: actions.GET_USER_ID,
-      payload: userId,
+      payload: {userId,email,firstName,secondName},
     };
   };
 export const getLabelLists = (labelLists) => {
@@ -113,7 +113,7 @@ export const fetchUserIdByEmail=(emailId)=>{
             const userId=data.data.filter(data=>{ if(data.email===emailId){
                 userID=data.id
                 console.log(data.id)
-                dispatch(getUserId(data.id))
+                dispatch(getUserId(data.id,data.email,data.firstName,data.lastName))
                 return data.id
             }})
             

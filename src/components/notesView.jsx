@@ -34,6 +34,7 @@ import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import CropOriginalOutlinedIcon from "@material-ui/icons/CropOriginalOutlined";
 import DateAndTimePicker from './DateTimePicker';
+import {collaboratorsPopUp} from '../redux'
 function LabelView(props) {
   const theme = useTheme();
   const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
@@ -210,8 +211,24 @@ alignItems:"center",
       flexWrap: 'wrap',
     },
     collaboratorsTags:{
+      margin:"3px 0 3px 0",
       display:'flex',
+      flexWrap: 'wrap',
 
+
+    },
+    collaboratorsTagsChild:{
+      width: "46px",
+    boxShadow: "0px 0px 6px 0px black",
+    borderRadius:" 50%",
+    height:" 35px",
+    textAlign: 'center',
+    paddingTop:' 11px',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginLeft: '12px',
+    cursor: 'pointer',
     },
   }));
   let [dateSection] = "";
@@ -315,7 +332,6 @@ alignItems:"center",
                 placeholder="List Item"
                 value={description.itemName}
                 onClick={(e) => {
-                  console.log(props.userData);
                   dispatch(notesViewOnClick(true, props.userData));
                 }}
                 onFocus={(e) => {
@@ -363,7 +379,6 @@ alignItems:"center",
           className={classes.titleInput}
           inputProps={{ "aria-label": "search content" }}
           onClick={(e) => {
-            console.log(props.userData);
             dispatch(notesViewOnClick(true, props.userData));
           }}
         />
@@ -400,7 +415,6 @@ alignItems:"center",
             <div className={classes.reminderTextSection}  >{dateSection} {timeSection} </div>
             {   displayIconOnHoverClearButton?  <IconButton  className={classes.reminderClearIcon} 
                       onClick={()=>{
-                        console.log("IM GETTING CLICKED")
                         const removeReminder={
                           noteIdList:[props.userData.id]
                         }
@@ -422,7 +436,6 @@ alignItems:"center",
                classes.labelDisplaySection
           }
         onMouseOver={(e) => {
-          console.log(e.currentTarget.firstElementChild.innerText)
             setDisplayIconOnHoverClearButton(e.currentTarget.firstElementChild.innerText)
         }}
         onMouseLeave={(e) => {
@@ -451,7 +464,9 @@ alignItems:"center",
             >
               <AddAlertOutlinedIcon className={classes.bottomIcons} />
             </IconButton>
-            <IconButton className={classes.iconButton} aria-label="menu">
+            <IconButton className={classes.iconButton} aria-label="menu"
+            onClick={()=>dispatch(collaboratorsPopUp(true,props.userData.id))}
+            >
               <PersonAddOutlinedIcon className={classes.bottomIcons} />
             </IconButton>
             <IconButton className={classes.iconButton} aria-label="menu">
@@ -482,7 +497,7 @@ alignItems:"center",
         
         {typeof props.userData.collaborators!=='undefined' && props.userData.collaborators.length>0? 
         <div className={classes.collaboratorsTags}  > {         props.userData.collaborators.map(data=>{
-          return <div>{data.firstName[0].toUpperCase()}</div>
+          return <div className={classes.collaboratorsTagsChild}  >{data.firstName[0].toUpperCase()}</div>
         }) }</div>
  :null  
       }

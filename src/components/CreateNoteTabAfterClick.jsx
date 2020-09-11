@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import OutsideClickHandler from "react-outside-click-x";
+import qs from 'qs'
 import { useDispatch } from "react-redux";
 import AddAlertOutlinedIcon from "@material-ui/icons/AddAlertOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
@@ -323,16 +324,30 @@ function CreateNoteTabAfterClick(props) {
             variant="contained"
             className={classes.closeButton}
             onClick={() => {
-              const data={
-                title,
-                description,
-               checklist,
-                isPined:pinnedStatus,
-                color,
-                isArchived,
-
+              let data={}
+              if(checklist[0].itemName!==''){
+                let list=checklist;
+                list=list.pop()
+                data={
+                  title,
+                  description,
+                  noteCheckLists:qs.stringify( checklist) ,
+                  isPined:pinnedStatus,
+                  color,
+                  isArchived,
+  
+                }
+              }else{
+                data={
+                  title,
+                  description,
+                  isPined:pinnedStatus,
+                  color,
+                  isArchived,
+  
+                }
               }
-              console.log("i was called")
+              
               if(title!==''|| description!==''||checklist[0].itemName!==''){
                 labelService.addNote(data).then(response =>{
                   dispatch(addNoteBeforeClick());

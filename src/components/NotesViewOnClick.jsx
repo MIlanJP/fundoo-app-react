@@ -39,6 +39,7 @@ import {
   updateArchievedStatusById,
   setPinnedStatus,
   removeReminderById,
+  collaboratorsPopUp
 } from "../redux";
 function NotesViewOnClick(props) {
   const descriptionList = useSelector(
@@ -471,7 +472,9 @@ alignItems:"center",
             <AddAlertOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
 
-          <IconButton className={classes.iconButton} aria-label="menu">
+          <IconButton className={classes.iconButton} aria-label="menu"
+           onClick={()=>dispatch(collaboratorsPopUp(true,data[0].id))}
+          >
             <PersonAddOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
           <IconButton className={classes.iconButton} aria-label="menu">

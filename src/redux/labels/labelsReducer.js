@@ -4,6 +4,8 @@ const initialState = {
     loading :false,
     userID:"",
     emailId:'',
+    firstName:'',
+    lastName:'',
     labelList:[],
     onlyLabelsList:[],
     userData:[],
@@ -53,7 +55,10 @@ const initialState = {
             return {
                 ...state,
                 loading:false,
-                userID:action.payload
+                userID:action.payload.userId,
+                emailId:action.payload.email,
+                firstName:action.payload.firstName,
+                lastName:action.payload.secondName
             }
         }
         case actions.SET_EMAIL_ID:{

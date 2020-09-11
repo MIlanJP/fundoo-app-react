@@ -8,6 +8,9 @@ const initialState={
     pinnedNotes:[],
     unPinnedNotes:userData.data.data.filter(pinned=> pinned.isPined===false),
     notesViewOnClick:{},
+    collaboratorDisplay:false,
+    collaboratorData:{},
+    searchCollaborator:false
 }
 
 const reducer=(state=initialState,action)=>{
@@ -43,18 +46,18 @@ switch(action.type){
         }
     }
     case actions.UPDATE_PINNED_STATUS_OF_NOTE:{
-        const notes=[]
-        state.userData.map(data=> { 
-            if(data.id===action.id){
-                data.isPined=action.payload
-            }
-            notes.push(data)
-        }
-            )
+        // const notes=[]
+        
            
         return{
             ...state,
-            userData:notes,
+            userData:state.userData.map(data=> { 
+                if(data.id===action.payload.id){
+                    data.isPined=action.payload.condition
+                }
+                return data
+            }
+                ),
         }
     }
     case actions.HIDE_ALL_NOTE_SECTION:{
@@ -121,6 +124,20 @@ switch(action.type){
                 }
                 return data
             })
+        }
+    }
+
+    case actions.DISPLAY_COLLABORATOR_POPUP:{
+        return{
+            ...state,
+            collaboratorDisplay:action.payload.condition,
+            collaboratorData:  state.userData.filter(data=>data.id===action.payload.id)
+        }
+    }
+    case actions.TOGGLE_SEARCH_FOR_COLLABORATOR_SEARCH:{
+        return{
+            ...state,
+            searchCollaborator:action.payload
         }
     }
 

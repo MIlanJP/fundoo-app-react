@@ -30,8 +30,8 @@ export const setDescriptList=(list)=>{
 export const setPinnedStatus=(condition,id)=>{
     return{
         type:actions.UPDATE_PINNED_STATUS_OF_NOTE,
-        payload:condition,
-        id:id
+        payload:{condition,id},
+       
     }
 }
 
@@ -73,6 +73,13 @@ export const getAllLabels = (userData) => {
     };
   };
 
+  export const collaboratorsPopUp=(condition,id)=>{
+      return{
+        type: actions.DISPLAY_COLLABORATOR_POPUP,
+        payload: {condition,id}
+      }
+  }
+
   export const updateReminderById=(reminderTime,id)=>{
     return{
       type:actions.UPDATE_REMINDER_BY_USER_ID,
@@ -83,6 +90,19 @@ export const getAllLabels = (userData) => {
     return{
       type:actions.REMOVE_REMINDER_BY_USER_ID,
       payload:id
+    }
+  }
+
+  export const getCollabDataById=(id)=>{
+return{
+  type:actions.GET_COLLAB_DATA_BY_ID,
+  payload:id
+}
+  }
+  export const toggleCollaboratorSearch=(condition)=>{
+    return{
+      type:actions.TOGGLE_SEARCH_FOR_COLLABORATOR_SEARCH,
+      payload:condition
     }
   }
 

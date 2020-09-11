@@ -42,6 +42,7 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import labelservice from "../services/labelservice";
+import ColaboratorDialogBox from './../components/colaboratorDialog';
 
 export default function Profile() {
   // const messages = useContext(MessageContext);
@@ -52,7 +53,6 @@ export default function Profile() {
   const matchesLargeSize = useMediaQuery(theme.breakpoints.down("lg"));
   const history = useHistory();
   const dispatch = useDispatch();
-  // const loadingStatus = useSelector((state) => state.labels.loading);
   const loadedUserData = useSelector((state) => state.notes.userData);
   const loadedLabels = useSelector((state) => state.labels.labelList);
   const userId = useSelector((state) => state.labels.userID);
@@ -91,6 +91,8 @@ export default function Profile() {
   const [popUpTargetAutoFocusAddNew, setPopUpTargetAutoFocusAddNew] = useState(
     false
   );
+ 
+  const displayCollabPopUp=useSelector(state=>state.notes.collaboratorDisplay)
   const [
     popUpTargetAutoFocusAddNewValue,
     setPopUpTargetAutoFocusAddNewValue,
@@ -436,6 +438,7 @@ export default function Profile() {
           </DialogContent>{" "}
         </Dialog>
       ) : null}
+  {displayCollabPopUp ? <ColaboratorDialogBox  />:null}
     </div>
   );
 }

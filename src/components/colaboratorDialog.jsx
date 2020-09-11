@@ -19,6 +19,8 @@ import { purple } from '@material-ui/core/colors';
 import {useSelector} from 'react-redux'
 import {useDispatch} from 'react-redux'
 import { IconButton } from '@material-ui/core';
+import SearchBox from './searchCollaborator'
+
 const emails = ['username@gmail.com', 'user02@gmail.com'];
 
 const useStyles = makeStyles({
@@ -120,7 +122,9 @@ const displayCollabPopUp=useSelector(state=>state.notes.collaboratorDisplay)
           </Avatar>
         </ListItemAvatar>
         <ListItemText primary="Add Colaborators" />
-      </ListItem>:null
+      </ListItem>:<SearchBox
+
+      />
       }
 
       </List>

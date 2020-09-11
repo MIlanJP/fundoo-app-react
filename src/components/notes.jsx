@@ -7,8 +7,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {  useTheme } from "@material-ui/core";
 import NotesView from "./notesView";
+import _ from 'lodash'
 
-export default function Notes(props) {
+export default function Labels(props) {
   const theme = useTheme();
   const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
   const matchesSmallSize = useMediaQuery(theme.breakpoints.down("sm"));
@@ -56,6 +57,7 @@ export default function Notes(props) {
     let mediumCount = 2;
     let largeCount = 4;
     userData.map((data, index) => {
+     
       if(!data.isPined && !data.isDeleted){
       unPinnedExtraSmallRow.push(<NotesView userData={data} />)
 

@@ -106,6 +106,13 @@ return{
     }
   }
 
+  export const removeLabelFromNote=(id,labelName)=>{
+    return{
+      type:actions.REMOVE_LABEL_FROM_NOTE,
+      payload:{id,labelName}
+    }
+  }
+
 export const fetchAllUserData = () => {
     return (dispatch) => {
       dispatch(fetchUserReqests);

@@ -20,7 +20,7 @@ import NotesViewOnClick from "../components/NotesViewOnClick";
 import Bin from "../components/bin";
 import LabelIcon from "@material-ui/icons/Label";
 import { makeStyles } from "@material-ui/core/styles";
-import Notes from "../components/notes";
+import Labels from "../components/notes";
 import Reminder from "../components/reminder";
 import Archieve from "../components/archieve";
 import Drawer from "../components/drawer";
@@ -59,7 +59,7 @@ export default function Profile() {
   // const addNoteFeature = useDispatch();
   // const addNote = useSelector((state) => state.addNoteFeature.addNote);
 
-  const [routesPages] = useState([Notes, Reminder, Label, Archieve, Bin]);
+  const [routesPages] = useState([Labels, Reminder, Label, Archieve, Bin]);
   const [routesName] = useState([
     "Notes",
     "Reminder",
@@ -193,7 +193,7 @@ export default function Profile() {
       </div>
 
       <div className={styles.pageSize}>
-        <Route exact path="/profile" component={Notes} />
+        <Route exact path="/profile" component={Labels} />
         {routesPages.map((PageComponent, index) => {
           if (index !== 2 && index !== 0) {
             return (

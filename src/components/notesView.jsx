@@ -10,7 +10,7 @@ import {
   List,
   useMediaQuery,
 } from "@material-ui/core";
-import labelService from '../services/labelservice'
+import labelService from "../services/labelservice";
 import NotesViewOnClick from "./NotesViewOnClick";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { makeStyles } from "@material-ui/core/styles";
@@ -22,19 +22,20 @@ import {
   notesViewOnClick,
   updateArchievedStatusById,
   removeReminderById,
+  removeLabelFromNote,
 } from "../redux";
-import labelservice from '../services/labelservice'
+import labelservice from "../services/labelservice";
 import AddAlertOutlinedIcon from "@material-ui/icons/AddAlertOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
 import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
 import AddIcon from "@material-ui/icons/Add";
 import PaletteOutlinedIcon from "@material-ui/icons/PaletteOutlined";
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import CropOriginalOutlinedIcon from "@material-ui/icons/CropOriginalOutlined";
-import DateAndTimePicker from './DateTimePicker';
-import {collaboratorsPopUp} from '../redux'
+import DateAndTimePicker from "./DateTimePicker";
+import { collaboratorsPopUp } from "../redux";
 function LabelView(props) {
   const theme = useTheme();
   const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
@@ -43,8 +44,11 @@ function LabelView(props) {
   const [onFocusText, setOnFocusText] = useState("");
   const [showClearIcon, setShowClearIcon] = useState("");
   const [displayIconOnHover, setDisplayIconOnHover] = useState(true);
-  const [displayIconOnHoverClearButton, setDisplayIconOnHoverClearButton] = useState('');
-  const [displayDateTimePicker,setDisplayDateTimePicker] = useState(false)
+  const [
+    displayIconOnHoverClearButton,
+    setDisplayIconOnHoverClearButton,
+  ] = useState("");
+  const [displayDateTimePicker, setDisplayDateTimePicker] = useState(false);
   // const [,setNotesViewOnClick] = useState(false)
 
   const useStyles = makeStyles((theme) => ({
@@ -145,90 +149,87 @@ function LabelView(props) {
       fontSize: ".75rem",
       background: "rgba(215, 212, 212, 0.8)",
       // height:"20px",
-      display:"flex",
-      flexDirection:'row',
+      display: "flex",
+      flexDirection: "row",
       borderRadius: "15px",
-      border:'groove 1px ',
-      marginRight:"50px",
-      marginLeft:"3px",
-      height:'19px',
-
+      border: "groove 1px ",
+      marginRight: "50px",
+      marginLeft: "3px",
+      height: "19px",
     },
     reminderSectionCutOff: {
       fontSize: ".75rem",
       background: "rgba(215, 212, 212, 0.8)",
       // height:"20px",
-      display:"flex",
-      flexDirection:'row',
+      display: "flex",
+      flexDirection: "row",
       borderRadius: "15px",
-      border:'groove 1px ',
-      marginRight:"50px",
-      marginLeft:"3px",
-      height:'19px',
+      border: "groove 1px ",
+      marginRight: "50px",
+      marginLeft: "3px",
+      height: "19px",
       textDecoration: "line-through",
     },
-    reminderClearIcon:{
-      
-      marginLeft:"1%",
-      padding:"8px 3px 8px 0",
+    reminderClearIcon: {
+      marginLeft: "1%",
+      padding: "8px 3px 8px 0",
       transition: ".25s",
-      zIndex:2,
+      zIndex: 2,
     },
-    reminderClearIconroot:{
-      fontSize:'.9rem',
+    reminderClearIconroot: {
+      fontSize: ".9rem",
       transition: ".25s",
     },
-    reminderTimeIcon:{
-      marginLeft:"5px",
-      padding:"3px 6px 3px 0px",
+    reminderTimeIcon: {
+      marginLeft: "5px",
+      padding: "3px 6px 3px 0px",
     },
     reminderTextSection: {
-      textAlign:'center',
-      justifyContent:'center',
-    },labelDisplaySection:{
+      textAlign: "center",
+      justifyContent: "center",
+    },
+    labelDisplaySection: {
       fontSize: ".65rem",
       background: "rgba(215, 212, 212, 0.8)",
       // height:"20px",
-      display:"flex",
-      flexDirection:'row',
+      display: "flex",
+      flexDirection: "row",
       borderRadius: "15px",
-      border:'groove 1px ',
-alignItems:"center",
+      border: "groove 1px ",
+      alignItems: "center",
 
       justifyContent: "space-between",
     },
-    labelTextSection:{
-      textAlign:'center',
+    labelTextSection: {
+      textAlign: "center",
       padding: "8px",
-      justifyContent:'center',
+      justifyContent: "center",
       lineHeight: ".5rem",
     },
-    labelSection:{
-      marginTop:'5px',
-      display:"flex",
-      paddingLeft:'3px',
+    labelSection: {
+      marginTop: "5px",
+      display: "flex",
+      paddingLeft: "3px",
       flexDirection: "row",
-      flexWrap: 'wrap',
+      flexWrap: "wrap",
     },
-    collaboratorsTags:{
-      margin:"3px 0 3px 0",
-      display:'flex',
-      flexWrap: 'wrap',
-
-
+    collaboratorsTags: {
+      margin: "3px 0 3px 0",
+      display: "flex",
+      flexWrap: "wrap",
     },
-    collaboratorsTagsChild:{
+    collaboratorsTagsChild: {
       width: "46px",
-    boxShadow: "0px 0px 6px 0px black",
-    borderRadius:" 50%",
-    height:" 35px",
-    textAlign: 'center',
-    paddingTop:' 11px',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginLeft: '12px',
-    cursor: 'pointer',
+      boxShadow: "0px 0px 6px 0px black",
+      borderRadius: " 50%",
+      height: " 35px",
+      textAlign: "center",
+      paddingTop: " 11px",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      marginLeft: "12px",
+      cursor: "pointer",
     },
   }));
   let [dateSection] = "";
@@ -250,13 +251,13 @@ alignItems:"center",
     <IconButton
       className={classes.pinIcon}
       onClick={() => {
-        const data={
-          isPined:true,
-          noteIdList:[props.userData.id]
-        }
-        labelService.updateIsPined(data).then(
-          dispatch(setPinnedStatus(true, props.userData.id))
-        )
+        const data = {
+          isPined: true,
+          noteIdList: [props.userData.id],
+        };
+        labelService
+          .updateIsPined(data)
+          .then(dispatch(setPinnedStatus(true, props.userData.id)));
       }}
     >
       <svg
@@ -274,13 +275,13 @@ alignItems:"center",
     <IconButton
       className={classes.pinIcon}
       onClick={() => {
-        const data={
-          isPined:false,
-          noteIdList:[props.userData.id]
-        }
-        labelService.updateIsPined(data).then(
-          dispatch(setPinnedStatus(false, props.userData.id))
-        )
+        const data = {
+          isPined: false,
+          noteIdList: [props.userData.id],
+        };
+        labelService
+          .updateIsPined(data)
+          .then(dispatch(setPinnedStatus(false, props.userData.id)));
       }}
     >
       <svg
@@ -405,67 +406,100 @@ alignItems:"center",
                 : classes.reminderSectionCutOff
             }
             onMouseOver={(e) => {
-              setDisplayIconOnHoverClearButton(true)
+              setDisplayIconOnHoverClearButton(true);
             }}
             onMouseLeave={(e) => {
-              setDisplayIconOnHoverClearButton(false)
+              setDisplayIconOnHoverClearButton(false);
             }}
-          ><AccessTimeIcon className={classes.reminderTimeIcon} classes={{root:classes.reminderClearIconroot}}  />
-            {" "}
-            <div className={classes.reminderTextSection}  >{dateSection} {timeSection} </div>
-            {   displayIconOnHoverClearButton?  <IconButton  className={classes.reminderClearIcon} 
-                      onClick={()=>{
-                        const removeReminder={
-                          noteIdList:[props.userData.id]
-                        }
-                        labelservice.removeReminderNotes(removeReminder).then(()=>{
-                          dispatch( removeReminderById(props.userData.id))
-                        })
-                      }}  >
-          <ClearIcon  classes={{root:classes.reminderClearIconroot}}/>{" "}
-
-          </IconButton>:null }
+          >
+            <AccessTimeIcon
+              className={classes.reminderTimeIcon}
+              classes={{ root: classes.reminderClearIconroot }}
+            />{" "}
+            <div className={classes.reminderTextSection}>
+              {dateSection} {timeSection}{" "}
+            </div>
+            {displayIconOnHoverClearButton ? (
+              <IconButton
+                className={classes.reminderClearIcon}
+                onClick={() => {
+                  const removeReminder = {
+                    noteIdList: [props.userData.id],
+                  };
+                  labelservice.removeReminderNotes(removeReminder).then(() => {
+                    dispatch(removeReminderById(props.userData.id));
+                  });
+                }}
+              >
+                <ClearIcon classes={{ root: classes.reminderClearIconroot }} />{" "}
+              </IconButton>
+            ) : null}
           </label>
         ) : null}
-       
- {typeof props.userData.noteLabels!=='undefined' && props.userData.noteLabels.length>0?
 
-  <div className={classes.labelSection}  >      { props.userData.noteLabels.map(data=>{
-         return  <div
-          className={
-               classes.labelDisplaySection
-          }
-        onMouseOver={(e) => {
-            setDisplayIconOnHoverClearButton(e.currentTarget.firstElementChild.innerText)
-        }}
-        onMouseLeave={(e) => {
-          setDisplayIconOnHoverClearButton('')
-        }}
-        >
-          <div className={classes.labelTextSection}>{data.label} </div>
-          {   displayIconOnHoverClearButton===data.label ?  <IconButton  className={classes.reminderClearIcon} 
+        {typeof props.userData.noteLabels !== "undefined" &&
+        props.userData.noteLabels.length > 0 ? (
+          <div className={classes.labelSection}>
+            {" "}
+            {props.userData.noteLabels.map((data) => {
+              if (data.isDeleted === false) {
+                return (
+                  <div
+                    className={classes.labelDisplaySection}
+                    onMouseOver={(e) => {
+                      setDisplayIconOnHoverClearButton(
+                        e.currentTarget.firstElementChild.innerText
+                      );
+                    }}
+                    onMouseLeave={(e) => {
+                      setDisplayIconOnHoverClearButton("");
+                    }}
+                  >
+                    <div className={classes.labelTextSection}>
+                      {data.label}{" "}
+                    </div>
+                    {displayIconOnHoverClearButton === data.label ? (
+                      <IconButton className={classes.reminderClearIcon}
+                      onClick={(e)=>{
+                        const labelData={
+                          noteId:props.userData.id,
+                          labelId:data.id
+                        }
+                        labelservice.removeLabelFromNote(labelData).then(
+                          dispatch(removeLabelFromNote(props.userData.id,e.currentTarget.previousElementSibling.innerText))
+                        )
+                      }}
+                      >
+                        <ClearIcon
+                          classes={{ root: classes.reminderClearIconroot }}
 
-          >
-          <ClearIcon  classes={{root:classes.reminderClearIconroot}}/>{" "}
+                        />{" "}
+                      </IconButton>
+                    ) : null}
+                  </div>
+                );
+              }
+            })}
+          </div>
+        ) : null}
 
-          </IconButton>:null }
-        
-        </div>
-        })}</div>
-        :null}
-        
-       
         {!displayIconOnHover ? (
           <div className={classes.iconColumn}>
-            <IconButton className={classes.iconButton} aria-label="menu"
-            onClick={()=>{
-              setDisplayDateTimePicker(!displayDateTimePicker)
-            }}
+            <IconButton
+              className={classes.iconButton}
+              aria-label="menu"
+              onClick={() => {
+                setDisplayDateTimePicker(!displayDateTimePicker);
+              }}
             >
               <AddAlertOutlinedIcon className={classes.bottomIcons} />
             </IconButton>
-            <IconButton className={classes.iconButton} aria-label="menu"
-            onClick={()=>dispatch(collaboratorsPopUp(true,props.userData.id))}
+            <IconButton
+              className={classes.iconButton}
+              aria-label="menu"
+              onClick={() =>
+                dispatch(collaboratorsPopUp(true, props.userData.id))
+              }
             >
               <PersonAddOutlinedIcon className={classes.bottomIcons} />
             </IconButton>
@@ -494,14 +528,27 @@ alignItems:"center",
             </IconButton>
           </div>
         ) : null}
-        
-        {typeof props.userData.collaborators!=='undefined' && props.userData.collaborators.length>0? 
-        <div className={classes.collaboratorsTags}  > {         props.userData.collaborators.map(data=>{
-          return <div className={classes.collaboratorsTagsChild}  >{data.firstName[0].toUpperCase()}</div>
-        }) }</div>
- :null  
-      }
-       {displayDateTimePicker?  <DateAndTimePicker  displayDateTimePicker={displayDateTimePicker}  setDisplayDateTimePicker={setDisplayDateTimePicker}  userData={props.userData.id}  /  >:null }
+
+        {typeof props.userData.collaborators !== "undefined" &&
+        props.userData.collaborators.length > 0 ? (
+          <div className={classes.collaboratorsTags}>
+            {" "}
+            {props.userData.collaborators.map((data) => {
+              return (
+                <div className={classes.collaboratorsTagsChild}>
+                  {data.firstName[0].toUpperCase()}
+                </div>
+              );
+            })}
+          </div>
+        ) : null}
+        {displayDateTimePicker ? (
+          <DateAndTimePicker
+            displayDateTimePicker={displayDateTimePicker}
+            setDisplayDateTimePicker={setDisplayDateTimePicker}
+            userData={props.userData.id}
+          />
+        ) : null}
       </Paper>
     </div>
   );

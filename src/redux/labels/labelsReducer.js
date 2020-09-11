@@ -85,6 +85,8 @@ const initialState = {
                 emailId:action.payload
             }
         }
+
+        
         default: return state;
     }
 }

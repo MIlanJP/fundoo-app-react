@@ -141,6 +141,18 @@ switch(action.type){
         }
     }
 
+    case actions.REMOVE_LABEL_FROM_NOTE:{
+        return{
+            ...state,
+            userData:state.userData.map(data=> {
+                if(data.id===action.payload.id){
+                   data.noteLabels= data.noteLabels.filter(label=>label.label!==action.payload.labelName)
+                }
+            return data}
+            )
+        }
+    }
+
     default : return state
 }
 }

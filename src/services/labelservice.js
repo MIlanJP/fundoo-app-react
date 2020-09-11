@@ -74,6 +74,15 @@ class LabelService {
       "POST",'application/json'
     );
   }
+
+  removeLabelFromNote(data){
+    const token = localStorage.getItem("token");
+    return ApiCall(
+      data,
+      `${baseURL}notes/${data.noteId}/addLabelToNotes/${data.labelId}/remove?access_token=${token}`,
+      "POST",'application/json'
+    );
+  }
   
 
   addUpdateReminderNotes(data){

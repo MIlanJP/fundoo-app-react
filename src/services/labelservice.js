@@ -84,6 +84,14 @@ class LabelService {
     );
   }
   
+  addLabelToNote(data){
+    const token = localStorage.getItem("token");
+    return ApiCall(
+      data,
+      `${baseURL}notes/${data.noteId}/addLabelToNotes/${data.labelId}/add?access_token=${token}`,
+      "POST",'application/json'
+    );
+  }
 
   addUpdateReminderNotes(data){
     const token = localStorage.getItem("token");

@@ -294,7 +294,7 @@ return null
     <div className={classes.mainSection}>
       <div className={classes.AddNoteLabels}>
         {addFeature ? (
-          <CreateNoteTabAfterClick className={classes.PopUp} />
+          <CreateNoteTabAfterClick className={classes.PopUp} isLabel={true} labelName={props.labelName}  />
         ) : (
           <CreateNoteTabBeforeClick className={classes.PopUp} />
         )}

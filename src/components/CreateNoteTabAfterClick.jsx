@@ -47,6 +47,7 @@ function CreateNoteTabAfterClick(props) {
   const [pinnedStatus,setPinnedStatus] = useState(false);
   const dispatch = useDispatch();
   const addNote = useSelector((state) => state.addNoteFeature.addNote);
+  const onlyLabelsList = useSelector((state) => state.labels.onlyLabelsList);
   const displayListFeature = useSelector(
     (state) => state.notes.displayListFeature
   );
@@ -324,6 +325,7 @@ function CreateNoteTabAfterClick(props) {
             variant="contained"
             className={classes.closeButton}
             onClick={() => {
+
               let data={}
               if(checklist[0].itemName!==''){
                 let list=checklist;
@@ -349,11 +351,30 @@ function CreateNoteTabAfterClick(props) {
               }
               
               if(title!==''|| description!==''||checklist[0].itemName!==''){
+
                 labelService.addNote(data).then(response =>{
-                  dispatch(addNoteBeforeClick());
-                  dispatch(fetchAllUserData());
+                  console.log(response.data.status.details.id)
+                  if(props.isLabel){
+                    const labelDetails= onlyLabelsList.filter(data=>data.label===props.labelName)
+                          const labelId=labelDetails[0].id
+                          const dataOfLabel={
+                            noteId:response.data.status.details.id,
+                            labelId:labelId
+                          }
+                          labelService.addLabelToNote(dataOfLabel).then(response =>{
+                            dispatch(addNoteBeforeClick());
+                            dispatch(fetchAllUserData());
+                          })
+                  }else{
+                    dispatch(addNoteBeforeClick());
+                    dispatch(fetchAllUserData());
+                  }
+
+
                 })
-              }else{
+              }
+              else
+              {
                 dispatch(addNoteBeforeClick());
               }
 

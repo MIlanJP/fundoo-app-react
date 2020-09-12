@@ -75,6 +75,23 @@ class LabelService {
     );
   }
 
+  deleteNote(data){
+    const token = localStorage.getItem("token");
+    return ApiCall(
+      data,
+      `${baseURL}notes/trashNotes?access_token=${token}`,
+      "POST",'application/json'
+    );
+  }
+  deleteNoteForever(data){
+    const token = localStorage.getItem("token");
+    return ApiCall(
+      data,
+      `${baseURL}notes/deleteForeverNotes?access_token=${token}`,
+      "POST",'application/json'
+    );
+  }
+
   removeLabelFromNote(data){
     const token = localStorage.getItem("token");
     return ApiCall(
@@ -98,6 +115,23 @@ class LabelService {
     return ApiCall(
       data,
       `${baseURL}notes/addUpdateReminderNotes?access_token=${token}`,
+      "POST",'application/json'
+    );
+  }
+  updateArchievedStatus(data){
+    const token = localStorage.getItem("token");
+    return ApiCall(
+      data,
+      `${baseURL}notes/archiveNotes?access_token=${token}`,
+      "POST",'application/json'
+    );
+  }
+
+  updateColorOfNote(data){
+    const token = localStorage.getItem("token");
+    return ApiCall(
+     data,
+      `${baseURL}notes/changesColorNotes?access_token=${token}`,
       "POST",'application/json'
     );
   }

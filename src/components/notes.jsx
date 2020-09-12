@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect} from "react";
 import styles from "../scss/profile.module.scss";
 import CreateNoteTabBeforeClick from "./CreateNoteTabBeforeClick";
 import CreateNoteTabAfterClick from "./CreateNoteTabAfterClick";
@@ -15,6 +15,7 @@ export default function Labels(props) {
   const matchesSmallSize = useMediaQuery(theme.breakpoints.down("sm"));
   const matchesMediumSize = useMediaQuery(theme.breakpoints.down("md"));
   const matchesLargeSize = useMediaQuery(theme.breakpoints.down("(max-width:1150px)"));
+  // const [showLabel,setShowLabel]=useState(false)
   
 
 
@@ -58,7 +59,7 @@ export default function Labels(props) {
     let largeCount = 4;
     userData.map((data, index) => {
      
-      if(!data.isPined && !data.isDeleted){
+      if(!data.isPined && !data.isDeleted && !data.isArchived){
       unPinnedExtraSmallRow.push(<NotesView userData={data} />)
 
         if (index % 2 === 0) {
@@ -98,7 +99,7 @@ return null
     });
 
     userData.map((data, index) => {
-      if(data.isPined  && !data.isDeleted){
+      if(data.isPined  && !data.isDeleted&& !data.isArchived){
       pinnedExtraSmallRow.push(<NotesView userData={data} />)
 
         if (index % 2 === 0) {

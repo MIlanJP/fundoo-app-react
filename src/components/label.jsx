@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import styles from "../scss/profile.module.scss";
 import CreateNoteTabBeforeClick from "./CreateNoteTabBeforeClick";
 import CreateNoteTabAfterClick from "./CreateNoteTabAfterClick";
@@ -14,8 +14,7 @@ export default function Notes(props) {
   const matchesSmallSize = useMediaQuery(theme.breakpoints.down("sm"));
   const matchesMediumSize = useMediaQuery(theme.breakpoints.down("md"));
   const matchesLargeSize = useMediaQuery(theme.breakpoints.down("(max-width:1150px)"));
-  
-
+  const [showLabel,setShowLabel]=useState(false)
 
   const addFeature = useSelector((state) => state.addNoteFeature.addNote);
   const userData = useSelector((state) => state.notes.userData);
@@ -100,6 +99,9 @@ return null
       const found=data.noteLabels.some(label=>label.label===props.labelName)
 
       if(data.isPined  && !data.isDeleted && found){
+        if(!showLabel){
+          setShowLabel(true)
+        }
       pinnedExtraSmallRow.push(<NotesView userData={data} />)
 
         if (index % 2 === 0) {
@@ -217,9 +219,12 @@ return null
   
   const noOfColumnsOnExtraSmallColumn = (
     <div className={classes.extraSmallRow}>
+       {showLabel ? <div>Pinned</div> : null}
       {pinnedNotes.length > 0 ?
         pinnedExtraSmallRow
         : null}
+      {showLabel ? <div>Others</div> : null}
+
       {unPinnedNotes.length > 0
         ? unPinnedExtraSmallRow
         : null}
@@ -228,14 +233,14 @@ return null
 
   const noOfColumnsOnSmallRow = (
     <div className={classes.smallRow}>
-      {pinnedNotes.length > 0 ? <div>Pinned</div> : null}
+      {showLabel ? <div>Pinned</div> : null}
       {pinnedNotes.length > 0 ? (
         <div className={classes.pinnedSmallRow}>
           <div>{pinnedSmallerColumn1}</div>
           <div>{pinnedSmallerColumn2}</div>
         </div>
       ) : null}
-      {pinnedNotes.length > 0 ? <div>Others</div> : null}
+      {showLabel ? <div>Others</div> : null}
       {unPinnedNotes.length > 0 ? (
         <div className={classes.unPinnedSmallRow}>
           <div>{unPinnedSmallerColumn1}</div>
@@ -245,7 +250,7 @@ return null
     </div>
   );
   const noOfColumnsOnMediumColumn = ( <div className={classes.mediumRow}>
-            {pinnedNotes.length > 0 ? <div>Pinned</div> : null}
+            {showLabel ? <div>Pinned</div> : null}
       {pinnedNotes.length > 0 ? (
         <div className={classes.pinnedMediumRow}>
           <div>{pinnedMediumColumn1}</div>
@@ -253,7 +258,7 @@ return null
           <div>{pinnedMediumColumn3}</div>
         </div>
       ) : null}
-      {userData.some(data=>data.isPined) ? <div>Others</div> : null}
+      {showLabel ? <div>Others</div> : null}
       {unPinnedNotes.length > 0 ? (
         <div className={classes.unPinnedMediumRow}>
           <div>{unPinnedMediumColumn1}</div>
@@ -265,7 +270,7 @@ return null
   );
 
   const noOfColumnsOnLargeColumn = <div className={classes.largeRow}>
-                  {userData.some(data=>data.isPined===true) ? <div>Pinned</div> : null}
+                  {showLabel ? <div>Pinned</div> : null}
       {pinnedNotes.length > 0 ? (
         <div className={classes.pinnedLargeRow}>
           <div>{pinnedLargeColumn1}</div>
@@ -275,7 +280,7 @@ return null
           <div>{pinnedLargeColumn5}</div>
         </div>
       ) : null}
-      { userData.some(data=>data.isPined===true) ? <div>Others</div> : null}
+      { showLabel ? <div>Others</div> : null}
       {unPinnedNotes.length > 0 ? (
         <div className={classes.unPinnedLargeRow}>
           <div>{unPinnedLargeColumn1}</div>

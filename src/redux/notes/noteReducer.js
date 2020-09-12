@@ -1,5 +1,6 @@
 import * as actions from './noteType'
 import userData from './userStaticdata.json'
+import _ from 'lodash'
 const initialState={
     loading:false,
     displayListFeature:false,
@@ -150,6 +151,47 @@ switch(action.type){
                 }
             return data}
             )
+        }
+    }
+    case actions.UPDATE_BGCOLOR_OF_NOTE_BY_ID:{
+        return {
+            ...state,
+            userData:state.userData.map(data=> {
+                if(data.id===action.payload.id){
+                    data.color=action.payload.color
+                }
+                return data
+            })
+        }
+    }
+
+
+    case actions.ADD_LABEL_TO_NOTE:{
+        return{
+            ...state,
+            userData:state.userData.map(data=>{
+                if(data.id===action.payload.id){
+                    let datalists=[]
+                    if(!_.some(datalists,{id:action.payload.labelDetails.id}) ){
+                        datalists.push(...data.noteLabels,action.payload.labelDetails)
+                        console.log(datalists)
+                        data.noteLabels=datalists
+                    }
+ 
+                }
+                return data
+            })
+        }
+    }
+    case actions.UPDATE_DELETE_STATUS_BY_OF_NOTE_BY_ID:{
+        return {
+            ...state,
+            userData:state.userData.map(data=> {
+                if(data.id===action.payload.id){
+                    data.isDeleted=action.payload.condition
+                }
+                return data
+            })
         }
     }
 

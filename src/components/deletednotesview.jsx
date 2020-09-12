@@ -28,7 +28,6 @@ import { CalculateTime } from "../util/calculateTime";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setPinnedStatus,
-  notesViewOnClick,
   updateArchievedStatusById,
   removeReminderById,
   removeLabelFromNote,
@@ -36,35 +35,17 @@ import {
   setNoteDeleteStatus,
 } from "../redux";
 import labelservice from "../services/labelservice";
-import AddAlertOutlinedIcon from "@material-ui/icons/AddAlertOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
-import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
 import AddIcon from "@material-ui/icons/Add";
-import PaletteOutlinedIcon from "@material-ui/icons/PaletteOutlined";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
-import CropOriginalOutlinedIcon from "@material-ui/icons/CropOriginalOutlined";
-import DateAndTimePicker from "./DateTimePicker";
-import { collaboratorsPopUp } from "../redux";
-import ColorPallette from "./ColorPallette";
-import SearchBox from "./searchCollaborator";
-function NoteView(props) {
+
+function DeletedNotesView(props) {
   const theme = useTheme();
   const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
   const onlyLabelsList = useSelector((state) => state.labels.onlyLabelsList);
  
-  const [listLabels,setListLabels]=useState(onlyLabelsList.map((data)=>{
-    // console.log(props.userData.noteLabels)
-    // console.log(data)
-    if( typeof props.userData.noteLabels !==[] &&   _.some(props.userData.noteLabels,{label:data.label})){
-      data.checked=true
-    }else{
-      data.checked=false
-    }
-    return data
-  }))
-  const [filter, setFilter] = useState("");
+ 
   const dispatch = useDispatch();
   const [tickIcon, setTickIcon] = useState(false);
   const [onFocusText, setOnFocusText] = useState("");
@@ -74,17 +55,14 @@ function NoteView(props) {
     displayIconOnHoverClearButton,
     setDisplayIconOnHoverClearButton,
   ] = useState("");
-  const [displayDateTimePicker, setDisplayDateTimePicker] = useState(false);
-  const [displayColorPallette, setDisplayColorPallette] = useState(false);
+
   const [open, setOpen] = React.useState(false);
   const [openLabelsList, setOpenLabelsList] = React.useState(false);
   const anchorRef = React.useRef(null);
-  const [labelLists  ,setLabelLists]=useState(props.userData.noteLabels)
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
-const [checkStatus,setCheckStatus] = useState([])
 
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -170,9 +148,6 @@ const [checkStatus,setCheckStatus] = useState([])
       width: "100%",
       height: "25px",
       marginLeft: "5px",
-      // boxShadow: " 0 0 1px 1px",
-      //   borderBottomStyle: 'inset',
-      //   borderTopStyle: 'groove'
     },
 
     listInput: {
@@ -194,13 +169,11 @@ const [checkStatus,setCheckStatus] = useState([])
       left: "-5px",
       color: "black",
       cursor: "pointer",
-      // pointer:'cursor'
-      // background:'white',
+
     },
     reminderSection: {
       fontSize: ".75rem",
       background: "rgba(215, 212, 212, 0.8)",
-      // height:"20px",
       display: "flex",
       flexDirection: "row",
       borderRadius: "15px",
@@ -212,7 +185,6 @@ const [checkStatus,setCheckStatus] = useState([])
     reminderSectionCutOff: {
       fontSize: ".75rem",
       background: "rgba(215, 212, 212, 0.8)",
-      // height:"20px",
       display: "flex",
       flexDirection: "row",
       borderRadius: "15px",
@@ -243,7 +215,6 @@ const [checkStatus,setCheckStatus] = useState([])
     labelDisplaySection: {
       fontSize: ".65rem",
       background: "rgba(215, 212, 212, 0.8)",
-      // height:"20px",
       display: "flex",
       flexDirection: "row",
       borderRadius: "15px",
@@ -294,7 +265,7 @@ const [checkStatus,setCheckStatus] = useState([])
     menuPaper: {
       position: "absolute",
       top: "100%",
-      right: "0px",
+      left: "0px",
       borderRadius: "7px",
       border: "groove 4px",
       zIndex: 3,
@@ -336,15 +307,15 @@ const [checkStatus,setCheckStatus] = useState([])
   const unPinned = (
     <IconButton
       className={classes.pinIcon}
-      onClick={() => {
-        const data = {
-          isPined: true,
-          noteIdList: [props.userData.id],
-        };
-        labelService
-          .updateIsPined(data)
-          .then(dispatch(setPinnedStatus(true, props.userData.id)));
-      }}
+    //   onClick={() => {
+    //     const data = {
+    //       isPined: true,
+    //       noteIdList: [props.userData.id],
+    //     };
+    //     labelService
+    //       .updateIsPined(data)
+    //       .then(dispatch(setPinnedStatus(true, props.userData.id)));
+    //   }}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -360,15 +331,15 @@ const [checkStatus,setCheckStatus] = useState([])
   const pinned = (
     <IconButton
       className={classes.pinIcon}
-      onClick={() => {
-        const data = {
-          isPined: false,
-          noteIdList: [props.userData.id],
-        };
-        labelService
-          .updateIsPined(data)
-          .then(dispatch(setPinnedStatus(false, props.userData.id)));
-      }}
+    //   onClick={() => {
+    //     const data = {
+    //       isPined: false,
+    //       noteIdList: [props.userData.id],
+    //     };
+    //     labelService
+    //       .updateIsPined(data)
+    //       .then(dispatch(setPinnedStatus(false, props.userData.id)));
+    //   }}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -419,7 +390,6 @@ const [checkStatus,setCheckStatus] = useState([])
                 placeholder="List Item"
                 value={description.itemName}
                 onClick={(e) => {
-                  dispatch(notesViewOnClick(true, props.userData));
                 }}
                 onFocus={(e) => {
                   setOnFocusText(e.currentTarget.value);
@@ -430,79 +400,6 @@ const [checkStatus,setCheckStatus] = useState([])
         })}
       </List>
     ) : null;
-
-  const labelSearchBar = openLabelsList ? (
-    <div className={classes.listOfLabelsContainer}>
-        <Button
-      onClick={()=>{
-        setOpenLabelsList(!openLabelsList);
-      }}
-      >go back</Button >
-      <InputBase
-        // className={classes.labelSearchBox}
-        value={filter}
-        placeholder="Search for Labels"
-        onChange={(e) => {
-          setFilter(e.currentTarget.value);
-        }}
-      />
-    
-      {onlyLabelsList.map((data,index) => {
-        if (data.label.toLowerCase().includes(filter.toLowerCase())) {
-          return (
-            
-            <FormControlLabel
-              classes={{label:classes.listOfLabels}}
-              control={<Checkbox name={data.label}  
-              checked={_.some(props.userData.noteLabels,{id:data.id})}
-              onClick={(e)=>{
-                let tracklist=onlyLabelsList
-                // tracklist[index].checked=!tracklist[index].checked
-                // setListLabels(tracklist)
-                console.log(e.currentTarget.firstElementChild.firstElementChild.name)
-                const labelName=e.currentTarget.firstElementChild.firstElementChild.name
-                const addLabel=onlyLabelsList.filter(data=>data.label===labelName)[0]
-                console.log(addLabel)
-                console.log(labelLists)
-
-                if(!_.some(props.userData.noteLabels,{id:data.id})){
-
-                  const dataTobeSent={
-                    noteId:props.userData.id,
-                    labelId:addLabel.id
-                  }
-                  labelservice.addLabelToNote(dataTobeSent).then(()=>{
-                    dispatch(updateLabelForNote(props.userData.id,addLabel))
-                    let list=labelLists
-                    list=[...list,addLabel]
-                    setLabelLists(list)
-                  }
-                  )
-                }else if(_.some(props.userData.noteLabels,{id:data.id})){
-                  
-                 const updatedList = _.filter(labelLists,(n)=>n.label!==addLabel.label)
-                 const dataTobeSent={
-                   noteId:props.userData.id,
-                   labelId:addLabel.id
-                 }
-                 labelservice.removeLabelFromNote(dataTobeSent).then(()=>{
-                   dispatch(removeLabelFromNote(props.userData.id,addLabel.label))
-                   setLabelLists(updatedList)
-                 })
-
-
-                }
-                
-            
-              }}  />}
-              label={data.label}
-
-            />
-          );
-        }
-      })}
-    </div>
-  ) : null;
 
   return (
     <div
@@ -534,9 +431,7 @@ const [checkStatus,setCheckStatus] = useState([])
           value={props.userData.title}
           className={classes.titleInput}
           inputProps={{ "aria-label": "search content" }}
-          onClick={(e) => {
-            dispatch(notesViewOnClick(true, props.userData));
-          }}
+
         />
         <InputBase
           value={props.userData.description}
@@ -547,9 +442,7 @@ const [checkStatus,setCheckStatus] = useState([])
           fullWidth
           className={classes.input}
           inputProps={{ "aria-label": "search content" }}
-          onClick={() => {
-            dispatch(notesViewOnClick(true, props.userData));
-          }}
+
         />
         {/* {inputsToAddLabel} */}
         {typeof props.userData.reminder !== "undefined" &&
@@ -651,57 +544,6 @@ const [checkStatus,setCheckStatus] = useState([])
             <IconButton
               className={classes.iconButton}
               aria-label="menu"
-              onClick={() => {
-                setDisplayDateTimePicker(!displayDateTimePicker);
-              }}
-            >
-              <AddAlertOutlinedIcon className={classes.bottomIcons} />
-            </IconButton>
-            <IconButton
-              className={classes.iconButton}
-              aria-label="menu"
-              onClick={() =>
-                dispatch(collaboratorsPopUp(true, props.userData.id))
-              }
-            >
-              <PersonAddOutlinedIcon className={classes.bottomIcons} />
-            </IconButton>
-            <IconButton className={classes.iconButton} aria-label="menu">
-              <PaletteOutlinedIcon
-                className={classes.bottomIcons}
-                onClick={() => {
-                  setDisplayColorPallette(!displayColorPallette);
-                }}
-              />
-            </IconButton>
-            <IconButton className={classes.iconButton} aria-label="menu">
-              <CropOriginalOutlinedIcon className={classes.bottomIcons} />
-            </IconButton>
-            <IconButton
-              className={classes.iconButton}
-              aria-label="menu"
-              onClick={() => {
-                const archieveData = {
-                  isArchived: !props.userData.isArchived,
-                  noteIdList: [props.userData.id],
-                };
-                labelService
-                  .updateArchievedStatus(archieveData)
-                  .then(
-                    dispatch(
-                      updateArchievedStatusById(
-                        props.userData.id,
-                        !props.userData.isArchived
-                      )
-                    )
-                  );
-              }}
-            >
-              <ArchiveOutlinedIcon className={classes.bottomIcons} />
-            </IconButton>
-            <IconButton
-              className={classes.iconButton}
-              aria-label="menu"
               // ref={anchorRef}
               aria-controls={open ? "menu-list-grow" : undefined}
               aria-haspopup="true"
@@ -725,31 +567,9 @@ const [checkStatus,setCheckStatus] = useState([])
             })}
           </div>
         ) : null}
-        {displayDateTimePicker ? (
-          <DateAndTimePicker
-            displayDateTimePicker={displayDateTimePicker}
-            setDisplayDateTimePicker={setDisplayDateTimePicker}
-            userData={props.userData.id}
-          />
-        ) : null}
-      </Paper>
-      {displayColorPallette ? (
-        <OutsideClickHandler
-          onOutsideClick={() => {
-            setDisplayColorPallette(false);
-            setOpenLabelsList(false)
 
-          }}
-        >
-          {" "}
-          <Card className={classes.colorPallette}>
-            <ColorPallette
-              id={props.userData.id}
-              setDisplayColorPallette={setDisplayColorPallette}
-            />
-          </Card>
-        </OutsideClickHandler>
-      ) : null}
+      </Paper>
+     
       {open ? (
         <OutsideClickHandler
           onOutsideClick={() => {
@@ -765,26 +585,23 @@ const [checkStatus,setCheckStatus] = useState([])
                 >
                   <MenuItem onClick={()=>{
                     const dataTobeSent={
-                      isDeleted :true,
+                      isDeleted :false,
                       noteIdList: [props.userData.id],
                     }
                     labelservice.deleteNote(dataTobeSent).then(()=>{
-                      dispatch(setNoteDeleteStatus(true,props.userData.id))
+                      dispatch(setNoteDeleteStatus(false,props.userData.id))
                       handleClose()
                     })
-                  }}
-                  
-                  >DeleteNote</MenuItem>
+                  }}>Restore</MenuItem>
                   <MenuItem
                     onClick={() => {
                       setOpenLabelsList(!openLabelsList);
                     }}
                   >
-                    Add Label{" "}
+                Delete Forever
                   </MenuItem>
                 </MenuList>
             </Paper>
-            {labelSearchBar}
           </div>{" "}
         </OutsideClickHandler>
       ) : null}
@@ -792,4 +609,4 @@ const [checkStatus,setCheckStatus] = useState([])
   );
 }
 
-export default NoteView;
+export default DeletedNotesView;

@@ -99,6 +99,7 @@ return{
   payload:id
 }
   }
+
   export const toggleCollaboratorSearch=(condition)=>{
     return{
       type:actions.TOGGLE_SEARCH_FOR_COLLABORATOR_SEARCH,
@@ -110,6 +111,26 @@ return{
     return{
       type:actions.REMOVE_LABEL_FROM_NOTE,
       payload:{id,labelName}
+    }
+  }
+
+  export const updateColorOfNote=(color,id)=>{
+    return{
+      type:actions.UPDATE_BGCOLOR_OF_NOTE_BY_ID,
+      payload:{color,id}
+    }
+  }
+
+  export const updateLabelForNote=(id,labelDetails)=>{
+return{
+  type:actions.ADD_LABEL_TO_NOTE,
+  payload:{labelDetails,id}
+}
+  }
+  export const setNoteDeleteStatus=(condition,id)=>{
+    return{
+      type:actions.UPDATE_DELETE_STATUS_BY_OF_NOTE_BY_ID,
+      payload:{condition,id}
     }
   }
 

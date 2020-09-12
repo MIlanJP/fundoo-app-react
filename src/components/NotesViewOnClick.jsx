@@ -5,15 +5,22 @@ import {
   InputBase,
   Icon,
   SvgIcon,
+  FormControlLabel,
   Button,
   ListItem,
   Checkbox,
   ListItemIcon,
-  ListItemText,
+  Card,
   List,
+  MenuList,
+  MenuItem,
 } from "@material-ui/core";
+import _ from 'lodash'
 import labelservice from '../services/labelservice'
 import {reduxForm,Field} from 'redux-form'
+import ColorPallette from "./ColorPallette";
+
+import DateAndTimePicker from './DateTimePicker'
 import { makeStyles } from "@material-ui/core/styles";
 import OutsideClickHandler from "react-outside-click-x";
 import { useDispatch } from "react-redux";
@@ -39,21 +46,32 @@ import {
   updateArchievedStatusById,
   setPinnedStatus,
   removeReminderById,
-  collaboratorsPopUp
+  collaboratorsPopUp,
+  updateLabelForNote,
+  removeLabelFromNote
 } from "../redux";
 function NotesViewOnClick(props) {
   const descriptionList = useSelector(
     (state) => state.notes.descriptionCheckBoxList
   );
  const data=useSelector(state=>state.notes.userData.filter(data=>   data.id===props.userData.id))
- console.log(data,'printingdd')
   const [onFocusText, setOnFocusText] = useState("");
   const [showClearIcon, setShowClearIcon] = useState("");
+  const onlyLabelsList = useSelector((state) => state.labels.onlyLabelsList);
+  const [labelLists  ,setLabelLists]=useState(props.userData.noteLabels)
+  const [open, setOpen] = React.useState(false);
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
   const[reminderDate,setReminderDate]=useState(props.userData.reminder[0]);
   const [displayOnHover, setDisplayOnHover] = useState(false);
+  const [openLabelsList, setOpenLabelsList] = React.useState(false);
   const pinnedStatus = useSelector((state) => state.pinFeature.pinNote);
   const reminderDateonPopUp = useSelector((state) => state.pinFeature.pinNote);
   const dispatch = useDispatch();
+  const [filter, setFilter] = useState("");
+
+const [displayColorPallette,setDisplayColorPallette] = useState(false)
   const addNote = useSelector((state) => state.addNoteFeature.addNote);
   const [displayIconOnHoverClearButton, setDisplayIconOnHoverClearButton] = useState('');
   const displayListFeature = useSelector(
@@ -61,6 +79,8 @@ function NotesViewOnClick(props) {
   );
   const [title,setTitle]=useState(data[0].title)
   const [description,setDescription]=useState(data[0].description)
+  const [displayDateTimePicker, setDisplayDateTimePicker] = useState(false);
+
   let [dateSection] = "";
   let [timeSection] = "";
   let [timeGotOver] = "";
@@ -74,10 +94,26 @@ function NotesViewOnClick(props) {
     timeSection = time;
     timeGotOver = over;
   }
+  const anchorRef = React.useRef(null);
 
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    }
+  }
   useEffect(()=>{}
     ,[props.data]
   )
+  
   const useStyles = makeStyles((theme) => ({
     addingNotePortion: {
       borderRadius: "15px",
@@ -97,6 +133,7 @@ function NotesViewOnClick(props) {
       flexDirection: "column",
       borderRadius: "8px",
       boxShadow: "none",
+      background: props.userData.color,
       // paddingRight: "10px",
       paddingBottom:'80px',
     },
@@ -119,7 +156,7 @@ top:"3px",
       bottom: '0px',
       outline: "none",
       boxShadow: "none",
-      background: "white",
+      background:props.userData.color,
       textTransform: "Capitalize",
     },
     input: {
@@ -155,7 +192,7 @@ top:"3px",
       width: "45px",
       height: "45px",
       color: "black",
-      background: "white",
+      background: props.userData.color,
     },
     
     reminderSection: {
@@ -227,6 +264,32 @@ alignItems:"center",
       display:"flex",
       paddingLeft:'3px',
       flexDirection: "row",
+    },
+    menuPaper: {
+      position: "absolute",
+      top: "100%",
+      right: "0px",
+      borderRadius: "7px",
+      border: "groove 4px",
+      zIndex: 3,
+    },
+    listOfLabelsContainer: {
+      display: "flex",
+      flexDirection: "column",
+      backgroundColor: "white",
+      border: "groove 1px",
+      left: '116px',
+      bottom:'-25%',
+      width: "144px",
+      position: 'absolute',
+      padding:'5px 0 0 5px',
+      zIndex:4,
+      borderRadius:'8px',
+    },listOfLabels:{
+      width:'75%',
+      overflowWrap: 'break-word',
+      borderBottom:'groove 1px'
+      
     },
   }));
   const classes = useStyles();
@@ -366,11 +429,84 @@ alignItems:"center",
     />
   );
 
+
+  const labelSearchBar = openLabelsList ? (
+    <div className={classes.listOfLabelsContainer}>
+        <Button
+      onClick={()=>{
+        setOpenLabelsList(!openLabelsList);
+      }}
+      >go back</Button >
+      <InputBase
+        // className={classes.labelSearchBox}
+        value={filter}
+        placeholder="Search for Labels"
+        onChange={(e) => {
+          setFilter(e.currentTarget.value);
+        }}
+      />
+    
+      {onlyLabelsList.map((data,index) => {
+        if (data.label.toLowerCase().includes(filter.toLowerCase())) {
+          return (
+            
+            <FormControlLabel
+              classes={{label:classes.listOfLabels}}
+              control={<Checkbox name={data.label}  
+              checked={_.some(props.userData.noteLabels,{id:data.id})}
+              onClick={(e)=>{
+                let tracklist=onlyLabelsList
+                // tracklist[index].checked=!tracklist[index].checked
+                // setListLabels(tracklist)
+                console.log(e.currentTarget.firstElementChild.firstElementChild.name)
+                const labelName=e.currentTarget.firstElementChild.firstElementChild.name
+                const addLabel=onlyLabelsList.filter(data=>data.label===labelName)[0]
+                console.log(addLabel)
+                console.log(labelLists)
+
+                if(!_.some(props.userData.noteLabels,{id:data.id})){
+
+                  const dataTobeSent={
+                    noteId:props.userData.id,
+                    labelId:addLabel.id
+                  }
+                  labelservice.addLabelToNote(dataTobeSent).then(()=>{
+                    dispatch(updateLabelForNote(props.userData.id,addLabel))
+                    let list=labelLists
+                    list=[...list,addLabel]
+                    setLabelLists(list)
+                  }
+                  )
+                }else if(_.some(props.userData.noteLabels,{id:data.id})){
+                  
+                 const updatedList = _.filter(labelLists,(n)=>n.label!==addLabel.label)
+                 const dataTobeSent={
+                   noteId:props.userData.id,
+                   labelId:addLabel.id
+                 }
+                 labelservice.removeLabelFromNote(dataTobeSent).then(()=>{
+                   dispatch(removeLabelFromNote(props.userData.id,addLabel.label))
+                   setLabelLists(updatedList)
+                 })
+
+
+                }
+                
+            
+              }}  />}
+              label={data.label}
+
+            />
+          );
+        }
+      })}
+    </div>
+  ) : null;
+
   return (
     <div
       className={classes.addingNotePortion}
       onOutsideClick={() => {
-        console.log(addNote, "Printing");
         if (addNote !== false) {
           dispatch(addNoteBeforeClick());
           dispatch(hideListFeature());
@@ -449,7 +585,6 @@ alignItems:"center",
                classes.labelDisplaySection
           }
         onMouseOver={(e) => {
-          console.log(e.currentTarget.firstElementChild.innerText)
             setDisplayIconOnHoverClearButton(e.currentTarget.firstElementChild.innerText)
         }}
         onMouseLeave={(e) => {
@@ -468,7 +603,11 @@ alignItems:"center",
         :null}
 
         <div className={classes.iconColumn}>
-          <IconButton className={classes.iconButton} aria-label="menu">
+          <IconButton className={classes.iconButton} aria-label="menu"
+                        onClick={() => {
+                          setDisplayDateTimePicker(!displayDateTimePicker);
+                        }}
+          >
             <AddAlertOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
 
@@ -477,7 +616,11 @@ alignItems:"center",
           >
             <PersonAddOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
-          <IconButton className={classes.iconButton} aria-label="menu">
+          <IconButton className={classes.iconButton} aria-label="menu"
+                        onClick={()=>{
+                          props.setDisplayColorPallette(!props.displayColorPallette)
+                        }}
+          >
             <PaletteOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
           <IconButton className={classes.iconButton} aria-label="menu">
@@ -492,7 +635,12 @@ alignItems:"center",
 
             />
           </IconButton>
-          <IconButton className={classes.iconButton} aria-label="menu">
+          <IconButton className={classes.iconButton} aria-label="menu"
+        
+          // ref={anchorRef}
+          aria-controls={open ? "menu-list-grow" : undefined}
+          aria-haspopup="true"
+          onClick={handleToggle}>
             <MoreVertOutlinedIcon className={classes.bottomIcons} />
           </IconButton>
  
@@ -507,6 +655,60 @@ alignItems:"center",
           </Button>
         </div>
       </Paper>
+      {displayDateTimePicker ? (
+          <DateAndTimePicker
+            displayDateTimePicker={displayDateTimePicker}
+            setDisplayDateTimePicker={setDisplayDateTimePicker}
+            userData={data[0].id}
+          />
+        ) : null}
+
+{/* FROM HERE */}
+
+{displayColorPallette ? (
+        <OutsideClickHandler
+          onOutsideClick={() => {
+            setDisplayColorPallette(false);
+            setOpenLabelsList(false)
+
+          }}
+        >
+          {" "}
+          <Card className={classes.colorPallette}>
+            <ColorPallette
+              id={props.userData.id}
+              setDisplayColorPallette={setDisplayColorPallette}
+            />
+          </Card>
+        </OutsideClickHandler>
+      ) : null}
+      {open ? (
+        <OutsideClickHandler
+          onOutsideClick={() => {
+            setOpen(false);
+          }}
+        >
+          <div transition disablePortal className={classes.menuPaper}>
+            <Paper>
+                <MenuList
+                  autoFocusItem={open}
+                  id="menu-list-grow"
+                  onKeyDown={handleListKeyDown}
+                >
+                  <MenuItem onClick={handleClose}>DeleteNote</MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setOpenLabelsList(!openLabelsList);
+                    }}
+                  >
+                    Add Label{" "}
+                  </MenuItem>
+                </MenuList>
+            </Paper>
+            {labelSearchBar}
+          </div>{" "}
+        </OutsideClickHandler>
+      ) : null}
     </div>
   );
 }

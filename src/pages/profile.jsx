@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import MessageContext from "../components/messagecontext";
 import Header from "../components/header";
+import ColorPallette from '../components/ColorPallette'
 import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import { Route, useHistory } from "react-router-dom";
@@ -22,6 +23,7 @@ import LabelIcon from "@material-ui/icons/Label";
 import { makeStyles } from "@material-ui/core/styles";
 import Labels from "../components/notes";
 import Reminder from "../components/reminder";
+
 import Archieve from "../components/archieve";
 import Drawer from "../components/drawer";
 import OutsideClickHandler from "react-outside-click-x";
@@ -40,6 +42,7 @@ import {
   useTheme,
   useMediaQuery,
   CircularProgress,
+  Card,
 } from "@material-ui/core";
 import labelservice from "../services/labelservice";
 import ColaboratorDialogBox from './../components/colaboratorDialog';
@@ -55,9 +58,9 @@ export default function Profile() {
   const dispatch = useDispatch();
   const loadedUserData = useSelector((state) => state.notes.userData);
   const loadedLabels = useSelector((state) => state.labels.labelList);
+  const [displayColorPallette,setDisplayColorPallette] = useState(false)
   const userId = useSelector((state) => state.labels.userID);
-  // const addNoteFeature = useDispatch();
-  // const addNote = useSelector((state) => state.addNoteFeature.addNote);
+
 
   const [routesPages] = useState([Labels, Reminder, Label, Archieve, Bin]);
   const [routesName] = useState([
@@ -145,12 +148,29 @@ export default function Profile() {
       position: "relative",
       top: "-70px",
       borderRadius: "8px",
+      background:noteViewOnClick.condition ?  noteViewOnClick.data.color:'',
     },
     loadingIcon:{
       position:'absolute',
       left:"50vw",
       top:"50vh"
     },
+    colorPallette:{
+      // position:'absolute',
+      // bottom:"-115px",
+      display: "flex",
+      flexDirection: 'row',
+      // right:'0px',
+      zIndex:3,
+    },
+    ScrollPaperClrPallete:{
+      height:'160px',
+    },
+    dialoggScrollPaperClrPallete:{
+      height:'130px',
+    width: '155px',
+    }
+
   }));
 
   useEffect(() => {
@@ -415,6 +435,7 @@ export default function Profile() {
       ) : // </div>
       null}
       {noteViewOnClick.condition ? (
+        <div>
         <Dialog
           open={noteViewOnClick.condition}
           onBackdropClick={() => {
@@ -433,12 +454,28 @@ export default function Profile() {
             <NotesViewOnClick
               userData={noteViewOnClick.data}
               className={classes.noteViewOnClick}
+              setDisplayColorPallette={setDisplayColorPallette}
+              displayColorPallette={displayColorPallette}
             />
-            
           </DialogContent>{" "}
+         <Dialog
+         open={displayColorPallette}
+         classes={{
+          container: classes.ContainerClrPallete,
+          paperScrollPaper: classes.dialoggScrollPaperClrPallete,
+        }}
+         onBackdropClick={() => {
+          setDisplayColorPallette(false)
+         }}
+         >
+             <Card className={classes.colorPallette}><ColorPallette  id={noteViewOnClick.data.id} setDisplayColorPallette={setDisplayColorPallette} fromProfile={true}   /></Card>
+           <DialogContent></DialogContent>
+         </Dialog>
         </Dialog>
+        <div>HEY</div>
+        </div>
       ) : null}
-  {displayCollabPopUp ? <ColaboratorDialogBox  />:null}
+  {displayCollabPopUp ?  <ColaboratorDialogBox  />:null}
     </div>
   );
 }

@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function DateAndTimePicker(props) {
+  console.log(props)
     const today=new Date()
     let month=''
     if(today.getMonth()>9){

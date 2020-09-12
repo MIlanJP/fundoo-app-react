@@ -134,6 +134,14 @@ return{
     }
   }
 
+  export const deleteNoteForever=(id)=>{
+    return{
+      type:actions.DELETE_NOTE_FOREVER,
+      payload:id
+    }
+  }
+  
+
 export const fetchAllUserData = () => {
     return (dispatch) => {
       dispatch(fetchUserReqests);

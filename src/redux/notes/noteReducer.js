@@ -194,6 +194,12 @@ switch(action.type){
             })
         }
     }
+    case actions.DELETE_NOTE_FOREVER:{
+        return{
+            ...state,
+            userData:state.userData.filter(data=>data.id!==action.payload)
+        }
+    }
 
     default : return state
 }

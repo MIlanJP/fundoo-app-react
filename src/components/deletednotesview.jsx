@@ -31,7 +31,7 @@ import {
   updateArchievedStatusById,
   removeReminderById,
   removeLabelFromNote,
-  updateLabelForNote,
+  deleteNoteForever,
   setNoteDeleteStatus,
 } from "../redux";
 import labelservice from "../services/labelservice";
@@ -594,9 +594,15 @@ function DeletedNotesView(props) {
                     })
                   }}>Restore</MenuItem>
                   <MenuItem
-                    onClick={() => {
-                      setOpenLabelsList(!openLabelsList);
-                    }}
+                    onClick={()=>{
+                        const dataTobeSent={
+                          noteIdList: [props.userData.id],
+                        }
+                        labelservice.deleteNoteForever(dataTobeSent).then(()=>{
+                          dispatch(deleteNoteForever(props.userData.id))
+                          handleClose()
+                        })
+                      }}
                   >
                 Delete Forever
                   </MenuItem>

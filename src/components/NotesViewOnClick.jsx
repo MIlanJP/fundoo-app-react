@@ -314,6 +314,7 @@ function NotesViewOnClick(props) {
       width: "75%",
       overflowWrap: "break-word",
       borderBottom: "groove 1px",
+      marginBottom:'10px',
     },
     dialogScrollPaper: {
       background: "rgba(255, 255, 255, 0.65)",
@@ -330,6 +331,11 @@ function NotesViewOnClick(props) {
     colorPallette:{
       position: "absolute",
       bottom:'30px'
+    },
+    reminderLayout:{
+      marginTop:'10px',
+      // position: "absolute",
+      paddingTop:'10px',
     },
   }));
   const classes = useStyles();
@@ -610,7 +616,7 @@ function NotesViewOnClick(props) {
             />
             {inputsToAddLabel}
 
-            {typeof data[0].reminder !== "undefined" &&
+            {typeof data[0].T !== "undefined" &&
             data[0].reminder.length > 0 ? (
               <label
                 className={
@@ -706,6 +712,14 @@ function NotesViewOnClick(props) {
                 })}
               </div>
             ) : null}
+             {displayDateTimePicker ? (
+               <div className={classes.reminderLayout}>
+            <DateAndTimePicker 
+              displayDateTimePicker={displayDateTimePicker}
+              setDisplayDateTimePicker={setDisplayDateTimePicker}
+              userData={data[0].id}
+            /></div>
+          ) : null}
 
             <div className={classes.iconColumn}>
               <IconButton
@@ -715,6 +729,7 @@ function NotesViewOnClick(props) {
                   setDisplayDateTimePicker(!displayDateTimePicker);
                 }}
               >
+                  
                 <AddAlertOutlinedIcon className={classes.bottomIcons} />
               </IconButton>
 
@@ -817,13 +832,7 @@ function NotesViewOnClick(props) {
               </Button>
             </div>
           </Paper>
-          {displayDateTimePicker ? (
-            <DateAndTimePicker
-              displayDateTimePicker={displayDateTimePicker}
-              setDisplayDateTimePicker={setDisplayDateTimePicker}
-              userData={data[0].id}
-            />
-          ) : null}
+       
 
           {/* FROM HERE */}
 

@@ -9,12 +9,13 @@ export default function ColorPallette(props) {
     const dispatch = useDispatch()
 const useStyles = makeStyles((theme) => ({
     colorBox:{
-        width:"160px",
+        width:"145px",
         height:"120px",
         zIndex:3,
         display:"flex",
         flexDirection:'row',
         flexWrap: "wrap",
+        padding:"0 4px 0 4px",
     },
     colorOption:{
         width:'35px',

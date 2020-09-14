@@ -3,38 +3,41 @@ import {
   IconButton,
   Paper,
   InputBase,
-  Icon,
-  SvgIcon,
+  useTheme,
+  Dialog,
+  DialogContent,
   FormControlLabel,
   Button,
   ListItem,
   Checkbox,
   ListItemIcon,
   Card,
+  useMediaQuery,
   List,
   MenuList,
   MenuItem,
 } from "@material-ui/core";
-import _ from 'lodash'
-import labelservice from '../services/labelservice'
-import {reduxForm,Field} from 'redux-form'
+import _ from "lodash";
+import labelservice from "../services/labelservice";
+import { reduxForm, Field } from "redux-form";
 import ColorPallette from "./ColorPallette";
 
-import DateAndTimePicker from './DateTimePicker'
+import DateAndTimePicker from "./DateTimePicker";
 import { makeStyles } from "@material-ui/core/styles";
 import OutsideClickHandler from "react-outside-click-x";
 import { useDispatch } from "react-redux";
 import AddAlertOutlinedIcon from "@material-ui/icons/AddAlertOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
+import ColaboratorDialogBox from "./../components/colaboratorDialog";
 import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from "@material-ui/icons/Add";
 import PaletteOutlinedIcon from "@material-ui/icons/PaletteOutlined";
 import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import CropOriginalOutlinedIcon from "@material-ui/icons/CropOriginalOutlined";
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import { useSelector } from "react-redux";
-import { CalculateTime } from './../util/calculateTime';
+import { CalculateTime } from "./../util/calculateTime";
 
 import {
   addNoteBeforeClick,
@@ -48,22 +51,32 @@ import {
   removeReminderById,
   collaboratorsPopUp,
   updateLabelForNote,
-  removeLabelFromNote
+  removeLabelFromNote,
 } from "../redux";
 function NotesViewOnClick(props) {
   const descriptionList = useSelector(
     (state) => state.notes.descriptionCheckBoxList
   );
- const data=useSelector(state=>state.notes.userData.filter(data=>   data.id===props.userData.id))
+  const data = useSelector((state) =>
+    state.notes.userData.filter((data) => data.id === props.userData.id)
+  );
   const [onFocusText, setOnFocusText] = useState("");
+  const theme = useTheme();
+
   const [showClearIcon, setShowClearIcon] = useState("");
   const onlyLabelsList = useSelector((state) => state.labels.onlyLabelsList);
-  const [labelLists  ,setLabelLists]=useState(props.userData.noteLabels)
+  const [labelLists, setLabelLists] = useState(props.userData.noteLabels);
   const [open, setOpen] = React.useState(false);
+  const noteViewOnClick = useSelector((state) => state.notes.notesViewOnClick);
+
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
-  const[reminderDate,setReminderDate]=useState(props.userData.reminder[0]);
+  const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
+  const matchesSmallSize = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchesMediumSize = useMediaQuery(theme.breakpoints.down("md"));
+  const matchesLargeSize = useMediaQuery(theme.breakpoints.down("lg"));
+  const [reminderDate, setReminderDate] = useState(props.userData.reminder[0]);
   const [displayOnHover, setDisplayOnHover] = useState(false);
   const [openLabelsList, setOpenLabelsList] = React.useState(false);
   const pinnedStatus = useSelector((state) => state.pinFeature.pinNote);
@@ -71,24 +84,27 @@ function NotesViewOnClick(props) {
   const dispatch = useDispatch();
   const [filter, setFilter] = useState("");
 
-const [displayColorPallette,setDisplayColorPallette] = useState(false)
+  const [displayColorPallette, setDisplayColorPallette] = useState(false);
   const addNote = useSelector((state) => state.addNoteFeature.addNote);
-  const [displayIconOnHoverClearButton, setDisplayIconOnHoverClearButton] = useState('');
+  const [
+    displayIconOnHoverClearButton,
+    setDisplayIconOnHoverClearButton,
+  ] = useState("");
   const displayListFeature = useSelector(
     (state) => state.notes.displayListFeature
   );
-  const [title,setTitle]=useState(data[0].title)
-  const [description,setDescription]=useState(data[0].description)
+  const [title, setTitle] = useState(data[0].title);
+  const [description, setDescription] = useState(data[0].description);
   const [displayDateTimePicker, setDisplayDateTimePicker] = useState(false);
+  const displayCollabPopUp = useSelector(
+    (state) => state.notes.collaboratorDisplay
+  );
 
   let [dateSection] = "";
   let [timeSection] = "";
   let [timeGotOver] = "";
 
-  if (
-    typeof data[0].reminder !== "undefined" &&
-    data[0].reminder.length > 0
-  ) {
+  if (typeof data[0].reminder !== "undefined" && data[0].reminder.length > 0) {
     const [date, time, over] = CalculateTime(reminderDate);
     dateSection = date;
     timeSection = time;
@@ -110,21 +126,17 @@ const [displayColorPallette,setDisplayColorPallette] = useState(false)
       setOpen(false);
     }
   }
-  useEffect(()=>{}
-    ,[props.data]
-  )
-  
+  useEffect(() => {}, [props.data]);
+
   const useStyles = makeStyles((theme) => ({
     addingNotePortion: {
       borderRadius: "15px",
       position: " relative",
-      height:"100%",
+      height: "100%",
       // top: '0px',
-      width:"100%",
+      width: "100%",
       display: "flex",
       flexDirection: "row",
-
-
     },
     paper: {
       display: "flex",
@@ -135,15 +147,15 @@ const [displayColorPallette,setDisplayColorPallette] = useState(false)
       boxShadow: "none",
       background: props.userData.color,
       // paddingRight: "10px",
-      paddingBottom:'80px',
+      paddingBottom: "80px",
     },
     iconButton: {
       margin: "0 2px 0 4px",
       padding: "5px 5px 5px px ",
     },
-    clearIcons:{
-position:'relative',
-top:"3px",
+    clearIcons: {
+      position: "relative",
+      top: "3px",
     },
     bottomIcons: {
       height: "17px",
@@ -152,11 +164,11 @@ top:"3px",
     },
     closeButton: {
       position: "absloute",
-      
-      bottom: '0px',
+
+      bottom: "0px",
       outline: "none",
       boxShadow: "none",
-      background:props.userData.color,
+      background: props.userData.color,
       textTransform: "Capitalize",
     },
     input: {
@@ -167,10 +179,9 @@ top:"3px",
     },
     iconColumn: {
       position: "absolute",
-    bottom: "0px",
+      bottom: "0px",
     },
     titleInput: {
-
       width: "80%",
     },
     listItem: {
@@ -187,87 +198,98 @@ top:"3px",
     },
     pinIcon: {
       position: "absolute",
-      right: "-5px",
-      top: "-5px",
+      right: "15px",
+      top: "10px",
       width: "45px",
       height: "45px",
       color: "black",
       background: props.userData.color,
     },
-    
+
     reminderSection: {
       fontSize: ".75rem",
       background: "rgba(215, 212, 212, 0.8)",
       // height:"20px",
-      display:"flex",
-      flexDirection:'row',
+      display: "flex",
+      flexDirection: "row",
       borderRadius: "15px",
-      border:'groove 1px ',
-      marginTop:"30px",
-      marginRight:"50px",
-      marginLeft:"3px",
-      height: '19px',
-      width:"150px"
-
+      border: "groove 1px ",
+      marginTop: "30px",
+      marginRight: "50px",
+      marginLeft: "3px",
+      height: "19px",
+      width: "150px",
+    },
+    dialogContent: {
+      minWidth: "350px",
+      width: matchesLargeSize
+        ? "40vw"
+        : matchesSmallSize
+        ? "100vw"
+        : matchesExtraSmallSize
+        ? "500px"
+        : "",
+      minHeight: "150px",
     },
     reminderSectionCutOff: {
       fontSize: ".75rem",
       background: "rgba(215, 212, 212, 0.8)",
-      width:"150px",
-      display:"flex",
-      flexDirection:'row',
-      marginTop:"30px",
+      width: "150px",
+      display: "flex",
+      flexDirection: "row",
+      marginTop: "30px",
       borderRadius: "15px",
-      border:'groove 1px ',
-      marginRight:"50px",
-      marginLeft:"3px",
-      height: '19px',
+      border: "groove 1px ",
+      marginRight: "50px",
+      marginLeft: "3px",
+      height: "19px",
       textDecoration: "line-through",
     },
-    reminderClearIcon:{
-      marginLeft:"1%",
-      padding:"8px 3px 8px 0",
+    reminderClearIcon: {
+      marginLeft: "1%",
+      padding: "8px 3px 8px 0",
       transition: ".25s",
-      zIndex:2,
+      zIndex: 2,
     },
-    reminderClearIconroot:{
-      fontSize:'.9rem',
+    reminderClearIconroot: {
+      fontSize: ".9rem",
       transition: ".25s",
     },
-    reminderTimeIcon:{
-      marginLeft:"5px",
-      padding:"3px 6px 3px 0px",
+    reminderTimeIcon: {
+      marginLeft: "5px",
+      padding: "3px 6px 3px 0px",
     },
     reminderTextSection: {
-      textAlign:'center',
-      justifyContent:'center',
-    },labelDisplaySection:{
+      textAlign: "center",
+      justifyContent: "center",
+    },
+    labelDisplaySection: {
       fontSize: ".65rem",
       background: "rgba(215, 212, 212, 0.8)",
       // height:"20px",
-      display:"flex",
-      flexDirection:'row',
+      display: "flex",
+      flexDirection: "row",
       borderRadius: "15px",
-      border:'groove 1px ',
-alignItems:"center",
+      border: "groove 1px ",
+      alignItems: "center",
 
       justifyContent: "space-between",
     },
-    labelTextSection:{
-      textAlign:'center',
+    labelTextSection: {
+      textAlign: "center",
       padding: "8px",
-      justifyContent:'center',
+      justifyContent: "center",
       lineHeight: ".5rem",
     },
-    labelSection:{
-      marginTop:'5px',
-      display:"flex",
-      paddingLeft:'3px',
+    labelSection: {
+      marginTop: "5px",
+      display: "flex",
+      paddingLeft: "3px",
       flexDirection: "row",
     },
     menuPaper: {
       position: "absolute",
-      top: "100%",
+      bottom: "30px",
       right: "0px",
       borderRadius: "7px",
       border: "groove 4px",
@@ -278,25 +300,43 @@ alignItems:"center",
       flexDirection: "column",
       backgroundColor: "white",
       border: "groove 1px",
-      left: '116px',
-      bottom:'-25%',
+      right: "116px",
+      height: "100px",
+      overflow: "auto",
+      bottom: "0%",
       width: "144px",
-      position: 'absolute',
-      padding:'5px 0 0 5px',
-      zIndex:4,
-      borderRadius:'8px',
-    },listOfLabels:{
-      width:'75%',
-      overflowWrap: 'break-word',
-      borderBottom:'groove 1px'
-      
+      position: "absolute",
+      padding: "5px 0 0 5px",
+      zIndex: 4,
+      borderRadius: "8px",
+    },
+    listOfLabels: {
+      width: "75%",
+      overflowWrap: "break-word",
+      borderBottom: "groove 1px",
+    },
+    dialogScrollPaper: {
+      background: "rgba(255, 255, 255, 0.65)",
+    },
+    dialoggScrollPaper: {
+      position: "relative",
+      top: "-70px",
+      borderRadius: "8px",
+      background: noteViewOnClick.condition ? noteViewOnClick.data.color : "",
+    },
+    colorLayout: {
+      position: "absolute",
+    },
+    colorPallette:{
+      position: "absolute",
+      bottom:'30px'
     },
   }));
   const classes = useStyles();
   const unPinned = (
     <IconButton
       className={classes.pinIcon}
-      onClick={() => dispatch(setPinnedStatus(true,data[0].id))}
+      onClick={() => dispatch(setPinnedStatus(true, data[0].id))}
       onPointerOut={() => {}}
     >
       <svg
@@ -311,7 +351,10 @@ alignItems:"center",
   );
 
   const pinned = (
-    <IconButton className={classes.pinIcon} onClick={() => dispatch(setPinnedStatus(false,data[0].id))}>
+    <IconButton
+      className={classes.pinIcon}
+      onClick={() => dispatch(setPinnedStatus(false, data[0].id))}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -327,29 +370,31 @@ alignItems:"center",
     <List>
       {descriptionList.map((description, index) => {
         return (
-          <ListItem className={classes.listItem}
-          onMouseOver={(e) => {
-            // setDisplayOnHover(true)
-            setShowClearIcon(e.currentTarget.firstChild.nextSibling.firstChild.value)
-
-          }}
-          onMouseLeave={(e) => {
-            // setDisplayOnHover(false)
-            setShowClearIcon('')
-          }}
+          <ListItem
+            className={classes.listItem}
+            onMouseOver={(e) => {
+              // setDisplayOnHover(true)
+              setShowClearIcon(
+                e.currentTarget.firstChild.nextSibling.firstChild.value
+              );
+            }}
+            onMouseLeave={(e) => {
+              // setDisplayOnHover(false)
+              setShowClearIcon("");
+            }}
           >
             <ListItemIcon>
-            {index===descriptionList.length-1?
-            <AddIcon/>    :
-            <Checkbox
-            edge="start"
-            //   checked={true}
-            tabIndex={-1}
-            disableRipple
-              inputProps={{ 'aria-labelledby': index }}
-          />
-        }
-
+              {index === descriptionList.length - 1 ? (
+                <AddIcon />
+              ) : (
+                <Checkbox
+                  edge="start"
+                  //   checked={true}
+                  tabIndex={-1}
+                  disableRipple
+                  inputProps={{ "aria-labelledby": index }}
+                />
+              )}
             </ListItemIcon>
             <InputBase
               className={classes.listInput}
@@ -381,7 +426,7 @@ alignItems:"center",
             />
             {/* <IconButton className={classes.iconButton} aria-label="menu"> */}
 
-            {onFocusText === description || showClearIcon===description ? (
+            {onFocusText === description || showClearIcon === description ? (
               <ClearIcon
                 className={classes.clearIcons}
                 onClick={() => {
@@ -409,34 +454,32 @@ alignItems:"center",
       value={description}
       rowsMin={4}
       onChange={(e) => {
-        setDescription(e.currentTarget.value)
+        setDescription(e.currentTarget.value);
       }}
-      onBlur={(e)=>{
-        const dataToBeUpdated={
-          noteId:data[0].id, 
-          title:title,
-          description:description
-        }
-        labelservice.updateNote(dataToBeUpdated).then(
-          response=>{
-            dispatch(updateDescriptionById(description,data[0].id))
-          }
-        )
-
+      onBlur={(e) => {
+        const dataToBeUpdated = {
+          noteId: data[0].id,
+          title: title,
+          description: description,
+        };
+        labelservice.updateNote(dataToBeUpdated).then((response) => {
+          dispatch(updateDescriptionById(description, data[0].id));
+        });
       }}
       className={classes.input}
       inputProps={{ "aria-label": "search content" }}
     />
   );
 
-
   const labelSearchBar = openLabelsList ? (
     <div className={classes.listOfLabelsContainer}>
-        <Button
-      onClick={()=>{
-        setOpenLabelsList(!openLabelsList);
-      }}
-      >go back</Button >
+      <Button
+        onClick={() => {
+          setOpenLabelsList(!openLabelsList);
+        }}
+      >
+        go back
+      </Button>
       <InputBase
         // className={classes.labelSearchBox}
         value={filter}
@@ -445,57 +488,68 @@ alignItems:"center",
           setFilter(e.currentTarget.value);
         }}
       />
-    
-      {onlyLabelsList.map((data,index) => {
+
+      {onlyLabelsList.map((data, index) => {
         if (data.label.toLowerCase().includes(filter.toLowerCase())) {
           return (
-            
             <FormControlLabel
-              classes={{label:classes.listOfLabels}}
-              control={<Checkbox name={data.label}  
-              checked={_.some(props.userData.noteLabels,{id:data.id})}
-              onClick={(e)=>{
-                let tracklist=onlyLabelsList
-                // tracklist[index].checked=!tracklist[index].checked
-                // setListLabels(tracklist)
-                console.log(e.currentTarget.firstElementChild.firstElementChild.name)
-                const labelName=e.currentTarget.firstElementChild.firstElementChild.name
-                const addLabel=onlyLabelsList.filter(data=>data.label===labelName)[0]
-                console.log(addLabel)
-                console.log(labelLists)
+              classes={{ label: classes.listOfLabels }}
+              control={
+                <Checkbox
+                  name={data.label}
+                  checked={_.some(props.userData.noteLabels, { id: data.id })}
+                  onClick={(e) => {
+                    console.log(
+                      e.currentTarget.firstElementChild.firstElementChild.name
+                    );
+                    const labelName =
+                      e.currentTarget.firstElementChild.firstElementChild.name;
+                    const addLabel = onlyLabelsList.filter(
+                      (data) => data.label === labelName
+                    )[0];
+                    console.log(addLabel);
+                    console.log(labelLists);
 
-                if(!_.some(props.userData.noteLabels,{id:data.id})){
-
-                  const dataTobeSent={
-                    noteId:props.userData.id,
-                    labelId:addLabel.id
-                  }
-                  labelservice.addLabelToNote(dataTobeSent).then(()=>{
-                    dispatch(updateLabelForNote(props.userData.id,addLabel))
-                    let list=labelLists
-                    list=[...list,addLabel]
-                    setLabelLists(list)
-                  }
-                  )
-                }else if(_.some(props.userData.noteLabels,{id:data.id})){
-                  
-                 const updatedList = _.filter(labelLists,(n)=>n.label!==addLabel.label)
-                 const dataTobeSent={
-                   noteId:props.userData.id,
-                   labelId:addLabel.id
-                 }
-                 labelservice.removeLabelFromNote(dataTobeSent).then(()=>{
-                   dispatch(removeLabelFromNote(props.userData.id,addLabel.label))
-                   setLabelLists(updatedList)
-                 })
-
-
-                }
-                
-            
-              }}  />}
+                    if (!_.some(props.userData.noteLabels, { id: data.id })) {
+                      const dataTobeSent = {
+                        noteId: props.userData.id,
+                        labelId: addLabel.id,
+                      };
+                      labelservice.addLabelToNote(dataTobeSent).then(() => {
+                        dispatch(
+                          updateLabelForNote(props.userData.id, addLabel)
+                        );
+                        let list = labelLists;
+                        list = [...list, addLabel];
+                        setLabelLists(list);
+                      });
+                    } else if (
+                      _.some(props.userData.noteLabels, { id: data.id })
+                    ) {
+                      const updatedList = _.filter(
+                        labelLists,
+                        (n) => n.label !== addLabel.label
+                      );
+                      const dataTobeSent = {
+                        noteId: props.userData.id,
+                        labelId: addLabel.id,
+                      };
+                      labelservice
+                        .removeLabelFromNote(dataTobeSent)
+                        .then(() => {
+                          dispatch(
+                            removeLabelFromNote(
+                              props.userData.id,
+                              addLabel.label
+                            )
+                          );
+                          setLabelLists(updatedList);
+                        });
+                    }
+                  }}
+                />
+              }
               label={data.label}
-
             />
           );
         }
@@ -504,7 +558,25 @@ alignItems:"center",
   ) : null;
 
   return (
-    <div
+    <div>
+      <Dialog
+        disableEnforceFocus
+        open={noteViewOnClick.condition}
+        onBackdropClick={() => {
+          dispatch(notesViewOnClick(false, {}));
+        }}
+        classes={{
+          container: classes.dialogScrollPaper,
+          paperScrollPaper: classes.dialoggScrollPaper,
+        }}
+        maxWidth="md"
+        disableBackdropClick={true}
+        className={classes.dialogBlock}
+      >
+        {" "}
+        {data[0].isPined ? pinned : unPinned}
+        <DialogContent className={`${classes.dialogContent}  `}>
+          {/* <div
       className={classes.addingNotePortion}
       onOutsideClick={() => {
         if (addNote !== false) {
@@ -512,203 +584,266 @@ alignItems:"center",
           dispatch(hideListFeature());
         }
       }}
-    >
-      <Paper component="form" className={` ${classes.paper}  `} >
-        {data[0].isPined ? pinned : unPinned}
-        <InputBase
-          placeholder=" Title"
-          fullWidth
-          value={ title}
-          className={classes.titleInput}
-          onChange={(e)=>{
-              setTitle(e.currentTarget.value)
-          }}
-          inputProps={{ "aria-label": "search content" }}
-          
-          onBlur={(e)=>{
-            const dataToBeUpdated={
-              noteId:data[0].id, 
-              title:title,
-              description:description
-            }
-            labelservice.updateNote(dataToBeUpdated).then(
-              response=>{
-                dispatch(updateTitleFromId(title,data[0].id))
-                // setTitle(title)
-              }
-            )
-    
-          }}
-        />
-        {inputsToAddLabel}
+    > */}
 
-        {typeof data[0].reminder !== "undefined" &&
-        data[0].reminder.length > 0 ? (
-          <label
-            className={
-              !timeGotOver
-                ? classes.reminderSection
-                : classes.reminderSectionCutOff
-            }
-            onMouseOver={(e) => {
-              setDisplayIconOnHoverClearButton(true)
-            }}
-            onMouseLeave={(e) => {
-              setDisplayIconOnHoverClearButton(false)
-            }}
-          ><AccessTimeIcon className={classes.reminderTimeIcon}  classes={{root:classes.reminderClearIconroot}} />
-            {" "}
-            <div className={classes.reminderTextSection}  >{dateSection} {timeSection} </div>
-            {   displayIconOnHoverClearButton?  <IconButton  className={classes.reminderClearIcon} 
-              onClick={()=>{
-                const removeReminder={
-                  noteIdList:[data[0].id]
+          <Paper component="form" className={` ${classes.paper}  `}>
+            <InputBase
+              placeholder=" Title"
+              fullWidth
+              value={title}
+              className={classes.titleInput}
+              onChange={(e) => {
+                setTitle(e.currentTarget.value);
+              }}
+              inputProps={{ "aria-label": "search content" }}
+              onBlur={(e) => {
+                const dataToBeUpdated = {
+                  noteId: data[0].id,
+                  title: title,
+                  description: description,
+                };
+                labelservice.updateNote(dataToBeUpdated).then((response) => {
+                  dispatch(updateTitleFromId(title, data[0].id));
+                  // setTitle(title)
+                });
+              }}
+            />
+            {inputsToAddLabel}
+
+            {typeof data[0].reminder !== "undefined" &&
+            data[0].reminder.length > 0 ? (
+              <label
+                className={
+                  !timeGotOver
+                    ? classes.reminderSection
+                    : classes.reminderSectionCutOff
                 }
-                labelservice.removeReminderNotes(removeReminder).then(()=>{
-                  dispatch( removeReminderById(data[0].id))
-                })
-                  }}
-            >
-          <ClearIcon  classes={{root:classes.reminderClearIconroot}}
-
-          />{" "}
-
-          </IconButton>:null }
-          </label>
-        ) : null}
-       
- {typeof data[0].noteLabels!=='undefined' && data[0].noteLabels.length>0?
-
-  <div className={classes.labelSection}  >      { data[0].noteLabels.map(data=>{
-         return  <div
-          className={
-               classes.labelDisplaySection
-          }
-        onMouseOver={(e) => {
-            setDisplayIconOnHoverClearButton(e.currentTarget.firstElementChild.innerText)
-        }}
-        onMouseLeave={(e) => {
-          setDisplayIconOnHoverClearButton('')
-        }}
-        >
-          {" "}
-          <div className={classes.labelTextSection}>{data.label} </div>
-          {   displayIconOnHoverClearButton===data.label ?  <IconButton  className={classes.reminderClearIcon}   >
-          <ClearIcon  classes={{root:classes.reminderClearIconroot}}/>{" "}
-
-          </IconButton>:null }
-        
-        </div>
-        })}</div>
-        :null}
-
-        <div className={classes.iconColumn}>
-          <IconButton className={classes.iconButton} aria-label="menu"
-                        onClick={() => {
-                          setDisplayDateTimePicker(!displayDateTimePicker);
-                        }}
-          >
-            <AddAlertOutlinedIcon className={classes.bottomIcons} />
-          </IconButton>
-
-          <IconButton className={classes.iconButton} aria-label="menu"
-           onClick={()=>dispatch(collaboratorsPopUp(true,data[0].id))}
-          >
-            <PersonAddOutlinedIcon className={classes.bottomIcons} />
-          </IconButton>
-          <IconButton className={classes.iconButton} aria-label="menu"
-                        onClick={()=>{
-                          props.setDisplayColorPallette(!props.displayColorPallette)
-                        }}
-          >
-            <PaletteOutlinedIcon className={classes.bottomIcons} />
-          </IconButton>
-          <IconButton className={classes.iconButton} aria-label="menu">
-            <CropOriginalOutlinedIcon className={classes.bottomIcons} />
-          </IconButton>
-          <IconButton className={classes.iconButton} aria-label="menu"
-                      onClick={()=>{
-                        dispatch(updateArchievedStatusById(data[0].id,!data[0].isArchived))
-                      }}
-          >
-            <ArchiveOutlinedIcon className={classes.bottomIcons} 
-
-            />
-          </IconButton>
-          <IconButton className={classes.iconButton} aria-label="menu"
-        
-          // ref={anchorRef}
-          aria-controls={open ? "menu-list-grow" : undefined}
-          aria-haspopup="true"
-          onClick={handleToggle}>
-            <MoreVertOutlinedIcon className={classes.bottomIcons} />
-          </IconButton>
- 
-          <Button
-            variant="contained"
-            className={classes.closeButton}
-            onClick={() => {
-              dispatch(notesViewOnClick(false,{}));
-            }}
-          >
-            Close
-          </Button>
-        </div>
-      </Paper>
-      {displayDateTimePicker ? (
-          <DateAndTimePicker
-            displayDateTimePicker={displayDateTimePicker}
-            setDisplayDateTimePicker={setDisplayDateTimePicker}
-            userData={data[0].id}
-          />
-        ) : null}
-
-{/* FROM HERE */}
-
-{displayColorPallette ? (
-        <OutsideClickHandler
-          onOutsideClick={() => {
-            setDisplayColorPallette(false);
-            setOpenLabelsList(false)
-
-          }}
-        >
-          {" "}
-          <Card className={classes.colorPallette}>
-            <ColorPallette
-              id={props.userData.id}
-              setDisplayColorPallette={setDisplayColorPallette}
-            />
-          </Card>
-        </OutsideClickHandler>
-      ) : null}
-      {open ? (
-        <OutsideClickHandler
-          onOutsideClick={() => {
-            setOpen(false);
-          }}
-        >
-          <div transition disablePortal className={classes.menuPaper}>
-            <Paper>
-                <MenuList
-                  autoFocusItem={open}
-                  id="menu-list-grow"
-                  onKeyDown={handleListKeyDown}
-                >
-                  <MenuItem onClick={handleClose}>DeleteNote</MenuItem>
-                  <MenuItem
+                onMouseOver={(e) => {
+                  setDisplayIconOnHoverClearButton(true);
+                }}
+                onMouseLeave={(e) => {
+                  setDisplayIconOnHoverClearButton(false);
+                }}
+              >
+                <AccessTimeIcon
+                  className={classes.reminderTimeIcon}
+                  classes={{ root: classes.reminderClearIconroot }}
+                />{" "}
+                <div className={classes.reminderTextSection}>
+                  {dateSection} {timeSection}{" "}
+                </div>
+                {displayIconOnHoverClearButton ? (
+                  <IconButton
+                    className={classes.reminderClearIcon}
                     onClick={() => {
-                      setOpenLabelsList(!openLabelsList);
+                      const removeReminder = {
+                        noteIdList: [data[0].id],
+                      };
+                      labelservice
+                        .removeReminderNotes(removeReminder)
+                        .then(() => {
+                          dispatch(removeReminderById(data[0].id));
+                        });
                     }}
                   >
-                    Add Label{" "}
-                  </MenuItem>
-                </MenuList>
-            </Paper>
-            {labelSearchBar}
-          </div>{" "}
-        </OutsideClickHandler>
-      ) : null}
+                    <ClearIcon
+                      classes={{ root: classes.reminderClearIconroot }}
+                    />{" "}
+                  </IconButton>
+                ) : null}
+              </label>
+            ) : null}
+
+            {typeof data[0].noteLabels !== "undefined" &&
+            data[0].noteLabels.length > 0 ? (
+              <div className={classes.labelSection}>
+                {" "}
+                {data[0].noteLabels.map((data) => {
+                  return (
+                    <div
+                      className={classes.labelDisplaySection}
+                      onMouseOver={(e) => {
+                        setDisplayIconOnHoverClearButton(
+                          e.currentTarget.firstElementChild.innerText
+                        );
+                      }}
+                      onMouseLeave={(e) => {
+                        setDisplayIconOnHoverClearButton("");
+                      }}
+                    >
+                      {" "}
+                      <div className={classes.labelTextSection}>
+                        {data.label}{" "}
+                      </div>
+                      {displayIconOnHoverClearButton === data.label ? (
+                        <IconButton
+                          className={classes.reminderClearIcon}
+                          onClick={(e) => {
+                            const labelData = {
+                              noteId: props.userData.id,
+                              labelId: data.id,
+                            };
+                            labelservice
+                              .removeLabelFromNote(labelData)
+                              .then(
+                                dispatch(
+                                  removeLabelFromNote(
+                                    props.userData.id,
+                                    e.currentTarget.previousElementSibling
+                                      .innerText
+                                  )
+                                )
+                              );
+                          }}
+                        >
+                          <ClearIcon
+                            classes={{ root: classes.reminderClearIconroot }}
+                          />{" "}
+                        </IconButton>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : null}
+
+            <div className={classes.iconColumn}>
+              <IconButton
+                className={classes.iconButton}
+                aria-label="menu"
+                onClick={() => {
+                  setDisplayDateTimePicker(!displayDateTimePicker);
+                }}
+              >
+                <AddAlertOutlinedIcon className={classes.bottomIcons} />
+              </IconButton>
+
+              <IconButton
+                className={classes.iconButton}
+                aria-label="menu"
+                onClick={() => dispatch(collaboratorsPopUp(true, data[0].id))}
+              >
+                <PersonAddOutlinedIcon className={classes.bottomIcons} />
+              </IconButton>
+              <IconButton
+                className={classes.iconButton}
+                aria-label="menu"
+                onClick={() => {
+                  setDisplayColorPallette(!displayColorPallette);
+                }}
+              >
+                {/* {displayCollabPopUp ?  <ColaboratorDialogBox  />:null} */}
+                {displayColorPallette ? (
+            <OutsideClickHandler
+              className={classes.colorLayout}
+              onOutsideClick={() => {
+                setDisplayColorPallette(false);
+                setOpenLabelsList(false);
+              }}
+            >
+              <div className={classes.colorPallette}>
+                {" "}
+                <Card >
+                  <ColorPallette
+                    id={props.userData.id}
+                    setDisplayColorPallette={setDisplayColorPallette}
+                  />
+                </Card>
+              </div>
+            </OutsideClickHandler>
+          ) : null}
+                <PaletteOutlinedIcon className={classes.bottomIcons} />
+              </IconButton>
+              <IconButton className={classes.iconButton} aria-label="menu">
+                <CropOriginalOutlinedIcon className={classes.bottomIcons} />
+              </IconButton>
+              <IconButton
+                className={classes.iconButton}
+                aria-label="menu"
+                onClick={() => {
+                  dispatch(
+                    updateArchievedStatusById(data[0].id, !data[0].isArchived)
+                  );
+                }}
+              >
+                <ArchiveOutlinedIcon className={classes.bottomIcons} />
+              </IconButton>
+              <IconButton
+                className={classes.iconButton}
+                aria-label="menu"
+                // ref={anchorRef}
+                aria-controls={open ? "menu-list-grow" : undefined}
+                aria-haspopup="true"
+                onClick={handleToggle}
+              >
+                {open ? (
+                  <OutsideClickHandler
+                  // onOutsideClick={() => {
+                  //   setOpen(false);
+                  // }}
+                  >
+                    <div transition disablePortal className={classes.menuPaper}>
+                      <Paper>
+                        <MenuList
+                          autoFocusItem={open}
+                          id="menu-list-grow"
+                          onKeyDown={handleListKeyDown}
+                        >
+                          <MenuItem onClick={handleClose}>DeleteNote</MenuItem>
+                          <MenuItem
+                            onClick={() => {
+                              setOpenLabelsList(!openLabelsList);
+                            }}
+                          >
+                            Adds Label{" "}
+                          </MenuItem>
+                        </MenuList>
+                      </Paper>
+                      {labelSearchBar}
+                    </div>{" "}
+                  </OutsideClickHandler>
+                ) : null}
+                <MoreVertOutlinedIcon className={classes.bottomIcons} />
+              </IconButton>
+
+              <Button
+                variant="contained"
+                className={classes.closeButton}
+                onClick={() => {
+                  dispatch(notesViewOnClick(false, {}));
+                }}
+              >
+                Close
+              </Button>
+            </div>
+          </Paper>
+          {displayDateTimePicker ? (
+            <DateAndTimePicker
+              displayDateTimePicker={displayDateTimePicker}
+              setDisplayDateTimePicker={setDisplayDateTimePicker}
+              userData={data[0].id}
+            />
+          ) : null}
+
+          {/* FROM HERE */}
+
+         
+
+          {/* </div> */}
+        </DialogContent>
+        {/* <Dialog
+         open={displayColorPallette}
+         classes={{
+          container: classes.ContainerClrPallete,
+          paperScrollPaper: classes.dialoggScrollPaperClrPallete,
+        }}
+         onBackdropClick={() => {
+          setDisplayColorPallette(false)
+         }}
+         >
+             <Card className={classes.colorPallette}><ColorPallette  id={noteViewOnClick.data.id} setDisplayColorPallette={setDisplayColorPallette} fromProfile={true}   /></Card>
+         </Dialog> */}
+      </Dialog>
     </div>
   );
 }

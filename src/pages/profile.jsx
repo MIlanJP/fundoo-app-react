@@ -435,47 +435,15 @@ export default function Profile() {
       ) : // </div>
       null}
       {noteViewOnClick.condition ? (
-        <div>
-        <Dialog
-          open={noteViewOnClick.condition}
-          onBackdropClick={() => {
-            dispatch(notesViewOnClick(false, {}));
-          }}
-          classes={{
-            container: classes.dialogScrollPaper,
-            paperScrollPaper: classes.dialoggScrollPaper,
-          }}
-          maxWidth="md"
-          disableBackdropClick={true}
-          className={styles.dialogBlock}
-        >
-          <DialogContent className={classes.dialogContent}>
-            {" "}
             <NotesViewOnClick
               userData={noteViewOnClick.data}
               className={classes.noteViewOnClick}
               setDisplayColorPallette={setDisplayColorPallette}
               displayColorPallette={displayColorPallette}
             />
-          </DialogContent>{" "}
-         <Dialog
-         open={displayColorPallette}
-         classes={{
-          container: classes.ContainerClrPallete,
-          paperScrollPaper: classes.dialoggScrollPaperClrPallete,
-        }}
-         onBackdropClick={() => {
-          setDisplayColorPallette(false)
-         }}
-         >
-             <Card className={classes.colorPallette}><ColorPallette  id={noteViewOnClick.data.id} setDisplayColorPallette={setDisplayColorPallette} fromProfile={true}   /></Card>
-           <DialogContent></DialogContent>
-         </Dialog>
-        </Dialog>
-        <div>HEY</div>
-        </div>
+
       ) : null}
-  {displayCollabPopUp ?  <ColaboratorDialogBox  />:null}
+
     </div>
   );
 }

@@ -19,6 +19,7 @@ import {
   FormControlLabel,
 } from "@material-ui/core";
 import _ from 'lodash'
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import labelService from "../services/labelservice";
 import OutsideClickHandler from "react-outside-click-x";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -241,6 +242,7 @@ const [checkStatus,setCheckStatus] = useState([])
       justifyContent: "center",
     },
     labelDisplaySection: {
+      ...theme.typography.labels,
       fontSize: ".65rem",
       background: "rgba(215, 212, 212, 0.8)",
       // height:"20px",
@@ -248,6 +250,8 @@ const [checkStatus,setCheckStatus] = useState([])
       flexDirection: "row",
       borderRadius: "15px",
       border: "groove 1px ",
+      marginRight:"3px",
+      fontWeight: "500",
       alignItems: "center",
 
       justifyContent: "space-between",
@@ -304,8 +308,9 @@ const [checkStatus,setCheckStatus] = useState([])
       flexDirection: "column",
       backgroundColor: "white",
       border: "groove 1px",
-      left: '116px',
-      bottom:'-25%',
+      right: '-20px',
+
+      bottom:'100%',
       width: "144px",
       position: 'absolute',
       padding:'5px 0 0 5px',
@@ -433,19 +438,7 @@ const [checkStatus,setCheckStatus] = useState([])
 
   const labelSearchBar = openLabelsList ? (
     <div className={classes.listOfLabelsContainer}>
-        <Button
-      onClick={()=>{
-        setOpenLabelsList(!openLabelsList);
-      }}
-      >go back</Button >
-      <InputBase
-        // className={classes.labelSearchBox}
-        value={filter}
-        placeholder="Search for Labels"
-        onChange={(e) => {
-          setFilter(e.currentTarget.value);
-        }}
-      />
+      
     
       {onlyLabelsList.map((data,index) => {
         if (data.label.toLowerCase().includes(filter.toLowerCase())) {
@@ -501,6 +494,20 @@ const [checkStatus,setCheckStatus] = useState([])
           );
         }
       })}
+
+      <InputBase
+        // className={classes.labelSearchBox}
+        value={filter}
+        placeholder="Search for Labels"
+        onChange={(e) => {
+          setFilter(e.currentTarget.value);
+        }}
+      />
+              <Button
+      onClick={()=>{
+        setOpenLabelsList(!openLabelsList);
+      }}
+      >go back</Button >
     </div>
   ) : null;
 
@@ -586,7 +593,7 @@ const [checkStatus,setCheckStatus] = useState([])
                   });
                 }}
               >
-                <ClearIcon classes={{ root: classes.reminderClearIconroot }} />{" "}
+                <HighlightOffIcon classes={{ root: classes.reminderClearIconroot }} />{" "}
               </IconButton>
             ) : null}
           </label>
@@ -634,7 +641,7 @@ const [checkStatus,setCheckStatus] = useState([])
                             );
                         }}
                       >
-                        <ClearIcon
+                        <HighlightOffIcon
                           classes={{ root: classes.reminderClearIconroot }}
                         />{" "}
                       </IconButton>

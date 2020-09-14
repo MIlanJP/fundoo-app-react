@@ -4,6 +4,7 @@ import {
   Paper,
   InputBase,
   Button,
+  Tooltip ,
   ListItem,
   Checkbox,
   ListItemIcon,
@@ -11,11 +12,8 @@ import {
   List,
   useMediaQuery,
   Card,
-  ClickAwayListener,
   MenuList,
   MenuItem,
-  Grow,
-  Popper,
   FormControlLabel,
 } from "@material-ui/core";
 import _ from 'lodash'
@@ -38,7 +36,6 @@ import {
 } from "../redux";
 import labelservice from "../services/labelservice";
 import AddAlertOutlinedIcon from "@material-ui/icons/AddAlertOutlined";
-import ClearIcon from "@material-ui/icons/Clear";
 import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
 import AddIcon from "@material-ui/icons/Add";
 import PaletteOutlinedIcon from "@material-ui/icons/PaletteOutlined";
@@ -49,22 +46,12 @@ import CropOriginalOutlinedIcon from "@material-ui/icons/CropOriginalOutlined";
 import DateAndTimePicker from "./DateTimePicker";
 import { collaboratorsPopUp } from "../redux";
 import ColorPallette from "./ColorPallette";
-import SearchBox from "./searchCollaborator";
 function NoteView(props) {
   const theme = useTheme();
   const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
   const onlyLabelsList = useSelector((state) => state.labels.onlyLabelsList);
  
-  const [listLabels,setListLabels]=useState(onlyLabelsList.map((data)=>{
-    // console.log(props.userData.noteLabels)
-    // console.log(data)
-    if( typeof props.userData.noteLabels !==[] &&   _.some(props.userData.noteLabels,{label:data.label})){
-      data.checked=true
-    }else{
-      data.checked=false
-    }
-    return data
-  }))
+
   const [filter, setFilter] = useState("");
   const dispatch = useDispatch();
   const [tickIcon, setTickIcon] = useState(false);
@@ -85,7 +72,6 @@ function NoteView(props) {
     setOpen((prevOpen) => !prevOpen);
   };
 
-const [checkStatus,setCheckStatus] = useState([])
 
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -339,6 +325,8 @@ const [checkStatus,setCheckStatus] = useState([])
 
   const classes = useStyles();
   const unPinned = (
+    <Tooltip title='Pin note'>
+
     <IconButton
       className={classes.pinIcon}
       onClick={() => {
@@ -360,9 +348,11 @@ const [checkStatus,setCheckStatus] = useState([])
         <path d="M11 17h2v5l-2 2v-7zm7-2h-12c0-3.128.091-4.744 1.874-7.276.551-.783.915-1.3.915-2.373 0-2.372-1.789-1.695-1.789-5.351h10c0 3.616-1.789 3.005-1.789 5.35 0 1.073.364 1.59.915 2.374 1.785 2.535 1.874 4.154 1.874 7.276zm-9.968-2h7.936c-.298-4.376-2.756-4.142-2.756-7.649-.001-1.605.521-2.351 1.271-3.351h-4.966c.75 1 1.272 1.745 1.272 3.35 0 3.487-2.46 3.29-2.757 7.65z" />
       </svg>
     </IconButton>
+    </Tooltip>
   );
 
   const pinned = (
+    <Tooltip title='Unpin note'>
     <IconButton
       className={classes.pinIcon}
       onClick={() => {
@@ -384,6 +374,7 @@ const [checkStatus,setCheckStatus] = useState([])
         <path d="M11 17h2v5l-2 2v-7zm3.571-12c0-2.903 2.36-3.089 2.429-5h-10c.068 1.911 2.429 2.097 2.429 5 0 3.771-3.429 3.291-3.429 10h12c0-6.709-3.429-6.229-3.429-10z" />
       </svg>
     </IconButton>
+    </Tooltip>
   );
 
   const inputsToAddLabel =
@@ -449,7 +440,6 @@ const [checkStatus,setCheckStatus] = useState([])
               control={<Checkbox name={data.label}  
               checked={_.some(props.userData.noteLabels,{id:data.id})}
               onClick={(e)=>{
-                let tracklist=onlyLabelsList
                 // tracklist[index].checked=!tracklist[index].checked
                 // setListLabels(tracklist)
                 console.log(e.currentTarget.firstElementChild.firstElementChild.name)
@@ -550,7 +540,6 @@ const [checkStatus,setCheckStatus] = useState([])
           multiline={true}
           readOnly={true}
           rowsMax={20}
-          placeholder=" Take a note..."
           fullWidth
           className={classes.input}
           inputProps={{ "aria-label": "search content" }}
@@ -655,6 +644,7 @@ const [checkStatus,setCheckStatus] = useState([])
 
         {!displayIconOnHover ? (
           <div className={classes.iconColumn}>
+            <Tooltip title="Add Reminder">
             <IconButton
               className={classes.iconButton}
               aria-label="menu"
@@ -664,6 +654,8 @@ const [checkStatus,setCheckStatus] = useState([])
             >
               <AddAlertOutlinedIcon className={classes.bottomIcons} />
             </IconButton>
+            </Tooltip>
+            <Tooltip title='Collaborators'>
             <IconButton
               className={classes.iconButton}
               aria-label="menu"
@@ -673,6 +665,8 @@ const [checkStatus,setCheckStatus] = useState([])
             >
               <PersonAddOutlinedIcon className={classes.bottomIcons} />
             </IconButton>
+            </Tooltip>
+            <Tooltip title='Change color'>
             <IconButton className={classes.iconButton} aria-label="menu">
               <PaletteOutlinedIcon
                 className={classes.bottomIcons}
@@ -681,9 +675,13 @@ const [checkStatus,setCheckStatus] = useState([])
                 }}
               />
             </IconButton>
+            </Tooltip>
+            <Tooltip title='Add Image'>
             <IconButton className={classes.iconButton} aria-label="menu">
               <CropOriginalOutlinedIcon className={classes.bottomIcons} />
             </IconButton>
+            </Tooltip>
+            <Tooltip title='Archive'>
             <IconButton
               className={classes.iconButton}
               aria-label="menu"
@@ -706,6 +704,8 @@ const [checkStatus,setCheckStatus] = useState([])
             >
               <ArchiveOutlinedIcon className={classes.bottomIcons} />
             </IconButton>
+            </Tooltip>
+            <Tooltip title='More'>
             <IconButton
               className={classes.iconButton}
               aria-label="menu"
@@ -716,6 +716,7 @@ const [checkStatus,setCheckStatus] = useState([])
             >
               <MoreVertOutlinedIcon className={classes.bottomIcons} />
             </IconButton>
+            </Tooltip>
           </div>
         ) : null}
 

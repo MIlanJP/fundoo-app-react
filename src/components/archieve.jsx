@@ -1,13 +1,9 @@
 import React, { useEffect} from "react";
-import styles from "../scss/profile.module.scss";
-import CreateNoteTabBeforeClick from "./CreateNoteTabBeforeClick";
-import CreateNoteTabAfterClick from "./CreateNoteTabAfterClick";
 import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {  useTheme } from "@material-ui/core";
 import NotesView from "./notesView";
-import _ from 'lodash'
 
 export default function Archieve(props) {
   const theme = useTheme();
@@ -19,7 +15,6 @@ export default function Archieve(props) {
   
 
 
-  const addFeature = useSelector((state) => state.addNoteFeature.addNote);
   const userData = useSelector((state) => state.notes.userData);
   const pinnedNotes = userData.filter(data=>data.isPined)
   const unPinnedNotes = userData.filter(data=>!data.isPined)
@@ -139,7 +134,7 @@ return null
 
   useEffect(() => {
     calculateColumn()
-  },[userData])
+  },[])
     
   calculateColumn()
 
@@ -162,6 +157,7 @@ return null
     mainSection: {
       display: "flex",
       flexDirection: "column",
+      paddingTop:"10px",
       alignItems: matchesExtraSmallSize? 'center':  "flex-start",
       width: "100%",
       height: "100%",
@@ -286,9 +282,9 @@ return null
         </div>
       ) :null}
   </div>;
-  const noOfColumnsOnExtraLargeColumn = (
-    <div className={classes.extraLargeRow}></div>
-  );
+  // const noOfColumnsOnExtraLargeColumn = (
+  //   <div className={classes.extraLargeRow}></div>
+  // );
 
   return (
     <div className={classes.mainSection}>

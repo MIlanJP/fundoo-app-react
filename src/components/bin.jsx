@@ -1,12 +1,9 @@
 import React, { useEffect} from "react";
-import styles from "../scss/profile.module.scss";
-import CreateNoteTabBeforeClick from "./CreateNoteTabBeforeClick";
-import CreateNoteTabAfterClick from "./CreateNoteTabAfterClick";
+
 import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {  useTheme } from "@material-ui/core";
-import _ from 'lodash'
 import DeletedNotesView from './deletednotesview'
 export default function Bin(props) {
   const theme = useTheme();
@@ -18,7 +15,6 @@ export default function Bin(props) {
   
 
 
-  const addFeature = useSelector((state) => state.addNoteFeature.addNote);
   const userData = useSelector((state) => state.notes.userData);
   const pinnedNotes = userData.filter(data=>data.isPined)
   const unPinnedNotes = userData.filter(data=>!data.isPined)
@@ -137,8 +133,8 @@ return null
   }
 
   useEffect(() => {
-    calculateColumn()
-  },[userData])
+    // calculateColumn()
+  })
     
   calculateColumn()
 
@@ -160,6 +156,7 @@ return null
     },
     mainSection: {
       display: "flex",
+      paddingTop:"10px",
       flexDirection: "column",
       alignItems: matchesExtraSmallSize? 'center':  "flex-start",
       width: "100%",

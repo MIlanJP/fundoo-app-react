@@ -3,32 +3,21 @@ import {
   IconButton,
   Paper,
   InputBase,
-  Button,
-  ListItem,
-  Checkbox,
-  ListItemIcon,
+
   useTheme,
-  List,
   useMediaQuery,
-  Card,
-  ClickAwayListener,
-  MenuList,
-  MenuItem,
-  Grow,
-  Popper,
-  FormControlLabel,
+  Tooltip,
 } from "@material-ui/core";
-import _ from 'lodash'
-import labelService from "../services/labelservice";
+import _ from "lodash";
+// import labelService from "../services/labelservice";
 import OutsideClickHandler from "react-outside-click-x";
+import RestoreFromTrashIcon from "@material-ui/icons/RestoreFromTrash";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { makeStyles } from "@material-ui/core/styles";
 import { CalculateTime } from "../util/calculateTime";
 // import OutsideClickHandler from "react-outside-click-x";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
-  setPinnedStatus,
-  updateArchievedStatusById,
   removeReminderById,
   removeLabelFromNote,
   deleteNoteForever,
@@ -36,20 +25,16 @@ import {
 } from "../redux";
 import labelservice from "../services/labelservice";
 import ClearIcon from "@material-ui/icons/Clear";
-import AddIcon from "@material-ui/icons/Add";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 function DeletedNotesView(props) {
   const theme = useTheme();
   const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
-  const onlyLabelsList = useSelector((state) => state.labels.onlyLabelsList);
- 
- 
+
   const dispatch = useDispatch();
   const [tickIcon, setTickIcon] = useState(false);
-  const [onFocusText, setOnFocusText] = useState("");
-  const [showClearIcon, setShowClearIcon] = useState("");
+
   const [displayIconOnHover, setDisplayIconOnHover] = useState(true);
   const [
     displayIconOnHoverClearButton,
@@ -57,11 +42,7 @@ function DeletedNotesView(props) {
   ] = useState("");
 
   const [open, setOpen] = React.useState(false);
-  const [openLabelsList, setOpenLabelsList] = React.useState(false);
   const anchorRef = React.useRef(null);
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
 
 
   const handleClose = (event) => {
@@ -72,12 +53,7 @@ function DeletedNotesView(props) {
     setOpen(false);
   };
 
-  function handleListKeyDown(event) {
-    if (event.key === "Tab") {
-      event.preventDefault();
-      setOpen(false);
-    }
-  }
+
   const useStyles = makeStyles((theme) => ({
     addNotePortion: {
       borderRadius: "15px",
@@ -169,7 +145,6 @@ function DeletedNotesView(props) {
       left: "-5px",
       color: "black",
       cursor: "pointer",
-
     },
     reminderSection: {
       fontSize: ".75rem",
@@ -275,18 +250,18 @@ function DeletedNotesView(props) {
       flexDirection: "column",
       backgroundColor: "white",
       border: "groove 1px",
-      left: '116px',
-      bottom:'-25%',
+      left: "116px",
+      bottom: "-25%",
       width: "144px",
-      position: 'absolute',
-      padding:'5px 0 0 5px',
-      zIndex:4,
-      borderRadius:'8px',
-    },listOfLabels:{
-      width:'75%',
-      overflowWrap: 'break-word',
-      borderBottom:'groove 1px'
-      
+      position: "absolute",
+      padding: "5px 0 0 5px",
+      zIndex: 4,
+      borderRadius: "8px",
+    },
+    listOfLabels: {
+      width: "75%",
+      overflowWrap: "break-word",
+      borderBottom: "groove 1px",
     },
   }));
   let [dateSection] = "";
@@ -307,15 +282,6 @@ function DeletedNotesView(props) {
   const unPinned = (
     <IconButton
       className={classes.pinIcon}
-    //   onClick={() => {
-    //     const data = {
-    //       isPined: true,
-    //       noteIdList: [props.userData.id],
-    //     };
-    //     labelService
-    //       .updateIsPined(data)
-    //       .then(dispatch(setPinnedStatus(true, props.userData.id)));
-    //   }}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -331,15 +297,6 @@ function DeletedNotesView(props) {
   const pinned = (
     <IconButton
       className={classes.pinIcon}
-    //   onClick={() => {
-    //     const data = {
-    //       isPined: false,
-    //       noteIdList: [props.userData.id],
-    //     };
-    //     labelService
-    //       .updateIsPined(data)
-    //       .then(dispatch(setPinnedStatus(false, props.userData.id)));
-    //   }}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -352,54 +309,6 @@ function DeletedNotesView(props) {
     </IconButton>
   );
 
-  const inputsToAddLabel =
-    typeof props.userData.noteCheckLists !== "undefined" &&
-    props.userData.noteCheckLists.length > 0 ? (
-      <List>
-        {props.userData.noteCheckLists.map((description, index) => {
-          return (
-            <ListItem
-              className={classes.listItem}
-              onMouseOver={(e) => {
-                // setDisplayOnHover(true)
-                setShowClearIcon(
-                  e.currentTarget.firstChild.nextSibling.firstChild.value
-                );
-              }}
-              onMouseLeave={(e) => {
-                // setDisplayOnHover(false)
-                setShowClearIcon("");
-              }}
-            >
-              <ListItemIcon>
-                {index === props.userData.noteCheckLists.length - 1 ? (
-                  <AddIcon />
-                ) : (
-                  <Checkbox
-                    edge="start"
-                    checked={description.status === "close"}
-                    tabIndex={-1}
-                    disableRipple
-                    inputProps={{ "aria-labelledby": index }}
-                  />
-                )}
-              </ListItemIcon>
-              <InputBase
-                readOnly={true}
-                className={classes.listInput}
-                placeholder="List Item"
-                value={description.itemName}
-                onClick={(e) => {
-                }}
-                onFocus={(e) => {
-                  setOnFocusText(e.currentTarget.value);
-                }}
-              />
-            </ListItem>
-          );
-        })}
-      </List>
-    ) : null;
 
   return (
     <div
@@ -431,7 +340,6 @@ function DeletedNotesView(props) {
           value={props.userData.title}
           className={classes.titleInput}
           inputProps={{ "aria-label": "search content" }}
-
         />
         <InputBase
           value={props.userData.description}
@@ -442,7 +350,6 @@ function DeletedNotesView(props) {
           fullWidth
           className={classes.input}
           inputProps={{ "aria-label": "search content" }}
-
         />
         {/* {inputsToAddLabel} */}
         {typeof props.userData.reminder !== "undefined" &&
@@ -541,16 +448,37 @@ function DeletedNotesView(props) {
 
         {!displayIconOnHover ? (
           <div className={classes.iconColumn}>
-            <IconButton
-              className={classes.iconButton}
-              aria-label="menu"
-              // ref={anchorRef}
-              aria-controls={open ? "menu-list-grow" : undefined}
-              aria-haspopup="true"
-              onClick={handleToggle}
-            >
-              <MoreVertOutlinedIcon className={classes.bottomIcons} />
-            </IconButton>
+            <Tooltip title="Restore Note">
+              <IconButton
+                onClick={() => {
+                  const dataTobeSent = {
+                    isDeleted: false,
+                    noteIdList: [props.userData.id],
+                  };
+                  labelservice.deleteNote(dataTobeSent).then(() => {
+                    dispatch(setNoteDeleteStatus(false, props.userData.id));
+                    handleClose();
+                  });
+                }}
+              >
+                <RestoreFromTrashIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete Forever">
+              <IconButton
+                onClick={() => {
+                  const dataTobeSent = {
+                    noteIdList: [props.userData.id],
+                  };
+                  labelservice.deleteNoteForever(dataTobeSent).then(() => {
+                    dispatch(deleteNoteForever(props.userData.id));
+                    handleClose();
+                  });
+                }}
+              >
+                 <DeleteForeverIcon  />
+              </IconButton>
+            </Tooltip>
           </div>
         ) : null}
 
@@ -567,48 +495,14 @@ function DeletedNotesView(props) {
             })}
           </div>
         ) : null}
-
       </Paper>
-     
+
       {open ? (
         <OutsideClickHandler
           onOutsideClick={() => {
             setOpen(false);
           }}
         >
-          <div transition disablePortal className={classes.menuPaper}>
-            <Paper>
-                <MenuList
-                  autoFocusItem={open}
-                  id="menu-list-grow"
-                  onKeyDown={handleListKeyDown}
-                >
-                  <MenuItem onClick={()=>{
-                    const dataTobeSent={
-                      isDeleted :false,
-                      noteIdList: [props.userData.id],
-                    }
-                    labelservice.deleteNote(dataTobeSent).then(()=>{
-                      dispatch(setNoteDeleteStatus(false,props.userData.id))
-                      handleClose()
-                    })
-                  }}>Restore</MenuItem>
-                  <MenuItem
-                    onClick={()=>{
-                        const dataTobeSent={
-                          noteIdList: [props.userData.id],
-                        }
-                        labelservice.deleteNoteForever(dataTobeSent).then(()=>{
-                          dispatch(deleteNoteForever(props.userData.id))
-                          handleClose()
-                        })
-                      }}
-                  >
-                Delete Forever
-                  </MenuItem>
-                </MenuList>
-            </Paper>
-          </div>{" "}
         </OutsideClickHandler>
       ) : null}
     </div>

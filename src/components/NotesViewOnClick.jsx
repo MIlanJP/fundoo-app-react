@@ -19,7 +19,6 @@ import {
 } from "@material-ui/core";
 import _ from "lodash";
 import labelservice from "../services/labelservice";
-import { reduxForm, Field } from "redux-form";
 import ColorPallette from "./ColorPallette";
 
 import DateAndTimePicker from "./DateTimePicker";
@@ -28,7 +27,7 @@ import OutsideClickHandler from "react-outside-click-x";
 import { useDispatch } from "react-redux";
 import AddAlertOutlinedIcon from "@material-ui/icons/AddAlertOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
-import ColaboratorDialogBox from "./../components/colaboratorDialog";
+// import ColaboratorDialogBox from "./../components/colaboratorDialog";
 import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
 import AddIcon from "@material-ui/icons/Add";
 import PaletteOutlinedIcon from "@material-ui/icons/PaletteOutlined";
@@ -40,8 +39,6 @@ import { useSelector } from "react-redux";
 import { CalculateTime } from "./../util/calculateTime";
 
 import {
-  addNoteBeforeClick,
-  hideListFeature,
   setDescriptList,
   notesViewOnClick,
   updateTitleFromId,
@@ -74,18 +71,16 @@ function NotesViewOnClick(props) {
   };
   const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
   const matchesSmallSize = useMediaQuery(theme.breakpoints.down("sm"));
-  const matchesMediumSize = useMediaQuery(theme.breakpoints.down("md"));
+  // const matchesMediumSize = useMediaQuery(theme.breakpoints.down("md"));
   const matchesLargeSize = useMediaQuery(theme.breakpoints.down("lg"));
-  const [reminderDate, setReminderDate] = useState(props.userData.reminder[0]);
-  const [displayOnHover, setDisplayOnHover] = useState(false);
+  const [reminderDate] = useState(props.userData.reminder[0]);
+  // const [displayOnHover, setDisplayOnHover] = useState(false);
   const [openLabelsList, setOpenLabelsList] = React.useState(false);
-  const pinnedStatus = useSelector((state) => state.pinFeature.pinNote);
-  const reminderDateonPopUp = useSelector((state) => state.pinFeature.pinNote);
+
   const dispatch = useDispatch();
   const [filter, setFilter] = useState("");
 
   const [displayColorPallette, setDisplayColorPallette] = useState(false);
-  const addNote = useSelector((state) => state.addNoteFeature.addNote);
   const [
     displayIconOnHoverClearButton,
     setDisplayIconOnHoverClearButton,
@@ -96,9 +91,9 @@ function NotesViewOnClick(props) {
   const [title, setTitle] = useState(data[0].title);
   const [description, setDescription] = useState(data[0].description);
   const [displayDateTimePicker, setDisplayDateTimePicker] = useState(false);
-  const displayCollabPopUp = useSelector(
-    (state) => state.notes.collaboratorDisplay
-  );
+  // const displayCollabPopUp = useSelector(
+  //   (state) => state.notes.collaboratorDisplay
+  // );
 
   let [dateSection] = "";
   let [timeSection] = "";
@@ -267,6 +262,8 @@ function NotesViewOnClick(props) {
       fontSize: ".65rem",
       background: "rgba(215, 212, 212, 0.8)",
       // height:"20px",
+      marginRight:"3px",
+
       display: "flex",
       flexDirection: "row",
       borderRadius: "15px",
@@ -455,7 +452,6 @@ function NotesViewOnClick(props) {
     <InputBase
       multiline={true}
       rowsMax={20}
-      placeholder=" Take a note..."
       fullWidth
       value={description}
       rowsMin={4}

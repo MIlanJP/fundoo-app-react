@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   IconButton,
   Paper,
   InputBase,
-  Icon,
-  SvgIcon,
   Button,
   ListItem,
   Checkbox,
   ListItemIcon,
-  ListItemText,
   List,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -30,8 +27,6 @@ import { useSelector } from "react-redux";
 import {
   addNoteBeforeClick,
   fetchAllUserData,
-  pinIt,
-  unPinIt,
   hideListFeature,
   setDescriptList,
 } from "../redux";
@@ -42,7 +37,6 @@ function CreateNoteTabAfterClick(props) {
 
   const [onFocusText, setOnFocusText] = useState("");
   const [showClearIcon, setShowClearIcon] = useState("");
-  const [displayOnHover, setDisplayOnHover] = useState(false);
   const [isArchived, setIsArchived] = useState(false);
   const [pinnedStatus,setPinnedStatus] = useState(false);
   const dispatch = useDispatch();
@@ -53,7 +47,7 @@ function CreateNoteTabAfterClick(props) {
   );
   const [title,setTitle]=useState('')
   const [description,setDescription]=useState('')
-  const [color,setColor]=useState('#FFFFFF')
+  const [color]=useState('#FFFFFF')
   const [checklist,setCheckList]=useState([{itemName:"",status:'open'}],)
   const useStyles = makeStyles((theme) => ({
     addNotePortion: {
@@ -328,8 +322,6 @@ function CreateNoteTabAfterClick(props) {
 
               let data={}
               if(checklist[0].itemName!==''){
-                let list=checklist;
-                list=list.pop()
                 data={
                   title,
                   description,

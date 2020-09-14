@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import MessageContext from "../components/messagecontext";
 import Header from "../components/header";
-import ColorPallette from '../components/ColorPallette'
 import AddOutlinedIcon from "@material-ui/icons/AddOutlined";
 import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import { Route, useHistory } from "react-router-dom";
@@ -11,7 +10,6 @@ import {
   fetchAllUserData,
   fetchLabelList,
   UpdateLabelonChange,
-  notesViewOnClick,
 } from "../redux";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -24,15 +22,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import Labels from "../components/notes";
 import Reminder from "../components/reminder";
 
-import Archieve from "../components/archieve";
+import Archive from "../components/archieve";
 import Drawer from "../components/drawer";
-import OutsideClickHandler from "react-outside-click-x";
 import styles from "../scss/profile.module.scss";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
   Dialog,
-  DialogContent,
   DialogTitle,
   Typography,
   ListItem,
@@ -45,29 +41,28 @@ import {
   Card,
 } from "@material-ui/core";
 import labelservice from "../services/labelservice";
-import ColaboratorDialogBox from './../components/colaboratorDialog';
 
 export default function Profile() {
   // const messages = useContext(MessageContext);
   const theme = useTheme();
   const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
   const matchesSmallSize = useMediaQuery(theme.breakpoints.down("sm"));
-  const matchesMediumSize = useMediaQuery(theme.breakpoints.down("md"));
+  // const matchesMediumSize = useMediaQuery(theme.breakpoints.down("md"));
   const matchesLargeSize = useMediaQuery(theme.breakpoints.down("lg"));
   const history = useHistory();
   const dispatch = useDispatch();
   const loadedUserData = useSelector((state) => state.notes.userData);
-  const loadedLabels = useSelector((state) => state.labels.labelList);
+  // const loadedLabels = useSelector((state) => state.labels.labelList);
   const [displayColorPallette,setDisplayColorPallette] = useState(false)
   const userId = useSelector((state) => state.labels.userID);
 
 
-  const [routesPages] = useState([Labels, Reminder, Label, Archieve, Bin]);
+  const [routesPages] = useState([Labels, Reminder, Label, Archive, Bin]);
   const [routesName] = useState([
     "Notes",
     "Reminder",
     "Label",
-    "Archieve",
+    "Archive",
     "Bin",
   ]);
   const noteViewOnClick = useSelector((state) => state.notes.notesViewOnClick);
@@ -79,11 +74,11 @@ export default function Profile() {
     "Reminder",
     ...labels,
     "Edit Labels",
-    "Archieve",
+    "Archive",
     "Bin",
   ]);
   const startTabs = ["Notes", "Reminder"];
-  const endTabs = ["Edit Labels", "Archieve", "Bin"];
+  const endTabs = ["Edit Labels", "Archive", "Bin"];
 
   const [heading, setHeading] = useState("Keep");
   const [showDrawer, setShowDrawer] = useState(false);
@@ -95,7 +90,7 @@ export default function Profile() {
     false
   );
  
-  const displayCollabPopUp=useSelector(state=>state.notes.collaboratorDisplay)
+  // const displayCollabPopUp=useSelector(state=>state.notes.collaboratorDisplay)
   const [
     popUpTargetAutoFocusAddNewValue,
     setPopUpTargetAutoFocusAddNewValue,

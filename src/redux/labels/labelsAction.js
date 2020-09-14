@@ -1,7 +1,5 @@
 import * as actions from "./labelsType";
 import services from "../../services/labelservice";
-import labelservice from '../../services/labelservice'
-import {useSelector} from 'react-redux'
 export const getAllLabels = (userData) => {
   return {
     type: actions.GET_ALL_NOTES,
@@ -76,13 +74,13 @@ export const fetchLabelList = () => {
     let list1 = [];
     let list2 = [];
     const startTabs = ["Notes", "Reminder"];
-    const endTabs = ["Edit Labels", "Archieve", "Bin"];
+    const endTabs = ["Edit Labels", "Archive", "Bin"];
     const lists = [];
     dispatch(fetchUserReqests);
     services
       .getLabelLists()
       .then((response) => {
-        const listofLabels = response.data.data.details.map((label) => {
+        response.data.data.details.map((label) => {
           if (label.isDeleted === false) {
             list1.push(label.label);
             list2.push(label);
@@ -95,9 +93,9 @@ export const fetchLabelList = () => {
         dispatch(getLabelLists(lists));
       })
       .catch((error) => {
-        let list = [];
+       
         const startTabs = ["Notes", "Reminder"];
-        const endTabs = ["Edit Labels", "Archieve", "Bin"];
+        const endTabs = ["Edit Labels", "Archive", "Bin"];
         const errorMessage = error;
         const lists = [];
         lists.push(...startTabs, ...list1, ...endTabs);

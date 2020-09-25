@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import {
   IconButton,
   Paper,
@@ -21,6 +21,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import labelService from "../services/labelservice";
 import OutsideClickHandler from "react-outside-click-x";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import MessageContext from "../components/messagecontext";
 import { makeStyles } from "@material-ui/core/styles";
 import { CalculateTime } from "../util/calculateTime";
 // import OutsideClickHandler from "react-outside-click-x";
@@ -48,6 +49,7 @@ import { collaboratorsPopUp } from "../redux";
 import ColorPallette from "./ColorPallette";
 function NoteView(props) {
   const theme = useTheme();
+  const message1 = useContext(MessageContext);
   const matchesExtraSmallSize = useMediaQuery(theme.breakpoints.down("xs"));
   const onlyLabelsList = useSelector((state) => state.labels.onlyLabelsList);
  
@@ -692,14 +694,23 @@ function NoteView(props) {
                 };
                 labelService
                   .updateArchievedStatus(archieveData)
-                  .then(
+                  .then(()=>{
                     dispatch(
                       updateArchievedStatusById(
                         props.userData.id,
                         !props.userData.isArchived
                       )
                     )
+                    if(props.userData.isArchived){
+                      // message1.setMessage("Note is Sucessfully archived");
+                      // message1.setSnackBar(true);
+                    }else{
+                      // message1.setMessage("Note is Sucessfully unArchived");
+                      // message1.setSnackBar(true);
+                    }
+                      }
                   );
+                 
               }}
             >
               <ArchiveOutlinedIcon className={classes.bottomIcons} />
@@ -779,6 +790,9 @@ function NoteView(props) {
                     labelservice.deleteNote(dataTobeSent).then(()=>{
                       dispatch(setNoteDeleteStatus(true,props.userData.id))
                       handleClose()
+                
+                      // message1.setMessage("Note is Sucessfully deleted");
+                      // message1.setSnackBar(true);
                     })
                   }}
                   

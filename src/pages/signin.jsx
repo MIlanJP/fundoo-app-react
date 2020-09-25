@@ -8,7 +8,7 @@ import {
   Button,
 } from "@material-ui/core";
 import styles from "../scss/login.module.scss";
-import {fetchUserIdByEmail,setEmailId} from '../redux'
+import {fetchUserIdByEmail} from '../redux'
 import {useDispatch} from 'react-redux'
 import "../css/logo.css";
 import Auth from "../services/Auth"
@@ -75,7 +75,7 @@ export default function Login(props) {
   }
 
   return (
-    <Card className={styles.mainLogo} justify="center" >
+    <Card className={styles.mainLogo} data-testid="login-component"  justify="center"  >
       <CardContent>
         <div className={styles.LoginLogo}>
         <Logo />
@@ -83,7 +83,7 @@ export default function Login(props) {
         <Typography className={styles.signInLabel} m={3} variant="h5">
           Sign in
         </Typography>
-        <Typography className={styles.loginInfo}>Continue to Fundoo</Typography>
+        <Typography className={styles.loginInfo} data-testid="login-label"   >Continue to Fundoo</Typography>
         <p className={styles.message}>{message}</p>
         <form action="">
           <Grid
@@ -98,7 +98,6 @@ export default function Login(props) {
               value={values.emailId}
               name="emailId"
               onChange={handleOnChange}
-              // fullWidth="true"
               id="outlined-basic"
               autoComplete='off'
               color="primary"
@@ -110,7 +109,7 @@ export default function Login(props) {
               value={values.password}
               name="password"
               onChange={handleOnChange}
-              fullWidth="true"
+              fullWidth={ true}
               id="outlined-basic"
               type={showPassword ? "text" : "password"}
               color="primary"

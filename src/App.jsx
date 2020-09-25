@@ -34,7 +34,10 @@ export default class App extends Component {
         "Some Error Occured while processing request":"error",
         "Error Occured while resetting password":'error',
         "Label Already present":'error',
-"Empty Name cannot be given":'error'
+"Empty Name cannot be given":'error',
+"Note is Sucessfully archived":"success",
+"Note is Sucessfully unArchived":"success",
+"Note is Sucessfully deleted":"error"
       }
       
     };

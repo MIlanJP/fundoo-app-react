@@ -1,19 +1,14 @@
 import * as actions from "./labelsType";
 import services from "../../services/labelservice";
-export const getAllLabels = (userData) => {
-  return {
-    type: actions.GET_ALL_NOTES,
-    payload: userData,
-  };
-};
 
-export const fetchUserReqests = (usersData) => {
+
+export const fetchUserReqestslabel = (usersData) => {
   return {
     type: actions.FETCH_USERS_REQUESTS,
   };
 };
 
-export const fetchUserFailed = (error) => {
+export const fetchUserFailedlabel = (error) => {
   return {
     type: actions.FETCH_USER_FAILURE,
     payload: error,
@@ -76,7 +71,7 @@ export const fetchLabelList = () => {
     const startTabs = ["Notes", "Reminder"];
     const endTabs = ["Edit Labels", "Archive", "Bin"];
     const lists = [];
-    dispatch(fetchUserReqests);
+    dispatch(fetchUserReqestslabel);
     services
       .getLabelLists()
       .then((response) => {
@@ -100,7 +95,7 @@ export const fetchLabelList = () => {
         const lists = [];
         lists.push(...startTabs, ...list1, ...endTabs);
         // dispatch(getLabelLists(lists));
-        dispatch(fetchUserFailed(errorMessage));
+        dispatch(fetchUserFailedlabel(errorMessage));
       });
   };
 };
@@ -117,7 +112,7 @@ export const fetchUserIdByEmail=(emailId)=>{
             }})
             
         }).catch(error=>{
-            dispatch(fetchUserFailed(error.errorMessage));
+            dispatch(fetchUserFailedlabel(error.errorMessage));
         })
     }
 

@@ -56,7 +56,7 @@ export default function Notes(props) {
     let largeCount = 4;
     userData.map((data, index) => {
       const found=data.noteLabels.some(label=>label.label===props.labelName)
-      if(!data.isPined && !data.isDeleted && found ){
+      if(!data.isPined && !data.isDeleted && found && !data.isArchived){
       unPinnedExtraSmallRow.push(<NotesView userData={data} />)
 
         if (index % 2 === 0) {
@@ -98,7 +98,7 @@ return null
     userData.map((data, index) => {
       const found=data.noteLabels.some(label=>label.label===props.labelName)
 
-      if(data.isPined  && !data.isDeleted && found){
+      if(data.isPined  && !data.isDeleted && found  && !data.isArchived){
         if(!showLabel){
           setShowLabel(true)
         }
